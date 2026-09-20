@@ -31,6 +31,21 @@ export interface AdminNotification {
   unread: boolean;
 }
 
+export type TestDriveStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
+
+export interface AdminTestDrive {
+  id: string;
+  vehicleId: string;
+  vehicleLabel: string;
+  name: string;
+  phone: string;
+  preferredDate: string;
+  preferredTime: string;
+  status: TestDriveStatus;
+  note: string;
+  date: string;
+}
+
 export interface BrandStat {
   brand: string;
   count: number;

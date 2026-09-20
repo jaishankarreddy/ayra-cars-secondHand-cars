@@ -1,51 +1,62 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   LucideArrowRight,
-  LucideBike,
-  LucideCarFront,
-  LucideChevronDown,
-  LucideChevronRight,
   LucideSearch,
-  LucideSparkles,
   LucideX
 } from '@lucide/angular';
 import { FooterComponent } from '../../../home/components/footer/footer.component';
+import { CatalogService, CatalogVehicle } from '../../../../services/catalog.service';
 
-type VehicleType = 'Cars' | 'Bikes';
+type VehicleType = 'All' | 'Cars' | 'Bikes';
 
-interface Brand {
+interface BrandData {
   name: string;
-  mark: string;
-  color: string;
-  type: VehicleType;
-  description: string;
+  key: string;
+  type: 'Cars' | 'Bikes';
   count: number;
   logo: string;
 }
 
-const BRANDS: Brand[] = [
-  { name: 'Audi', mark: '\u25C9\u25C9\u25C9\u25C9', color: '#bb2632', type: 'Cars', description: 'Progressive luxury', count: 24, logo: '/vehicle_logos/audi-logo.png' },
-  { name: 'BMW', mark: 'BMW', color: '#1572b8', type: 'Cars', description: 'Sheer driving pleasure', count: 18, logo: '/vehicle_logos/bmw-logo.png' },
-  { name: 'Mercedes-Benz', mark: '\u2726', color: '#28343b', type: 'Cars', description: 'The best or nothing', count: 16, logo: '/vehicle_logos/mercedes-benz-logo.png' },
-  { name: 'Hyundai', mark: 'H', color: '#0873a7', type: 'Cars', description: 'New thinking, new possibilities', count: 31, logo: '/vehicle_logos/hyundai-logo.png' },
-  { name: 'Honda', mark: 'H', color: '#d51b29', type: 'Cars', description: 'The power of dreams', count: 27, logo: '/vehicle_logos/Honda-Logo.wine.svg' },
-  { name: 'Toyota', mark: 'T', color: '#d71920', type: 'Cars', description: 'Let\'s go places', count: 22, logo: '/vehicle_logos/toyota-logo.png' },
-  { name: 'Volkswagen', mark: 'VW', color: '#185a99', type: 'Cars', description: 'Das auto', count: 19, logo: '/vehicle_logos/volkswagen-logo.png' },
-  { name: 'Tata', mark: 'T', color: '#3474b9', type: 'Cars', description: 'Connecting aspirations', count: 38, logo: '/vehicle_logos/tata-logo.png' },
-  { name: 'Mahindra', mark: 'mahindra', color: '#ee3c45', type: 'Cars', description: 'Rise', count: 28, logo: '/vehicle_logos/mahindra-logo.png' },
-  { name: 'Maruti Suzuki', mark: 'S', color: '#df1730', type: 'Cars', description: 'Way of life', count: 46, logo: '/vehicle_logos/suzuki-logo.png' },
-  { name: 'Kia', mark: 'KIA', color: '#172238', type: 'Cars', description: 'Movement that inspires', count: 15, logo: '/vehicle_logos/kia-logo.png' },
-  { name: 'Renault', mark: 'R', color: '#f6a900', type: 'Cars', description: 'Passion for life', count: 12, logo: '/vehicle_logos/renault-logo.png' },
-  { name: 'Royal Enfield', mark: 'RE', color: '#71ae24', type: 'Bikes', description: 'Made like a gun', count: 17, logo: '/vehicle_logos/Eicher_Motors-Logo.wine.svg' },
-  { name: 'KTM', mark: 'KTM', color: '#fa5d13', type: 'Bikes', description: 'Ready to race', count: 13, logo: '/vehicle_logos/ktm-logo.png' },
-  { name: 'Yamaha', mark: 'Y', color: '#202a94', type: 'Bikes', description: 'Revs your heart', count: 18, logo: '/vehicle_logos/Yamaha_Motor_Company-Logo.wine.svg' },
-  { name: 'Bajaj', mark: 'B', color: '#1575a3', type: 'Bikes', description: 'The world\'s favourite', count: 21, logo: '' },
-  { name: 'TVS', mark: 'TVS', color: '#e6252e', type: 'Bikes', description: 'Inspiring confidence', count: 26, logo: '/vehicle_logos/TVS_Motor_Company-Logo.wine.svg' },
-  { name: 'Triumph', mark: 'T', color: '#292929', type: 'Bikes', description: 'For the ride', count: 8, logo: '' },
-  { name: 'Ducati', mark: 'D', color: '#c51d2f', type: 'Bikes', description: 'Style, sport, soul', count: 6, logo: '' },
-  { name: 'Harley-Davidson', mark: 'H-D', color: '#e66c1b', type: 'Bikes', description: 'All for freedom', count: 7, logo: '' },
-];
+const LOGO_MAP: Record<string, string> = {
+  'toyota': '/vehicle_logos/toyota-logo.png',
+  'hyundai': '/vehicle_logos/hyundai-logo.png',
+  'maruti suzuki': '/vehicle_logos/suzuki-logo.png',
+  'suzuki': '/vehicle_logos/suzuki-logo.png',
+  'kia': '/vehicle_logos/kia-logo.png',
+  'honda': '/vehicle_logos/honda-logo.png',
+  'tata': '/vehicle_logos/tata-logo.png',
+  'mahindra': '/vehicle_logos/mahindra-logo.png',
+  'bmw': '/vehicle_logos/bmw-logo.png',
+  'mercedes': '/vehicle_logos/mercedes-benz-logo.png',
+  'mercedes-benz': '/vehicle_logos/mercedes-benz-logo.png',
+  'audi': '/vehicle_logos/audi-logo.png',
+  'volkswagen': '/vehicle_logos/volkswagen-logo.png',
+  'volkswagenswagen': '/vehicle_logos/volkswagen-logo.png',
+  'renault': '/vehicle_logos/renault-logo.png',
+  'ford': '/vehicle_logos/ford-logo.png',
+  'chevrolet': '/vehicle_logos/chevrolet-logo.png',
+  'nissan': '/vehicle_logos/nissan-logo.png',
+  'skoda': '/vehicle_logos/skoda-logo.png',
+  'mg': '/vehicle_logos/mg-logo.png',
+  'jeep': '/vehicle_logos/jeep-logo.png',
+  'lexus': '/vehicle_logos/lexus-logo.png',
+  'subaru': '/vehicle_logos/subaru-logo.png',
+  'tesla': '/vehicle_logos/tesla-logo.png',
+  'mazda': '/vehicle_logos/mazda-logo.png',
+  'fiat': '/vehicle_logos/fiat-logo.png',
+  'volvo': '/vehicle_logos/volvo-logo.png',
+  'royal enfield': '/vehicle_logos/Royal-Enfield-Logo.png',
+  'ktm': '/vehicle_logos/ktm-logo.png',
+  'yamaha': '/vehicle_logos/Yamaha_Motor_Company-Logo.wine.svg',
+  'bajaj': '',
+  'tvs': '/vehicle_logos/TVS_Motor_Company-Logo.wine.svg',
+  'triumph': '',
+  'ducati': '',
+  'harley-davidson': '',
+  'hero': '/vehicle_logos/Hero_Motors-Logo.wine.svg',
+  'kawasaki': '/vehicle_logos/India_Kawasaki_Motors-Logo.wine.svg',
+};
 
 @Component({
   selector: 'app-brands-page',
@@ -54,57 +65,78 @@ const BRANDS: Brand[] = [
     RouterLink,
     FooterComponent,
     LucideArrowRight,
-    LucideBike,
-    LucideCarFront,
-    LucideChevronDown,
-    LucideChevronRight,
     LucideSearch,
-    LucideSparkles,
     LucideX
   ],
   templateUrl: './brands-page.component.html',
   styleUrl: './brands-page.component.scss'
 })
-export class BrandsPageComponent {
-  readonly type = signal<VehicleType>('Cars');
+export class BrandsPageComponent implements OnInit {
+  private readonly catalog = inject(CatalogService);
+
+  readonly type = signal<VehicleType>('All');
   readonly query = signal('');
-  readonly selectedBrand = signal<Brand | null>(null);
-  readonly showAll = signal(false);
   readonly failedLogos = signal<Set<string>>(new Set());
 
-  readonly filtered = computed(() =>
-    BRANDS.filter(
-      (brand) =>
-        brand.type === this.type() &&
-        brand.name.toLowerCase().includes(this.query().toLowerCase())
-    )
-  );
+  readonly brandCounts = computed(() => {
+    const vehicles = this.catalog.vehicles();
+    const map = new Map<string, { cars: number; bikes: number }>();
 
-  readonly marqueeRows = computed(() => {
-    const f = this.filtered();
-    return [f.slice(0, 8), f.slice(3, 11), f.slice(6, 14)];
+    for (const v of vehicles) {
+      const key = v.brand.toLowerCase();
+      if (!map.has(key)) map.set(key, { cars: 0, bikes: 0 });
+      const entry = map.get(key)!;
+      if (v.vehicleType === 'car') entry.cars++;
+      else entry.bikes++;
+    }
+
+    return map;
   });
 
-  readonly repeatedMarqueeRows = computed(() =>
-    this.marqueeRows().map((row) => [...row, ...row, ...row])
-  );
+  readonly filtered = computed(() => {
+    const counts = this.brandCounts();
+    const q = this.query().toLowerCase();
+    const result: BrandData[] = [];
 
-  readonly directoryBrands = computed(() =>
-    this.showAll() ? this.filtered() : this.filtered().slice(0, 8)
-  );
+    counts.forEach((val, key) => {
+      const total = val.cars + val.bikes;
+      if (total < 1) return;
+      if (q && !key.includes(q)) return;
 
-  readonly totalVehicles = computed(() =>
-    this.filtered().reduce((sum, item) => sum + item.count, 0)
-  );
+      const isCar = val.cars > 0;
+      const isBike = val.bikes > 0;
 
-  isRings(mark: string): boolean {
-    return mark === '\u25C9\u25C9\u25C9\u25C9';
-  }
+      const displayName = key.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const logo = LOGO_MAP[key] ?? '';
 
-  setType(type: VehicleType): void {
-    this.type.set(type);
-    this.query.set('');
-    this.showAll.set(false);
+      if (isCar && (this.type() === 'All' || this.type() === 'Cars')) {
+        result.push({
+          name: displayName,
+          key,
+          type: 'Cars',
+          count: val.cars,
+          logo,
+        });
+      }
+
+      if (isBike && (this.type() === 'All' || this.type() === 'Bikes')) {
+        result.push({
+          name: displayName,
+          key,
+          type: 'Bikes',
+          count: val.bikes,
+          logo,
+        });
+      }
+    });
+
+    return result.sort((a, b) => b.count - a.count);
+  });
+
+  readonly popularBrands = computed(() => this.filtered().slice(0, 12));
+
+  ngOnInit(): void {
+    this.catalog.load();
   }
 
   onQueryChange(value: string): void {
@@ -115,22 +147,9 @@ export class BrandsPageComponent {
     this.query.set('');
   }
 
-  toggleShowAll(): void {
-    this.showAll.update((v) => !v);
-  }
-
-  selectBrand(brand: Brand): void {
-    this.selectedBrand.set(brand);
-  }
-
-  closeModal(): void {
-    this.selectedBrand.set(null);
-  }
-
-  onBackdropClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('brand-modal-backdrop')) {
-      this.closeModal();
-    }
+  setType(type: VehicleType): void {
+    this.type.set(type);
+    this.query.set('');
   }
 
   onLogoError(name: string): void {
@@ -139,5 +158,13 @@ export class BrandsPageComponent {
       next.add(name);
       return next;
     });
+  }
+
+  getBrandRoute(brand: BrandData): string {
+    return brand.type === 'Bikes' ? '/bikes' : '/cars';
+  }
+
+  getBrandQueryParams(brand: BrandData): Record<string, string> {
+    return { brand: brand.key };
   }
 }

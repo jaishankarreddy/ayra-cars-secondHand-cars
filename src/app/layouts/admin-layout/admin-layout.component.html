@@ -3,11 +3,9 @@
   <aside class="admin-sidebar fixed inset-y-0 left-0 z-40 flex flex-col bg-ink text-white">
     <div class="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4">
       <a routerLink="/admin/dashboard" class="flex min-w-0 items-center gap-3" aria-label="Ayra Cars admin home">
-        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-primary">
-          <svg lucideCar class="h-5.5 w-5.5"></svg>
-        </span>
+        <img src="/logo.png" alt="Ayra Cars" class="h-10 w-auto shrink-0 rounded-lg bg-white p-1.5">
         <span class="brand-text truncate font-heading text-lg font-bold leading-tight">
-          Ayra Cars <span class="text-primary">Admin</span>
+          <span class="text-primary">Admin</span>
         </span>
       </a>
       <button
@@ -39,6 +37,7 @@
               @case ('bike') { <svg lucideBike class="h-5 w-5"></svg> }
               @case ('offers') { <svg lucideHandCoins class="h-5 w-5"></svg> }
               @case ('mail') { <svg lucideMail class="h-5 w-5"></svg> }
+              @case ('calendar') { <svg lucideCalendarDays class="h-5 w-5"></svg> }
               @case ('settings') { <svg lucideSettings class="h-5 w-5"></svg> }
             }
           </span>
@@ -112,6 +111,7 @@
               @case ('bike') { <svg lucideBike class="h-5 w-5"></svg> }
               @case ('offers') { <svg lucideHandCoins class="h-5 w-5"></svg> }
               @case ('mail') { <svg lucideMail class="h-5 w-5"></svg> }
+              @case ('calendar') { <svg lucideCalendarDays class="h-5 w-5"></svg> }
               @case ('settings') { <svg lucideSettings class="h-5 w-5"></svg> }
             }
           </span>

@@ -1,17 +1,17 @@
-<section class="content-section" id="featured-vehicles" appReveal>
-  <div class="section-heading">
+<section class="my-20 mx-auto max-w-[1240px] px-0 max-[700px]:my-[60px] max-[700px]:px-5" id="featured-vehicles" appReveal>
+  <div class="flex items-end justify-between mb-8 max-[700px]:flex-col max-[700px]:items-start max-[700px]:gap-3">
     <div>
-      <span class="section-kicker">FEATURED VEHICLES</span>
-      <h2>{{ heading().title }}</h2>
-      <p class="featured-subtitle">{{ heading().subtitle }}</p>
+      <span class="text-[#eb7138] text-xs font-semibold tracking-[0.1em]">FEATURED VEHICLES</span>
+      <h2 class="font-['Poppins',sans-serif] text-[30px] font-semibold tracking-[-0.03em] leading-none mt-2.5 mb-0">{{ heading().title }}</h2>
+      <p class="text-[#5e6b6a] text-base leading-[1.6] mt-4 max-w-[620px]">{{ heading().subtitle }}</p>
     </div>
-    <a routerLink="{{ heading().link }}" class="text-link">View all {{ heading().linkLabel }} <svg lucideArrowRight size="16"></svg></a>
+    <a routerLink="{{ heading().link }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#152329] transition-[gap] duration-200 hover:gap-2.5">View all {{ heading().linkLabel }} <svg lucideArrowRight size="16"></svg></a>
   </div>
 
-  <div class="filter-bar">
-    <div class="filter-tabs">
+  <div class="flex items-center justify-between mb-7">
+    <div class="bg-[#ecebe5] rounded-[30px] inline-flex gap-1 p-[5px]">
       @for (type of ['All', 'Cars', 'Bikes']; track type) {
-        <button [class.filter-active]="activeType() === type" (click)="setType(type)">
+        <button [class.bg-white]="activeType() === type" [class.shadow-[0_2px_8px_rgba(26,55,48,0.08)]]="activeType() === type" [class.text-[#152329]]="activeType() === type" [class.!text-[#152329]]="activeType() === type" (click)="setType(type)" class="flex items-center rounded-[24px] text-[#6c7774] text-sm font-semibold gap-[7px] px-[18px] py-[9px] transition-[background,color] duration-200 hover:text-[#152329]">
           @if (type === 'Cars') { <svg lucideCarFront size="15"></svg> }
           @if (type === 'Bikes') { <svg lucideBike size="15"></svg> }
           {{ type }}
@@ -20,21 +20,21 @@
     </div>
   </div>
 
-  <div class="vehicle-grid">
+  <div class="grid gap-[22px] grid-cols-4 max-[900px]:grid-cols-2 max-[700px]:gap-2.5">
     @for (vehicle of visibleVehicles(); track vehicle.id) {
-      <article class="vehicle-card" [routerLink]="['/vehicles', vehicle.id]">
-        <div class="vehicle-image" [style.background-image]="'url(' + vehicle.image + ')'">
-          <span class="vehicle-tag">{{ vehicle.tag }}</span>
-          <button class="heart-button" [class.wishlisted]="wishlisted(vehicle.id)" (click)="$event.stopPropagation(); toggleWishlist(vehicle.id)" [attr.aria-label]="wishlisted(vehicle.id) ? 'Remove from wishlist' : 'Add to wishlist'"><svg lucideHeart size="17" [attr.fill]="wishlisted(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
-          <button class="compare-button" [class.compared]="compared(vehicle.id)" (click)="$event.stopPropagation(); compareService.toggle(vehicle.id)" [attr.aria-label]="compared(vehicle.id) ? 'Remove from compare' : 'Add to compare'"><svg lucideScale size="16" [attr.fill]="compared(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
+      <article class="bg-white border border-[#e5e2da] rounded-2xl cursor-pointer overflow-hidden transition-[transform,box-shadow] duration-[0.25s] hover:shadow-[0_18px_38px_rgba(26,55,48,0.1)] hover:-translate-y-[5px]" [routerLink]="['/vehicles', vehicle.id]">
+        <div class="bg-center bg-cover h-[210px] relative max-[700px]:h-[135px]" [style.background-image]="'url(' + vehicle.image + ')'">
+          <span class="absolute top-3.5 left-3.5 bg-[#d7fa4c] rounded-[6px] text-[#14272c] text-[11px] font-semibold px-2.5 py-[6px] uppercase">{{ vehicle.tag }}</span>
+          <button class="absolute top-3.5 right-3.5 flex items-center justify-center w-9 h-9 rounded-full bg-white/92 transition-[background,color] duration-200 hover:bg-white hover:text-[#ef4444]" [class.text-[#ef4444]]="wishlisted(vehicle.id)" (click)="$event.stopPropagation(); toggleWishlist(vehicle.id)" [attr.aria-label]="wishlisted(vehicle.id) ? 'Remove from wishlist' : 'Add to wishlist'"><svg lucideHeart size="17" [attr.fill]="wishlisted(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
+          <button class="absolute right-3.5 top-[58px] flex items-center justify-center w-9 h-9 rounded-full bg-white/92 transition-[background,color] duration-200 hover:bg-white hover:text-[#eb7138]" [class.text-[#eb7138]]="compared(vehicle.id)" (click)="$event.stopPropagation(); compareService.toggle(vehicle.id)" [attr.aria-label]="compared(vehicle.id) ? 'Remove from compare' : 'Add to compare'"><svg lucideScale size="16" [attr.fill]="compared(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
         </div>
-        <div class="vehicle-details">
-          <div class="vehicle-type">{{ vehicle.type }} <span>•</span> Ayra Cars inspected</div>
-          <h3>{{ vehicle.name }}</h3>
-          <div class="vehicle-meta">{{ vehicle.meta }}</div>
-          <div class="vehicle-bottom">
-            <strong>{{ vehicle.price }}</strong>
-            <a aria-label="View {{ vehicle.name }}"><svg lucideArrowRight size="17"></svg></a>
+        <div class="px-5 pb-5 pt-[18px] max-[700px]:px-[11px] max-[700px]:pb-[13px] max-[700px]:pt-3">
+          <div class="text-[#eb7138] text-xs font-semibold tracking-[0.06em] uppercase max-[700px]:text-[9px]">{{ vehicle.type }} <span class="text-[#c9c6bc] mx-[5px]">•</span> Ayra Cars inspected</div>
+          <h3 class="font-['Poppins',sans-serif] text-lg font-semibold mt-[7px] mb-2 max-[700px]:text-[14px] max-[700px]:leading-[1.2]">{{ vehicle.name }}</h3>
+          <div class="text-[#8a948f] text-xs max-[700px]:text-[10px]">{{ vehicle.meta }}</div>
+          <div class="flex items-center justify-between border-t border-[#f0efe9] mt-4 pt-4">
+            <strong class="font-['Poppins',sans-serif] text-[22px] font-semibold max-[700px]:text-[16px]">{{ vehicle.price }}</strong>
+            <a aria-label="View {{ vehicle.name }}" class="flex items-center justify-center bg-[#f4f3ef] rounded-full text-[#152329] w-10 h-10 transition-[background,color] duration-200 hover:bg-[#152a30] hover:text-white max-[700px]:w-[30px] max-[700px]:h-[30px]"><svg lucideArrowRight size="17"></svg></a>
           </div>
         </div>
       </article>

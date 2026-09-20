@@ -2,29 +2,31 @@ import { Component, DestroyRef, WritableSignal, computed, effect, inject, signal
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  LucideArrowDownUp,
   LucideArrowRight,
   LucideBike,
+  LucideBookmark,
+  LucideCalendarDays,
   LucideCarFront,
   LucideCheck,
   LucideChevronDown,
-  LucideFilter,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideChevronUp,
+  LucideFuel,
+  LucideGauge,
   LucideGrid2X2,
   LucideHeart,
   LucideList,
+  LucideLoaderCircle,
   LucideMapPin,
   LucideSearch,
   LucideShieldCheck,
-  LucideSparkles,
-  LucideX,
-  LucideGauge,
-  LucideFuel,
-  LucideCalendarDays,
-  LucideLoaderCircle
+  LucideX
 } from '@lucide/angular';
 import { WishlistService } from '../../../../services/wishlist.service';
 import { CatalogVehicle } from '../../../../services/catalog.service';
 import { InventoryFacets, InventoryService } from '../../services/inventory.service';
+import { FooterComponent } from '../../../home/components/footer/footer.component';
 
 export type VehicleType = 'Car' | 'Bike';
 export type AbsOption = 'all' | 'With ABS' | 'Without ABS';
@@ -52,37 +54,32 @@ export interface ListingVehicle {
   rating: string;
 }
 
-interface ActiveFilterPill {
-  id: string;
-  label: string;
-}
-
-const PAGE_SIZE = 15;
-
 @Component({
   selector: 'app-inventory-page',
   standalone: true,
   imports: [
     RouterLink,
-    LucideArrowDownUp,
+    FooterComponent,
     LucideArrowRight,
     LucideBike,
+    LucideBookmark,
+    LucideCalendarDays,
     LucideCarFront,
     LucideCheck,
     LucideChevronDown,
-    LucideFilter,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideChevronUp,
+    LucideFuel,
+    LucideGauge,
     LucideGrid2X2,
     LucideHeart,
     LucideList,
+    LucideLoaderCircle,
     LucideMapPin,
     LucideSearch,
     LucideShieldCheck,
-    LucideSparkles,
-    LucideX,
-    LucideGauge,
-    LucideFuel,
-    LucideCalendarDays,
-    LucideLoaderCircle
+    LucideX
   ],
   templateUrl: './inventory-page.component.html',
   styleUrl: './inventory-page.component.scss'
@@ -94,46 +91,54 @@ export class InventoryPageComponent {
   private readonly router = inject(Router);
 
   readonly type = signal<VehicleType>(this.route.snapshot.data['type'] === 'bike' ? 'Bike' : 'Car');
-  readonly sort = signal('Newest first');
+  readonly sort = signal('Relevance');
   readonly search = signal('');
+  readonly selectedLocation = signal('');
   readonly filtersOpen = signal(false);
   readonly view = signal<'grid' | 'list'>('grid');
+  readonly pageSize = signal(12);
+  readonly currentPage = signal(1);
+  readonly savedSearchActive = signal(false);
 
-  // ---- filter state -------------------------------------------------------
-  readonly selectedBrands = signal<string[]>([]);
-  readonly selectedModels = signal<string[]>([]);
-  readonly selectedYears = signal<number[]>([]);
+  // ---- Accordion toggle states --------------------------------------------
+  readonly priceExpanded = signal(true);
+  readonly brandExpanded = signal(true);
+  readonly modelExpanded = signal(true);
+  readonly yearExpanded = signal(true);
+  readonly fuelExpanded = signal(true);
+  readonly transmissionExpanded = signal(true);
+  readonly bodyTypeExpanded = signal(true);
+  readonly ownershipExpanded = signal(true);
+  readonly ccExpanded = signal(true);
+  readonly absExpanded = signal(true);
+
+  // ---- Filter state -------------------------------------------------------
+  readonly selectedBrand = signal('');
+  readonly selectedModel = signal('');
+  readonly minYear = signal<number | null>(null);
+  readonly maxYear = signal<number | null>(null);
   readonly selectedFuels = signal<string[]>([]);
   readonly selectedTransmissions = signal<string[]>([]);
   readonly selectedBodyTypes = signal<string[]>([]);
-  readonly selectedLocations = signal<string[]>([]);
-  readonly selectedColors = signal<string[]>([]);
   readonly selectedOwners = signal<number[]>([]);
   readonly absOption = signal<AbsOption>('all');
   readonly priceMin = signal(0);
-  readonly priceMax = signal(2500000);
-  readonly priceBucket = signal('');
-  readonly kmBucket = signal('');
+  readonly priceMax = signal(5000000);
   readonly ccMin = signal(100);
   readonly ccMax = signal(650);
-  readonly mileageMax = signal(60);
 
   /** Debounced copy of `search` so typing does not hammer the API. */
   readonly debouncedSearch = signal('');
 
-  // ---- server state -------------------------------------------------------
+  // ---- Server state -------------------------------------------------------
   private readonly carFacets = signal<InventoryFacets | null>(null);
   private readonly bikeFacets = signal<InventoryFacets | null>(null);
   readonly results = signal<ListingVehicle[]>([]);
   readonly total = signal(0);
-  readonly page = signal(0);
-  readonly hasMore = signal(false);
+  readonly totalPages = signal(1);
   readonly loadingResults = signal(false);
-  readonly loadingMore = signal(false);
   readonly loadError = signal<string | null>(null);
 
-  private pendingBudget: string | null = null;
-  readonly appliedBudget = signal<string | null>(null);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestSeq = 0;
 
@@ -146,110 +151,89 @@ export class InventoryPageComponent {
 
     effect(() => {
       void this.queryKey();
-      const facets = this.facets();
-      if (!facets || facets.type !== (this.type() === 'Bike' ? 'bike' : 'car')) return;
-      void this.fetchResults(true);
+      void this.fetchResults();
     });
   }
 
-  // ---- facets helpers -----------------------------------------------------
+  // ---- Facets helpers -----------------------------------------------------
   readonly facets = computed(() =>
     this.type() === 'Bike' ? this.bikeFacets() : this.carFacets()
   );
   readonly carCount = computed(() => this.carFacets()?.count ?? 0);
   readonly bikeCount = computed(() => this.bikeFacets()?.count ?? 0);
 
-  readonly maxPriceOfType = computed(() => this.facets()?.priceMax ?? 0);
+  readonly maxPriceOfType = computed(() => this.facets()?.priceMax ?? 5000000);
   readonly maxCcOfType = computed(() => this.facets()?.engineCcMax ?? 650);
-  readonly maxMileageOfType = computed(() => this.facets()?.mileageMax ?? 60);
 
   readonly brands = computed(() => [...(this.facets()?.brands ?? [])].sort());
-  readonly models = computed(() => [...(this.facets()?.models ?? [])].sort());
-  readonly years = computed(() => [...(this.facets()?.years ?? [])].sort((a, b) => b - a));
-  readonly fuels = computed(() => [...(this.facets()?.fuels ?? [])].sort());
-  readonly transmissions = computed(() => [...(this.facets()?.transmissions ?? [])].sort());
-  readonly bodyTypes = computed(() => [...(this.facets()?.bodyTypes ?? [])].sort());
-  readonly locations = computed(() => [...(this.facets()?.districts ?? [])].sort());
-  readonly colors = computed(() => [...(this.facets()?.colors ?? [])].sort());
-  readonly ownerOptions = computed(() => [...(this.facets()?.owners ?? [])].sort((a, b) => a - b));
-
-  readonly activeFilterPills = computed<ActiveFilterPill[]>(() => {
-    const pills: ActiveFilterPill[] = [];
-    const addValues = (prefix: string, values: readonly (string | number)[]) => {
-      for (const value of values) pills.push({ id: `${prefix}:${value}`, label: String(value) });
-    };
-
-    addValues('brand', this.selectedBrands());
-    addValues('model', this.selectedModels());
-    addValues('year', this.selectedYears());
-    addValues('fuel', this.selectedFuels());
-    addValues('transmission', this.selectedTransmissions());
-    addValues('bodyType', this.selectedBodyTypes());
-    addValues('district', this.selectedLocations());
-    addValues('color', this.selectedColors());
-    addValues('owners', this.selectedOwners().map((owner) => `${owner} owner${owner > 1 ? 's' : ''}`));
-
-    if (this.absOption() !== 'all') pills.push({ id: 'abs', label: this.absOption() });
-    if (this.appliedBudget()) {
-      pills.push({ id: 'budget', label: this.budgetPillLabel(this.appliedBudget()!) });
-    } else {
-      if (this.priceMin() > 0) pills.push({ id: 'price-min', label: `From ₹${this.priceMin().toLocaleString('en-IN')}` });
-      if (this.priceMax() < this.maxPriceOfType()) pills.push({ id: 'price-max', label: `Up to ₹${this.priceMax().toLocaleString('en-IN')}` });
-    }
-    if (this.priceBucket()) {
-      const bucket = this.priceBuckets().find((option) => option.value === this.priceBucket());
-      pills.push({ id: 'price-bucket', label: bucket?.label ?? 'Price' });
-    }
-    if (this.kmBucket()) {
-      const bucket = this.kmBuckets().find((option) => option.value === this.kmBucket());
-      pills.push({ id: 'km-bucket', label: bucket?.label ?? 'Kilometres' });
-    }
-    if (this.type() === 'Bike' && this.ccMin() > 100) pills.push({ id: 'cc-min', label: `Min ${this.ccMin()} CC` });
-    if (this.type() === 'Bike' && this.ccMax() < this.maxCcOfType()) pills.push({ id: 'cc-max', label: `Max ${this.ccMax()} CC` });
-    if (this.mileageMax() < this.maxMileageOfType()) pills.push({ id: 'mileage', label: `Up to ${this.mileageMax()} km/l` });
-    if (this.debouncedSearch().trim()) pills.push({ id: 'search', label: `Search: ${this.debouncedSearch().trim()}` });
-
-    return pills;
+  readonly models = computed(() => {
+    const all = [...(this.facets()?.models ?? [])].sort();
+    return all;
   });
 
-  readonly priceBuckets = computed(() =>
-    (this.facets()?.priceBuckets ?? []).map((b) =>
-      b.threshold === null
-        ? { value: 'above', label: 'Above ₹3,00,000', count: b.count }
-        : { value: String(b.threshold), label: `Under ₹${b.threshold.toLocaleString('en-IN')}`, count: b.count }
-    )
-  );
+  readonly availableYears = computed(() => {
+    const fYears = this.facets()?.years ?? [];
+    if (fYears.length > 0) {
+      return [...fYears].sort((a, b) => b - a);
+    }
+    const currentYear = new Date().getFullYear();
+    const list: number[] = [];
+    for (let y = currentYear; y >= currentYear - 15; y--) list.push(y);
+    return list;
+  });
 
-  readonly kmBuckets = computed(() =>
-    (this.facets()?.kmBuckets ?? []).map((b) => ({
-      value: String(b.threshold),
-      label: `Less than ${b.threshold.toLocaleString('en-IN')} km`,
-      count: b.count
-    }))
-  );
+  readonly fuels = computed(() => {
+    const available = this.facets()?.fuels ?? [];
+    const defaults = ['Petrol', 'Diesel', 'CNG', 'Electric', 'Hybrid'];
+    const set = new Set([...defaults, ...available]);
+    return [...set];
+  });
 
-  // ---- query construction -------------------------------------------------
+  readonly transmissions = computed(() => {
+    return ['Automatic', 'Manual'];
+  });
+
+  readonly bodyTypes = computed(() => {
+    if (this.type() === 'Bike') {
+      return ['Sports', 'Cruiser', 'Commuter', 'Scooter', 'Adventure'];
+    }
+    return ['Hatchback', 'Sedan', 'SUV', 'MUV', 'Luxury'];
+  });
+
+  readonly locations = computed(() => {
+    const defaultLocs = ['Bengaluru', 'Mysore', 'Mangalore', 'Hubli', 'Belgaum'];
+    const serverLocs = this.facets()?.districts ?? [];
+    const set = new Set([...defaultLocs, ...serverLocs]);
+    return [...set].sort();
+  });
+
+  readonly ownerOptions = computed(() => [
+    { label: 'First Owner', value: 1 },
+    { label: 'Second Owner', value: 2 },
+    { label: 'Third Owner', value: 3 }
+  ]);
+
+  // ---- Query construction -------------------------------------------------
   readonly queryKey = computed(() => {
     const type = this.type();
     return [
       type,
       this.sort(),
       this.debouncedSearch().trim(),
-      this.selectedBrands().join(','),
-      this.selectedModels().join(','),
-      this.selectedYears().join(','),
+      this.selectedLocation(),
+      this.selectedBrand(),
+      this.selectedModel(),
+      this.minYear() ?? '',
+      this.maxYear() ?? '',
       this.selectedFuels().join(','),
       this.selectedTransmissions().join(','),
       this.selectedBodyTypes().join(','),
-      this.selectedLocations().join(','),
-      this.selectedColors().join(','),
       this.selectedOwners().join(','),
       this.absOption(),
       `${this.priceMin()}-${this.priceMax()}`,
-      this.priceBucket(),
-      this.kmBucket(),
-      type === 'Bike' ? `${this.ccMin()}-${this.ccMax()}` : '',
-      String(this.mileageMax())
+      this.pageSize(),
+      this.currentPage(),
+      type === 'Bike' ? `${this.ccMin()}-${this.ccMax()}` : ''
     ].join('|');
   });
 
@@ -257,89 +241,85 @@ export class InventoryPageComponent {
     const p = new URLSearchParams();
     p.set('type', this.type() === 'Bike' ? 'bike' : 'car');
     p.set('page', String(page));
-    p.set('limit', String(PAGE_SIZE));
+    p.set('limit', String(this.pageSize()));
 
-    for (const b of this.selectedBrands()) p.append('brand', b);
-    for (const m of this.selectedModels()) p.append('model', m);
-    for (const y of this.selectedYears()) p.append('year', String(y));
+    if (this.selectedBrand()) p.append('brand', this.selectedBrand());
+    if (this.selectedModel()) p.append('model', this.selectedModel());
+    if (this.minYear()) p.set('minYear', String(this.minYear()));
+    if (this.maxYear()) p.set('maxYear', String(this.maxYear()));
+
     for (const f of this.selectedFuels()) p.append('fuel', f);
     for (const t of this.selectedTransmissions()) p.append('transmission', t);
     for (const b of this.selectedBodyTypes()) p.append('bodyType', b);
-    for (const d of this.selectedLocations()) p.append('district', d);
-    for (const c of this.selectedColors()) p.append('color', c);
     for (const o of this.selectedOwners()) p.append('owners', String(o));
+
+    const loc = this.selectedLocation();
+    if (loc && loc !== 'All Locations') {
+      p.append('district', loc);
+    }
 
     const abs = this.absOption();
     if (abs === 'With ABS') p.set('abs', 'true');
     else if (abs === 'Without ABS') p.set('abs', 'false');
 
     if (this.priceMin() > 0) p.set('minPrice', String(this.priceMin()));
-    if (this.priceMax() < this.maxPriceOfType()) p.set('maxPrice', String(this.priceMax()));
+    if (this.priceMax() < 5000000) p.set('maxPrice', String(this.priceMax()));
 
     if (this.type() === 'Bike') {
       if (this.ccMin() > 100) p.set('engineCcMin', String(this.ccMin()));
       if (this.ccMax() < this.maxCcOfType()) p.set('engineCcMax', String(this.ccMax()));
-      const bucket = this.priceBucket();
-      if (bucket === 'above') p.set('minPrice', '300000');
-      else if (bucket) p.set('maxPrice', bucket);
-      if (this.kmBucket()) p.set('maxKm', this.kmBucket());
     }
-
-    if (this.mileageMax() < this.maxMileageOfType()) p.set('mileageMax', String(this.mileageMax()));
 
     const kw = this.debouncedSearch().trim();
     if (kw) p.set('q', kw);
+
     const sort = this.sortToApi(this.sort());
     if (sort) p.set('sortBy', sort);
+
     return p;
   }
 
   private sortToApi(sort: string): string {
     switch (sort) {
-      case 'Price: low to high': return 'price_asc';
-      case 'Price: high to low': return 'price_desc';
-      default: return 'newest';
+      case 'Price: Low to High':
+      case 'Price: low to high':
+        return 'price_asc';
+      case 'Price: High to Low':
+      case 'Price: high to low':
+        return 'price_desc';
+      case 'Newest First':
+      case 'Newest first':
+        return 'newest';
+      default:
+        return '';
     }
   }
 
-  // ---- fetching -----------------------------------------------------------
-  private async fetchResults(reset: boolean): Promise<void> {
+  // ---- Fetching -----------------------------------------------------------
+  private async fetchResults(): Promise<void> {
     const seq = ++this.requestSeq;
-    const nextPage = reset ? 1 : this.page() + 1;
-    const params = this.buildParams(nextPage);
+    const page = this.currentPage();
+    const params = this.buildParams(page);
 
-    if (reset) this.loadingResults.set(true);
-    else this.loadingMore.set(true);
+    this.loadingResults.set(true);
     this.loadError.set(null);
 
     try {
       const res = await this.inventory.fetchVehicles(params);
       if (seq !== this.requestSeq) return;
       const mapped = res.items.map((v) => this.toListing(v));
-      if (reset) {
-        this.results.set(mapped);
-        this.page.set(1);
-      } else {
-        this.results.update((cur) => [...cur, ...mapped]);
-        this.page.set(nextPage);
-      }
+      this.results.set(mapped);
       this.total.set(res.total);
-      this.hasMore.set(res.page < res.totalPages);
+      this.totalPages.set(res.totalPages || 1);
     } catch (err) {
       if (seq !== this.requestSeq) return;
       this.loadError.set(err instanceof Error ? err.message : 'Failed to load vehicles');
-      if (reset) this.results.set([]);
+      this.results.set([]);
     } finally {
       if (seq === this.requestSeq) {
         this.loadingResults.set(false);
-        this.loadingMore.set(false);
       }
     }
-  }
-
-  loadMore(): void {
-    if (this.loadingMore() || !this.hasMore()) return;
-    void this.fetchResults(false);
   }
 
   private toListing(v: CatalogVehicle): ListingVehicle {
@@ -348,26 +328,28 @@ export class InventoryPageComponent {
       type: v.vehicleType === 'bike' ? 'Bike' : 'Car',
       brand: v.brand,
       model: v.model,
-      trim: v.variant,
+      trim: v.variant || `${v.brand} ${v.model}`,
       price: Number.isFinite(Number(v.price)) ? Number(v.price) : 0,
-      location: v.district || v.location || 'Karnataka',
+      location: v.district || v.location || 'Bengaluru',
       year: v.year,
       km: `${(v.kilometers ?? 0).toLocaleString('en-IN')} km`,
-      fuel: v.fuel,
-      transmission: v.transmission,
-      bodyType: v.bodyType,
-      color: v.color,
-      owners: v.owners,
-      mileage: v.mileage,
+      fuel: v.fuel || 'Petrol',
+      transmission: v.transmission || 'Manual',
+      bodyType: v.bodyType || 'SUV',
+      color: v.color || '',
+      owners: v.owners || 1,
+      mileage: v.mileage || 18,
       engineCc: v.engineCC,
       abs: v.abs,
-      image: v.image,
+      image: v.image || '/home_landing.png',
       featured: v.featured,
       rating: v.rating ? v.rating.toFixed(1) : '4.5'
     };
   }
 
-  // ---- route / defaults ---------------------------------------------------
+  private routeSynced = false;
+
+  // ---- Route sync ---------------------------------------------------------
   private syncFromRoute(): void {
     const snapshot = this.route.snapshot;
     const dataType = snapshot.data['type'];
@@ -377,116 +359,146 @@ export class InventoryPageComponent {
       qType === 'bike' ? 'Bike' : qType === 'car' ? 'Car' : dataType === 'bike' ? 'Bike' : 'Car';
     this.type.set(type);
 
-    this.selectedModels.set([]);
-    this.selectedYears.set([]);
-    this.selectedFuels.set([]);
-    this.selectedTransmissions.set([]);
-    this.selectedBodyTypes.set([]);
-    this.selectedLocations.set([]);
-    this.selectedColors.set([]);
-    this.selectedOwners.set([]);
-    this.absOption.set('all');
-    this.search.set('');
-    this.debouncedSearch.set('');
-
     const brand = qp.get('brand');
-    this.selectedBrands.set(brand ? [brand] : []);
-    this.pendingBudget = qp.get('budget');
-    this.appliedBudget.set(this.pendingBudget);
+    this.selectedBrand.set(brand ? brand.toLowerCase() : '');
+    this.selectedModel.set(qp.get('model') || '');
+
+    const q = qp.get('q');
+    if (q) {
+      this.search.set(q);
+      this.debouncedSearch.set(q);
+    }
+
+    this.currentPage.set(1);
     this.applyTypeDefaults();
-    // Facets may not be loaded on first visit; loadFacets() applies the budget
-    // once they arrive. If they are already cached, apply it right away.
-    if (this.facets()) this.applyBudget();
+
+    const bodyType = qp.get('bodyType');
+    if (bodyType) {
+      this.selectedBodyTypes.set([bodyType]);
+    }
+
+    const priceMin = qp.get('priceMin');
+    const priceMax = qp.get('priceMax');
+    if (priceMin) this.priceMin.set(+priceMin);
+    if (priceMax) this.priceMax.set(+priceMax);
+
+    this.routeSynced = true;
   }
 
   private loadFacets(type: 'car' | 'bike'): void {
     this.inventory.fetchFacets(type).then((f) => {
       if (type === 'bike') this.bikeFacets.set(f);
       else this.carFacets.set(f);
-      if ((type === 'bike' && this.type() === 'Bike') || (type === 'car' && this.type() === 'Car')) {
+      if (!this.routeSynced && ((type === 'bike' && this.type() === 'Bike') || (type === 'car' && this.type() === 'Car'))) {
         this.applyTypeDefaults();
-        this.applyBudget();
       }
     });
   }
 
-  private applyBudget(): void {
-    if (!this.pendingBudget) return;
-    const range = this.budgetToRange(this.pendingBudget);
-    this.priceMin.set(range.min);
-    this.priceMax.set(range.max);
-    this.priceBucket.set('');
-    this.pendingBudget = null;
-  }
-
-  private budgetPillLabel(range: string): string {
-    const labels: Record<string, string> = {
-      '0-5': 'Under ₹5,00,000',
-      '5-10': '₹5,00,000 - ₹10,00,000',
-      '10-15': '₹10,00,000 - ₹15,00,000',
-      '15-25': '₹15,00,000 - ₹25,00,000',
-      '25+': '₹25,00,000+'
-    };
-    return labels[range] ?? 'Budget';
-  }
-
-  private budgetToRange(range: string): { min: number; max: number } {
-    const catalogueMax = this.maxPriceOfType();
-    switch (range) {
-      case '0-5': return { min: 0, max: 500000 };
-      case '5-10': return { min: 500000, max: 1000000 };
-      case '10-15': return { min: 1000000, max: 1500000 };
-      case '15-25': return { min: 1500000, max: 2500000 };
-      case '25+': return { min: 2500000, max: catalogueMax };
-      default: return { min: 0, max: catalogueMax };
-    }
-  }
-
   private applyTypeDefaults(): void {
-    const facets = this.facets();
     this.priceMin.set(0);
-    this.priceMax.set(facets?.priceMax ?? 2500000);
-    this.priceBucket.set('');
-    this.kmBucket.set('');
+    this.priceMax.set(5000000);
     this.ccMin.set(100);
-    this.ccMax.set(facets?.engineCcMax ?? 650);
-    this.mileageMax.set(facets?.mileageMax ?? 60);
+    this.ccMax.set(this.facets()?.engineCcMax ?? 650);
   }
 
-  // ---- filtering ----------------------------------------------------------
+  // ---- Filtering logic ----------------------------------------------------
   readonly activeFilterCount = computed(() => {
     let count = 0;
-    if (this.selectedBrands().length) count += this.selectedBrands().length;
-    if (this.selectedModels().length) count += this.selectedModels().length;
-    if (this.selectedYears().length) count += this.selectedYears().length;
+    if (this.selectedBrand()) count += 1;
+    if (this.selectedModel()) count += 1;
+    if (this.minYear() || this.maxYear()) count += 1;
     if (this.selectedFuels().length) count += this.selectedFuels().length;
     if (this.selectedTransmissions().length) count += this.selectedTransmissions().length;
     if (this.selectedBodyTypes().length) count += this.selectedBodyTypes().length;
-    if (this.selectedLocations().length) count += this.selectedLocations().length;
-    if (this.selectedColors().length) count += this.selectedColors().length;
     if (this.selectedOwners().length) count += this.selectedOwners().length;
-    if (this.absOption() !== 'all') count += 1;
-    if (this.priceMin() > 0 || this.priceMax() < this.maxPriceOfType()) count += 1;
-    if (this.type() === 'Bike' && this.priceBucket()) count += 1;
-    if (this.type() === 'Bike' && this.kmBucket()) count += 1;
-    if (this.type() === 'Bike' && (this.ccMin() > 100 || this.ccMax() < this.maxCcOfType())) count += 1;
-    if (this.mileageMax() < this.maxMileageOfType()) count += 1;
+    if (this.priceMin() > 0 || this.priceMax() < 5000000) count += 1;
     if (this.debouncedSearch().trim()) count += 1;
     return count;
   });
 
   readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
 
-  // ---- actions ------------------------------------------------------------
+  // ---- Pagination generation ----------------------------------------------
+  readonly pageNumbers = computed<(number | string)[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const pages: (number | string)[] = [1];
+    if (current > 3) {
+      pages.push('...');
+    }
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    if (current < total - 2) {
+      pages.push('...');
+    }
+    pages.push(total);
+    return pages;
+  });
+
+  // ---- Actions ------------------------------------------------------------
   changeType(nextType: VehicleType): void {
     if (nextType === this.type()) return;
-    const queryParams: Record<string, string> = { type: nextType === 'Bike' ? 'bike' : 'car' };
-    const qp = this.route.snapshot.queryParamMap;
-    const brand = qp.get('brand');
-    const budget = qp.get('budget');
-    if (brand) queryParams['brand'] = brand;
-    if (budget) queryParams['budget'] = budget;
-    this.router.navigate([`/${nextType === 'Bike' ? 'bikes' : 'cars'}`], { queryParams });
+    this.type.set(nextType);
+    this.currentPage.set(1);
+    this.selectedBrand.set('');
+    this.selectedModel.set('');
+    this.router.navigate([`/${nextType === 'Bike' ? 'bikes' : 'cars'}`]);
+  }
+
+  onSearchSubmit(): void {
+    this.debouncedSearch.set(this.search().trim());
+    this.currentPage.set(1);
+  }
+
+  setSearchValue(event: Event): void {
+    const val = (event.target as HTMLInputElement).value;
+    this.search.set(val);
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => {
+      this.debouncedSearch.set(val);
+      this.currentPage.set(1);
+    }, 400);
+  }
+
+  setSortValue(event: Event): void {
+    this.sort.set((event.target as HTMLSelectElement).value);
+    this.currentPage.set(1);
+  }
+
+  setLocationValue(event: Event): void {
+    this.selectedLocation.set((event.target as HTMLSelectElement).value);
+    this.currentPage.set(1);
+  }
+
+  setPageSizeValue(event: Event): void {
+    const size = Number((event.target as HTMLSelectElement).value);
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  goToPage(p: number | string): void {
+    if (typeof p !== 'number' || p === this.currentPage() || p < 1 || p > this.totalPages()) return;
+    this.currentPage.set(p);
+    window.scrollTo({ top: 350, behavior: 'smooth' });
+  }
+
+  prevPage(): void {
+    if (this.currentPage() > 1) {
+      this.goToPage(this.currentPage() - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.goToPage(this.currentPage() + 1);
+    }
   }
 
   toggleIn<T>(sig: WritableSignal<T[]>, value: T): void {
@@ -495,112 +507,89 @@ export class InventoryPageComponent {
         ? current.filter((item) => item !== value)
         : [...current, value]
     );
+    this.currentPage.set(1);
   }
 
-  toggleBrand(brand: string): void { this.toggleIn(this.selectedBrands, brand); }
-  toggleModel(model: string): void { this.toggleIn(this.selectedModels, model); }
-  toggleYear(year: number): void { this.toggleIn(this.selectedYears, year); }
   toggleFuel(fuel: string): void { this.toggleIn(this.selectedFuels, fuel); }
-  toggleTransmission(transmission: string): void { this.toggleIn(this.selectedTransmissions, transmission); }
-  toggleBodyType(bodyType: string): void { this.toggleIn(this.selectedBodyTypes, bodyType); }
-  toggleLocation(location: string): void { this.toggleIn(this.selectedLocations, location); }
-  toggleColor(color: string): void { this.toggleIn(this.selectedColors, color); }
+  toggleTransmission(trans: string): void { this.toggleIn(this.selectedTransmissions, trans); }
+  toggleBodyType(body: string): void { this.toggleIn(this.selectedBodyTypes, body); }
   toggleOwner(owner: number): void { this.toggleIn(this.selectedOwners, owner); }
 
   isSelected(sig: WritableSignal<unknown[]>, value: unknown): boolean {
     return (sig() as unknown[]).includes(value);
   }
 
-  setAbsOption(option: string): void {
-    this.absOption.set(option as AbsOption);
+  setBrand(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedBrand.set(val);
+    this.selectedModel.set('');
+    this.currentPage.set(1);
   }
 
-  setPriceBucket(value: string): void {
-    this.priceBucket.set(this.priceBucket() === value ? '' : value);
+  setModel(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedModel.set(val);
+    this.currentPage.set(1);
   }
 
-  setKmBucket(value: string): void {
-    this.kmBucket.set(this.kmBucket() === value ? '' : value);
+  setMinYear(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.minYear.set(val ? Number(val) : null);
+    this.currentPage.set(1);
+  }
+
+  setMaxYear(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.maxYear.set(val ? Number(val) : null);
+    this.currentPage.set(1);
+  }
+
+  setPriceMax(event: Event): void {
+    this.priceMax.set(Number((event.target as HTMLInputElement).value));
+    this.currentPage.set(1);
+  }
+
+  formatPrice(price: number): string {
+    if (price >= 10000000) {
+      return `₹ ${(price / 10000000).toFixed(2)} Cr`;
+    }
+    if (price >= 100000) {
+      return `₹ ${(price / 100000).toFixed(2)} Lakh`;
+    }
+    return `₹ ${price.toLocaleString('en-IN')}`;
+  }
+
+  formatPriceIn(price: number): string {
+    return `₹ ${price.toLocaleString('en-IN')}`;
   }
 
   toggleSave(id: string): void {
     this.wishlistService.toggle(id);
   }
 
-  isSaved = (id: string): boolean => this.wishlistService.has(id);
-
-  setSearchValue(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.search.set(value);
-    clearTimeout(this.searchTimer);
-    this.searchTimer = setTimeout(() => this.debouncedSearch.set(value), 300);
+  isSaved(id: string): boolean {
+    return this.wishlistService.has(id);
   }
 
-  setSortValue(event: Event): void {
-    this.sort.set((event.target as HTMLSelectElement).value);
-  }
-
-  setPriceValue(event: Event): void {
-    this.priceMax.set(Number((event.target as HTMLInputElement).value));
-  }
-
-  setCcMinValue(event: Event): void {
-    this.ccMin.set(Number((event.target as HTMLInputElement).value));
-  }
-
-  setCcMaxValue(event: Event): void {
-    this.ccMax.set(Number((event.target as HTMLInputElement).value));
-  }
-
-  setMileageValue(event: Event): void {
-    this.mileageMax.set(Number((event.target as HTMLInputElement).value));
-  }
-
-  removeActiveFilter(id: string): void {
-    const [prefix, ...valueParts] = id.split(':');
-    const value = valueParts.join(':');
-
-    switch (prefix) {
-      case 'brand': this.selectedBrands.update((items) => items.filter((item) => item !== value)); break;
-      case 'model': this.selectedModels.update((items) => items.filter((item) => item !== value)); break;
-      case 'year': this.selectedYears.update((items) => items.filter((item) => String(item) !== value)); break;
-      case 'fuel': this.selectedFuels.update((items) => items.filter((item) => item !== value)); break;
-      case 'transmission': this.selectedTransmissions.update((items) => items.filter((item) => item !== value)); break;
-      case 'bodyType': this.selectedBodyTypes.update((items) => items.filter((item) => item !== value)); break;
-      case 'district': this.selectedLocations.update((items) => items.filter((item) => item !== value)); break;
-      case 'color': this.selectedColors.update((items) => items.filter((item) => item !== value)); break;
-      case 'owners': this.selectedOwners.update((items) => items.filter((item) => `${item} owner${item > 1 ? 's' : ''}` !== value)); break;
-      case 'abs': this.absOption.set('all'); break;
-      case 'budget': this.appliedBudget.set(null); this.priceMin.set(0); this.priceMax.set(this.maxPriceOfType()); this.priceBucket.set(''); break;
-      case 'price-min': this.priceMin.set(0); break;
-      case 'price-max': this.priceMax.set(this.maxPriceOfType()); break;
-      case 'price-bucket': this.priceBucket.set(''); break;
-      case 'km-bucket': this.kmBucket.set(''); break;
-      case 'cc-min': this.ccMin.set(100); break;
-      case 'cc-max': this.ccMax.set(this.maxCcOfType()); break;
-      case 'mileage': this.mileageMax.set(this.maxMileageOfType()); break;
-      case 'search': this.search.set(''); this.debouncedSearch.set(''); break;
-    }
-  }
-
-  resetFilters(): void {
-    this.selectedBrands.set([]);
-    this.selectedModels.set([]);
-    this.selectedYears.set([]);
-    this.selectedFuels.set([]);
-    this.selectedTransmissions.set([]);
-    this.selectedBodyTypes.set([]);
-    this.selectedLocations.set([]);
-    this.selectedColors.set([]);
-    this.selectedOwners.set([]);
-    this.absOption.set('all');
-    this.appliedBudget.set(null);
-    this.search.set('');
-    this.debouncedSearch.set('');
-    this.applyTypeDefaults();
+  saveSearch(): void {
+    this.savedSearchActive.set(true);
+    setTimeout(() => this.savedSearchActive.set(false), 3000);
   }
 
   clearFilters(): void {
-    this.resetFilters();
+    this.selectedBrand.set('');
+    this.selectedModel.set('');
+    this.minYear.set(null);
+    this.maxYear.set(null);
+    this.selectedFuels.set([]);
+    this.selectedTransmissions.set([]);
+    this.selectedBodyTypes.set([]);
+    this.selectedOwners.set([]);
+    this.absOption.set('all');
+    this.search.set('');
+    this.debouncedSearch.set('');
+    this.priceMin.set(0);
+    this.priceMax.set(5000000);
+    this.currentPage.set(1);
   }
 }

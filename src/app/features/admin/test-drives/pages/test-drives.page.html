@@ -1,0 +1,156 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-heading text-2xl font-semibold text-text sm:text-2xl">Test Drives</h2>
+      <p class="mt-1 text-sm text-muted">Manage test drive bookings from your customers.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="rounded-full bg-surface-2 px-3.5 py-1.5 text-xs font-semibold text-muted">{{ counts().total }} total</span>
+      <span class="status-chip status-pending">{{ counts().pending }} pending</span>
+      <span class="status-chip status-confirmed">{{ counts().confirmed }} confirmed</span>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="inline-flex flex-wrap rounded-xl border border-border bg-surface p-1">
+      @for (opt of filterOptions; track opt.value) {
+        <button
+          type="button"
+          (click)="statusFilter.set(opt.value)"
+          class="rounded-lg px-4 py-2 text-xs font-semibold transition-colors duration-200"
+          [class.bg-primary]="statusFilter() === opt.value"
+          [class.text-white]="statusFilter() === opt.value"
+          [class.text-muted]="statusFilter() !== opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      }
+    </div>
+
+    <div class="relative w-full sm:w-72">
+      <svg lucideSearch class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"></svg>
+      <input
+        type="text"
+        placeholder="Search test drives…"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+        class="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-4 text-sm font-medium text-text outline-none transition-colors duration-300 placeholder:text-muted/70 focus:border-primary"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-2xl border border-border bg-surface shadow-sm">
+    <table class="w-full min-w-[900px] text-left text-sm">
+      <thead>
+        <tr class="border-b border-border bg-surface-2/70 text-[11px] uppercase tracking-[0.12em] text-muted">
+          <th class="px-5 py-4 font-semibold">Customer</th>
+          <th class="px-4 py-4 font-semibold">Vehicle</th>
+          <th class="px-4 py-4 font-semibold">Date</th>
+          <th class="px-4 py-4 font-semibold">Time</th>
+          <th class="px-4 py-4 font-semibold">Status</th>
+          <th class="px-4 py-4 font-semibold">Requested</th>
+          <th class="px-4 py-4 text-right font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        @for (td of filteredTestDrives(); track td.id) {
+          <tr class="transition-colors hover:bg-surface-2/40">
+            <td class="px-5 py-3.5">
+              <div class="flex items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
+                  {{ initials(td.name) }}
+                </span>
+                <div class="min-w-0">
+                  <p class="font-semibold text-text">{{ td.name }}</p>
+                  <p class="flex items-center gap-1 text-xs text-muted">
+                    <svg lucidePhone class="h-3 w-3"></svg>
+                    {{ td.phone }}
+                  </p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3.5">
+              <p class="font-semibold text-text">{{ td.vehicleLabel }}</p>
+              <p class="text-xs text-muted">{{ td.vehicleId }}</p>
+            </td>
+            <td class="px-4 py-3.5 text-muted">{{ td.preferredDate || '—' }}</td>
+            <td class="px-4 py-3.5 text-muted">{{ td.preferredTime || '—' }}</td>
+            <td class="px-4 py-3.5">
+              <span class="status-chip"
+                [class.status-pending]="td.status === 'Pending'"
+                [class.status-confirmed]="td.status === 'Confirmed'"
+                [class.status-completed]="td.status === 'Completed'"
+                [class.status-cancelled]="td.status === 'Cancelled'">
+                {{ td.status }}
+              </span>
+            </td>
+            <td class="px-4 py-3.5 text-muted">{{ td.date }}</td>
+            <td class="px-4 py-3.5">
+              <div class="flex items-center justify-end gap-1.5">
+                @if (td.status === 'Pending') {
+                  <button
+                    type="button"
+                    (click)="setStatus(td.id, 'Confirmed')"
+                    appRipple
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-semibold text-success transition-colors duration-200 hover:bg-success/20"
+                  >
+                    <svg lucideCheck class="h-3.5 w-3.5"></svg>
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setStatus(td.id, 'Cancelled')"
+                    appRipple
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger transition-colors duration-200 hover:bg-danger/20"
+                  >
+                    <svg lucideX class="h-3.5 w-3.5"></svg>
+                    Cancel
+                  </button>
+                } @else if (td.status === 'Confirmed') {
+                  <button
+                    type="button"
+                    (click)="setStatus(td.id, 'Completed')"
+                    appRipple
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-semibold text-success transition-colors duration-200 hover:bg-success/20"
+                  >
+                    <svg lucideCheck class="h-3.5 w-3.5"></svg>
+                    Complete
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setStatus(td.id, 'Cancelled')"
+                    appRipple
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger transition-colors duration-200 hover:bg-danger/20"
+                  >
+                    <svg lucideX class="h-3.5 w-3.5"></svg>
+                    Cancel
+                  </button>
+                } @else {
+                  <button
+                    type="button"
+                    (click)="setStatus(td.id, 'Pending')"
+                    appRipple
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-semibold text-muted transition-colors duration-200 hover:text-text"
+                  >
+                    <svg lucideCalendarDays class="h-3.5 w-3.5"></svg>
+                    Reopen
+                  </button>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="px-5 py-16 text-center">
+              <p class="font-heading text-lg font-semibold text-text">No test drives found</p>
+              <p class="mt-1 text-sm text-muted">Try adjusting your filters or search.</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

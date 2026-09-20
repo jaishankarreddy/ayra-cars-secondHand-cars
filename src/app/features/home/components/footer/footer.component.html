@@ -3,20 +3,15 @@
     <div class="grid grid-cols-2 gap-12 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr]">
       <!-- Brand -->
       <div class="col-span-full max-w-xs md:col-span-1">
-        <a routerLink="/" class="flex items-center gap-3">
-          <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d7fa4c] text-[#14272c]">
-            <svg lucideCar class="h-6 w-6"></svg>
-          </span>
-          <span class="font-heading text-xl font-bold">
-            Ayra<span class="text-[#d7fa4c]"> Cars</span>
-          </span>
+        <a routerLink="/" class="inline-flex items-center text-white font-['Poppins',sans-serif] text-2xl font-semibold tracking-[-1.4px]">
+          <img src="/logo.png" alt="Ayra Cars" class="h-[42px] w-auto object-contain bg-white p-2 rounded-lg">
         </a>
         <p class="mt-5 text-sm leading-relaxed text-white/60">
           Bangalore's premium marketplace for verified second-hand cars and bikes. Transparent, trusted and delivered to your door.
         </p>
         <div class="mt-7 flex items-center gap-3">
           @for (social of socials; track social.label) {
-            <a [href]="social.href" target="_blank" rel="noopener noreferrer" aria-label="{{ social.label }}" class="social-btn">
+            <a [href]="social.href" target="_blank" rel="noopener noreferrer" aria-label="{{ social.label }}" class="inline-flex items-center justify-center h-[2.75rem] w-[2.75rem] rounded-full border border-white/14 bg-white/5 text-white/80 transition-[background-color,color,transform] duration-200 ease-out hover:bg-[#d7fa4c] hover:text-[#14272c] hover:-translate-y-0.5">
               <span [innerHTML]="social.icon"></span>
             </a>
           }

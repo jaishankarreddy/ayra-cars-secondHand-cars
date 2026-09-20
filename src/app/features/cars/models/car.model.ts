@@ -31,6 +31,7 @@ export interface Car {
   bodyType: CarBodyType;
   color: CarColor;
   image: string;
+  images?: string[];
   featured?: boolean;
   rating?: number;
 }

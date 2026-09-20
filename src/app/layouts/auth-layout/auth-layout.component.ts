@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import {
-  LucideCar,
   LucideShieldCheck,
   LucideBadgeCheck,
   LucideHandCoins,
@@ -15,7 +14,6 @@ import {
   imports: [
     RouterLink,
     RouterOutlet,
-    LucideCar,
     LucideShieldCheck,
     LucideBadgeCheck,
     LucideHandCoins,

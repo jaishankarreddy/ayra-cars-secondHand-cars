@@ -1,120 +1,205 @@
-<main>
+<main class="bg-[#F8FAF9] font-['Poppins',sans-serif]">
+
   <!-- ===== Hero ===== -->
-  <section class="relative overflow-hidden bg-ink pb-16 pt-28 text-white sm:pt-36">
-    <div class="pointer-events-none absolute -top-40 left-1/2 h-80 w-[42rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[130px]"></div>
-    <div class="pointer-events-none absolute -bottom-24 right-0 h-72 w-96 rounded-full bg-accent/20 blur-[130px]"></div>
-    <div class="pointer-events-none absolute inset-0 opacity-[0.04]"
-         style="background-image: linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px); background-size: 64px 64px;"></div>
-
-    <div class="container-am relative">
-      <nav class="mb-6 flex items-center gap-2 text-xs font-medium text-white/50">
-        <a routerLink="/" class="transition-colors hover:text-white">Home</a>
-        <span>/</span>
-        <span class="text-white/90">About</span>
-      </nav>
-
-      <div class="max-w-3xl">
-        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
-          <svg lucideHandshake class="h-3.5 w-3.5 text-primary"></svg>
-          Who we are
-        </span>
-        <h1 class="mt-4 font-heading text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-          Making pre-owned <span class="gradient-text">honest again</span>
-        </h1>
-        <p class="mt-5 max-w-2xl text-base text-white/65 sm:text-lg">
-          Ayra Cars is Bangalore's trusted marketplace for certified used cars and bikes. Since day one, we've believed that buying a pre-owned vehicle should feel as safe and simple as buying new.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a routerLink="/cars" appRipple class="inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-white shadow-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg active:scale-[0.98]">
-            <svg lucideCar class="h-4 w-4"></svg>
-            Browse Vehicles
+  <section class="relative w-full min-h-[470px] bg-[url('/brands_banner.png')] bg-center bg-cover flex items-center max-[1024px]:min-h-[400px] max-[768px]:min-h-[360px]">
+    <div class="w-full max-w-[1460px] mx-auto px-[72px] max-[768px]:px-5">
+      <div class="max-w-[450px] w-full">
+        <div class="flex items-center gap-[7px]">
+          <span class="font-['Poppins',sans-serif] text-[11px] font-bold tracking-wider text-[#5C9F1F] uppercase leading-none">ABOUT AYRA CARS</span>
+          <span class="inline-block w-[25px] h-[2px] bg-[#B9F24A]"></span>
+        </div>
+        <h1 class="mt-[18px] font-['Inter',sans-serif] text-[38px] font-bold leading-[1.05] tracking-[-1.2px] text-[#0B1720] max-w-[400px] max-[1024px]:text-[34px] max-[768px]:text-[28px]">Driven by Trust,<br>Built for You</h1>
+        <p class="mt-[18px] max-w-[440px] font-['Poppins',sans-serif] text-[13px] font-normal leading-[1.55] text-[#34454F]">At Ayra Cars, we make buying and selling pre-owned vehicles simpler, safer and more transparent. Our goal is to help people find the right car and create a better car ownership experience across India.</p>
+        <div class="flex gap-[10px] mt-[22px] max-[768px]:flex-col">
+          <a routerLink="/cars" class="inline-flex items-center gap-2 h-[44px] px-[18px] bg-[#062D32] text-white border-0 rounded-lg text-[13px] font-semibold font-['Poppins',sans-serif] no-underline cursor-pointer transition-[background-color] duration-150 hover:bg-[#041e22] max-[768px]:w-full max-[768px]:justify-center">
+            Explore Our Cars
+            <svg lucideArrowRight size="14"></svg>
           </a>
-          <a routerLink="/contact" class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10">
-            Talk to an expert
-          </a>
+          <a routerLink="/contact" class="inline-flex items-center gap-2 h-[44px] px-[18px] bg-white text-[#0B1720] border border-[#DDE5E3] rounded-lg text-[13px] font-semibold font-['Poppins',sans-serif] no-underline cursor-pointer transition-[background-color] duration-150 hover:bg-[#f8faf9] max-[768px]:w-full max-[768px]:justify-center">Contact Us</a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Story ===== -->
-  <section class="py-20 sm:py-28">
-    <div class="container-am grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-      <div class="relative" appReveal>
-        <div class="overflow-hidden rounded-[2rem] shadow-lg">
-          <img
-            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80"
-            alt="A premium car on an open road"
-            loading="lazy"
-            class="aspect-[4/3] w-full object-cover"
-          />
-        </div>
-        <div class="absolute -bottom-6 -right-3 flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 shadow-lg sm:-right-6">
-          <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-soft text-primary">
-            <svg lucideShieldCheck class="h-6 w-6"></svg>
-          </span>
-          <div>
-            <p class="font-heading text-lg font-bold leading-none text-text">200-point</p>
-            <p class="mt-0.5 text-xs font-medium text-muted">certified checks</p>
+        <div class="flex items-center gap-3 mt-7 max-[480px]:flex-col max-[480px]:items-start">
+          <div class="flex">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full font-['Poppins',sans-serif] text-xs font-semibold border-2 border-white -ml-[7px] first:ml-0" style="background:#E9FFB5;color:#527C18;">R</span>
+            <span class="flex items-center justify-center w-8 h-8 rounded-full font-['Poppins',sans-serif] text-xs font-semibold border-2 border-white -ml-[7px]" style="background:#D6E8F5;color:#2456B8;">S</span>
+            <span class="flex items-center justify-center w-8 h-8 rounded-full font-['Poppins',sans-serif] text-xs font-semibold border-2 border-white -ml-[7px]" style="background:#FDE8D6;color:#C15A28;">A</span>
+            <span class="flex items-center justify-center w-8 h-8 rounded-full font-['Poppins',sans-serif] text-xs font-semibold border-2 border-white -ml-[7px]" style="background:#E8E0F5;color:#6B3FA0;">K</span>
           </div>
-        </div>
-      </div>
-
-      <div appReveal>
-        <span class="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-          <span class="h-0.5 w-8 rounded-full bg-primary"></span>
-          Our story
-        </span>
-        <h2 class="mt-5 font-heading text-3xl font-extrabold leading-[1.1] tracking-tight text-text sm:text-4xl">
-          Born in Bengaluru, built on trust
-        </h2>
-        <p class="mt-5 text-base leading-relaxed text-muted">
-          What started as a two-person garage in Bengaluru is now a network of certified vehicles across all 31 districts of Karnataka. We saw how stressful used-vehicle deals were — opaque pricing, surprise repairs and paperwork nightmares — and decided to fix it.
-        </p>
-        <p class="mt-4 text-base leading-relaxed text-muted">
-          Every car and bike on Ayra Cars passes a 200-point inspection, comes with transparent pricing and includes complete transfer support, so you can buy with total peace of mind.
-        </p>
-
-        <ul class="mt-7 space-y-3.5">
-          @for (item of checklist; track item) {
-            <li class="flex items-start gap-3 text-sm font-medium text-text">
-              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft">
-                <svg lucideCheck class="h-3 w-3 text-primary"></svg>
-              </span>
-              {{ item }}
-            </li>
-          }
-        </ul>
-
-        <div class="mt-8 grid grid-cols-3 gap-4 border-t border-border pt-7">
-          <div>
-            <p class="font-heading text-2xl font-bold text-text">2019</p>
-            <p class="mt-1 text-xs font-medium text-muted">Founded in Bengaluru</p>
-          </div>
-          <div>
-            <p class="font-heading text-2xl font-bold text-text">31</p>
-            <p class="mt-1 text-xs font-medium text-muted">Districts served</p>
-          </div>
-          <div>
-            <p class="font-heading text-2xl font-bold text-text">500+</p>
-            <p class="mt-1 text-xs font-medium text-muted">Happy buyers</p>
+          <div class="flex flex-col">
+            <strong class="font-['Poppins',sans-serif] text-[15px] font-bold text-[#0B1720] leading-[1.2]">1000+</strong>
+            <span class="font-['Poppins',sans-serif] text-[11px] font-normal text-[#52616D]">Happy Customers</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Values (reuses Why Choose Us) ===== -->
-  <app-why-choose-us />
+  <!-- ===== Our Story ===== -->
+  <section class="py-[75px] overflow-hidden max-[768px]:px-5">
+    <div class="story-inner grid grid-cols-[45%_50%] gap-[60px] items-center max-w-[1460px] mx-auto px-[72px] max-[1024px]:gap-[35px] max-[768px]:grid-cols-1 max-[768px]:gap-8 max-[768px]:px-0">
+      <div class="story-text max-[768px]:order-1">
+        <div class="flex items-center gap-[7px] mb-[18px]">
+          <span class="inline-block text-[11px] font-bold tracking-wider text-[#5C9F1F] uppercase font-['Poppins',sans-serif]">OUR STORY</span>
+          <span class="inline-block w-[25px] h-[2px] bg-[#B9F24A]"></span>
+        </div>
+        <h2 class="story-heading m-0 mb-[18px] font-['Poppins',sans-serif] text-[34px] font-semibold leading-[1.12] tracking-[-0.6px] text-[#0B1720] max-w-[520px] max-[1024px]:text-[30px] max-[768px]:text-[28px]">From a Simple Idea<br>to a Trusted Platform</h2>
+        <p class="m-0 mb-[14px] max-w-[560px] font-['Poppins',sans-serif] text-[14px] font-normal leading-[1.65] text-[#52616D] max-[768px]:text-[13px]">Ayra Cars started with a simple belief — buying and selling used cars should be easy, transparent and trustworthy.</p>
+        <p class="m-0 mb-[14px] max-w-[560px] font-['Poppins',sans-serif] text-[14px] font-normal leading-[1.65] text-[#52616D] max-[768px]:text-[13px]">What began as a small initiative in Karnataka has now grown into a customer-focused platform, helping individuals and families find reliable pre-owned cars without the usual hassles.</p>
+        <p class="m-0 mb-5 max-w-[560px] font-['Poppins',sans-serif] text-[14px] font-normal leading-[1.65] text-[#52616D] max-[768px]:text-[13px]">We are passionate about automobiles and committed to creating a better, more reliable and enjoyable car buying experience for everyone.</p>
+      </div>
+      <div class="relative max-[768px]:order-0">
+        <img src="/about_banner4.png" alt="Ayra Cars showroom" class="story-image w-full h-[400px] object-cover rounded-xl block shadow-[0_4px_16px_rgba(6,45,50,0.06)] transition-transform duration-200 hover:scale-[1.01] max-[768px]:h-[220px]" />
+        <div class="story-trust-card absolute bottom-5 right-5 flex items-start gap-[10px] w-[200px] bg-white border border-[#E6ECEA] rounded-[10px] p-3 shadow-[0_5px_18px_rgba(6,45,50,0.08)]">
+          <span class="flex items-center justify-center w-[34px] h-[34px] rounded-lg bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideShieldCheck size="15"></svg></span>
+          <div class="min-w-0">
+            <strong class="block font-['Poppins',sans-serif] text-[11px] font-bold leading-[1.3] text-[#0B1720]">Your Trusted<br>Car Partner</strong>
+            <span class="block mt-[2px] font-['Poppins',sans-serif] text-[9px] font-normal leading-[1.3] text-[#71808A]">Quality cars. Genuine people.<br>A better tomorrow.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- ===== Statistics ===== -->
-  <app-statistics />
+  <!-- ===== Stats ===== -->
+  <section class="pb-20 max-[768px]:px-5">
+    <div class="stats-inner flex items-center justify-center gap-0 max-w-[1460px] mx-auto px-[72px] bg-[#F1F7F4] rounded-[14px] h-[120px] max-[768px]:flex-wrap max-[768px]:h-auto max-[768px]:py-6 max-[768px]:px-4 max-[768px]:gap-4 max-[768px]:px-0">
+      <div class="stat-item flex flex-col items-center justify-center flex-1 text-center">
+        <span class="stat-number text-[26px] font-bold text-[#0B1720]">1,000+</span>
+        <span class="stat-label mt-1 text-[11px] font-normal text-[#66757D]">Happy Customers</span>
+      </div>
+      <div class="stat-divider w-px h-10 bg-[#D6E0DC] max-[768px]:hidden"></div>
+      <div class="stat-item flex flex-col items-center justify-center flex-1 text-center">
+        <span class="stat-number text-[26px] font-bold text-[#0B1720]">100+</span>
+        <span class="stat-label mt-1 text-[11px] font-normal text-[#66757D]">Cars Sold</span>
+      </div>
+      <div class="stat-divider w-px h-10 bg-[#D6E0DC] max-[768px]:hidden"></div>
+      <div class="stat-item flex flex-col items-center justify-center flex-1 text-center">
+        <span class="stat-number text-[26px] font-bold text-[#0B1720]">20+</span>
+        <span class="stat-label mt-1 text-[11px] font-normal text-[#66757D]">Trusted Brands</span>
+      </div>
+      <div class="stat-divider w-px h-10 bg-[#D6E0DC] max-[768px]:hidden"></div>
+      <div class="stat-item flex flex-col items-center justify-center flex-1 text-center">
+        <span class="stat-number text-[26px] font-bold text-[#0B1720]">4.8/5</span>
+        <span class="stat-label mt-1 text-[11px] font-normal text-[#66757D]">Customer Rating</span>
+      </div>
+    </div>
+  </section>
 
-  <!-- ===== Testimonials ===== -->
-  <app-testimonials />
+  <!-- ===== Values ===== -->
+  <section class="pb-20 max-[768px]:px-5">
+    <div class="values-inner max-w-[1460px] mx-auto px-[72px] text-center max-[768px]:px-0">
+      <span class="block text-center text-[11px] font-bold tracking-wider text-[#5C9F1F] uppercase">OUR VALUES</span>
+      <h2 class="values-heading mt-3 text-[30px] font-bold text-[#0B1720]">What Drives Us</h2>
+      <p class="values-desc mt-3 mx-auto max-w-[480px] text-[13px] text-[#52616D]">Our core values shape everything we do, from the cars we list to the people we serve.</p>
+      <div class="values-grid grid grid-cols-4 gap-4 mt-10 max-[1024px]:grid-cols-2 max-[768px]:grid-cols-1">
+        <div class="value-card bg-white border border-[#E6ECEA] rounded-[10px] p-5 text-left shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5">
+          <span class="value-icon flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-[#E9FFB5] text-[#527C18]"><svg lucideShieldCheck size="20"></svg></span>
+          <h4 class="mt-3.5 text-sm font-bold text-[#0B1720]">Trust &amp; Transparency</h4>
+          <p class="mt-1.5 text-[11px] leading-[1.5] text-[#66757D]">Clear information, honest dealings and no hidden surprises.</p>
+        </div>
+        <div class="value-card bg-white border border-[#E6ECEA] rounded-[10px] p-5 text-left shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5">
+          <span class="value-icon flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-[#E9FFB5] text-[#527C18]"><svg lucideUsers size="20"></svg></span>
+          <h4 class="mt-3.5 text-sm font-bold text-[#0B1720]">Customer First</h4>
+          <p class="mt-1.5 text-[11px] leading-[1.5] text-[#66757D]">Your needs and satisfaction always come before everything else.</p>
+        </div>
+        <div class="value-card bg-white border border-[#E6ECEA] rounded-[10px] p-5 text-left shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5">
+          <span class="value-icon flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-[#E9FFB5] text-[#527C18]"><svg lucideStar size="20"></svg></span>
+          <h4 class="mt-3.5 text-sm font-bold text-[#0B1720]">Quality Assurance</h4>
+          <p class="mt-1.5 text-[11px] leading-[1.5] text-[#66757D]">Verified vehicles, detailed inspections and genuine quality.</p>
+        </div>
+        <div class="value-card bg-white border border-[#E6ECEA] rounded-[10px] p-5 text-left shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5">
+          <span class="value-icon flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-[#E9FFB5] text-[#527C18]"><svg lucideLeaf size="20"></svg></span>
+          <h4 class="mt-3.5 text-sm font-bold text-[#0B1720]">A Better Tomorrow</h4>
+          <p class="mt-1.5 text-[11px] leading-[1.5] text-[#66757D]">We aim to make mobility easier, safer and more accessible for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- ===== CTA ===== -->
-  <app-cta />
+  <!-- ===== Mission ===== -->
+  <section class="pb-20 max-[768px]:px-5">
+    <div class="mission-inner grid grid-cols-[55%_45%] gap-12 items-center max-w-[1460px] mx-auto px-[72px] max-[1024px]:grid-cols-1 max-[1024px]:gap-8 max-[768px]:px-0">
+      <div class="relative max-[1024px]:order-0">
+        <img src="/about_banner6.png" alt="Vehicle on scenic road" class="w-full h-[330px] object-cover rounded-[14px] block max-[768px]:h-[220px]" />
+        <div class="mission-float-card absolute bottom-5 left-5 bg-white rounded-[10px] p-3.5 px-5 shadow-[0_3px_15px_rgba(6,45,50,0.08)]">
+          <strong class="block text-sm font-bold text-[#0B1720] leading-[1.2]">More Miles</strong>
+          <span class="block mt-[2px] text-[11px] text-[#71808A]">Happier Stories</span>
+        </div>
+      </div>
+      <div class="mission-text max-[1024px]:order-1">
+        <span class="inline-block text-[11px] font-bold tracking-wider text-[#5C9F1F] uppercase">OUR MISSION</span>
+        <h2 class="mission-heading mt-4 font-['Poppins',sans-serif] text-[34px] font-semibold leading-[1.12] tracking-[-0.6px] text-[#0B1720] max-[1024px]:text-[28px]">Making Car Ownership<br>Simple &amp; Hassle-Free</h2>
+        <p class="mission-desc mt-4 text-[13px] leading-[1.65] text-[#52616D]">We aim to bridge the gap between buyers and sellers by offering a reliable, easy-to-use platform with genuine listings, fair pricing and complete support throughout the journey.</p>
+        <div class="mission-benefits mt-6 flex flex-col gap-3">
+          <div class="flex items-center gap-[10px] text-xs font-medium text-[#0B1720]">
+            <span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideCheck size="14"></svg></span>
+            <span>Wide range of quality pre-owned vehicles</span>
+          </div>
+          <div class="flex items-center gap-[10px] text-xs font-medium text-[#0B1720]">
+            <span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideCheck size="14"></svg></span>
+            <span>Verified listings with detailed information</span>
+          </div>
+          <div class="flex items-center gap-[10px] text-xs font-medium text-[#0B1720]">
+            <span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideCheck size="14"></svg></span>
+            <span>Support at every step of your car buying journey</span>
+          </div>
+          <div class="flex items-center gap-[10px] text-xs font-medium text-[#0B1720]">
+            <span class="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideCheck size="14"></svg></span>
+            <span>Focused on customer satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA Banner ===== -->
+  <section class="pb-20 max-[768px]:px-5">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[768px]:px-0">
+      <div class="cta-content relative rounded-[14px] py-[50px] px-12 overflow-hidden min-h-[190px] bg-[url('/about_banner5.png')] bg-center bg-cover max-[768px]:py-8 max-[768px]:px-6">
+        <div class="cta-overlay absolute inset-0 rounded-[14px] pointer-events-none"></div>
+        <span class="relative z-[1] text-[11px] font-bold tracking-wider text-[#B9F24A] uppercase">JOIN OUR JOURNEY</span>
+        <h2 class="relative z-[1] mt-3 text-[32px] font-semibold text-white max-[768px]:text-[22px]">Let's Drive a Better Tomorrow</h2>
+        <p class="relative z-[1] mt-3 max-w-[480px] text-xs leading-[1.6] text-[#D8E4E1]">Whether you're looking to buy, sell or just explore, Ayra Cars is here to make your car journey smooth, safe and exciting.</p>
+        <div class="cta-buttons relative z-[1] flex gap-[10px] mt-6 max-[768px]:flex-col">
+          <a routerLink="/cars" class="inline-flex items-center gap-2 h-[38px] px-4 bg-white text-[#062D32] border-0 rounded-[7px] text-xs font-semibold font-['Poppins',sans-serif] no-underline cursor-pointer transition-[background-color] duration-150 hover:bg-[#f0f4f3] max-[768px]:w-full max-[768px]:justify-center">
+            Browse Cars
+            <svg lucideArrowRight size="14"></svg>
+          </a>
+          <a routerLink="/contact" class="inline-flex items-center gap-2 h-[38px] px-4 bg-transparent text-white border border-white/30 rounded-[7px] text-xs font-semibold font-['Poppins',sans-serif] no-underline cursor-pointer transition-[background-color] duration-150 hover:bg-white/[0.08] max-[768px]:w-full max-[768px]:justify-center">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="pb-20 max-[768px]:px-5">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[768px]:px-0">
+      <div class="faq-header flex items-end justify-between max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-3">
+        <div>
+          <span class="inline-block text-[11px] font-bold tracking-wider text-[#5C9F1F] uppercase">FREQUENTLY ASKED</span>
+          <h2 class="faq-heading mt-3 text-[28px] font-bold text-[#0B1720]">Quick Answers</h2>
+          <p class="faq-desc mt-2 text-xs text-[#71808A]">Here are some common questions about Ayra Cars.</p>
+        </div>
+        <a routerLink="/contact" class="faq-view-all inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B1720] no-underline transition-[color] duration-150 hover:text-[#5C9F1F]">
+          View All FAQs
+          <svg lucideArrowRight size="13"></svg>
+        </a>
+      </div>
+      <div class="faq-list mt-7 flex flex-col gap-2">
+        @for (faq of faqs; track faq.question; let i = $index) {
+          <div class="faq-item bg-white border border-[#E5EBE9] rounded-lg overflow-hidden transition-[border-color] duration-150" [class.faq-open]="faq.open">
+            <button class="faq-question flex items-center justify-between w-full p-4 bg-transparent border-0 cursor-pointer text-xs font-medium text-[#0B1720] font-['Poppins',sans-serif] text-left" (click)="toggleFaq(i)">
+              <span>{{ faq.question }}</span>
+              <svg lucideChevronDown size="16" class="faq-chevron text-[#71808A] shrink-0 transition-transform duration-200"></svg>
+            </button>
+            <div class="faq-answer max-h-0 overflow-hidden transition-[max-height,padding] duration-[250ms] ease-linear">
+              <p class="m-0 text-xs leading-[1.6] text-[#52616D]">{{ faq.answer }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <app-footer />

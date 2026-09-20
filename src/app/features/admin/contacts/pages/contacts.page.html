@@ -2,11 +2,11 @@
   <!-- Header -->
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
-      <h2 class="font-heading text-2xl font-bold text-text sm:text-3xl">Contact Enquiries</h2>
+      <h2 class="font-heading text-2xl font-semibold text-text sm:text-2xl">Contact Enquiries</h2>
       <p class="mt-1 text-sm text-muted">Messages from visitors across the website.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
-      <span class="rounded-full bg-surface-2 px-3.5 py-1.5 text-xs font-bold text-muted">{{ counts().total }} total</span>
+      <span class="rounded-full bg-surface-2 px-3.5 py-1.5 text-xs font-semibold text-muted">{{ counts().total }} total</span>
       <span class="status-chip status-new">{{ counts().new }} new</span>
       <span class="status-chip status-replied">{{ counts().replied }} replied</span>
     </div>
@@ -19,7 +19,7 @@
         <button
           type="button"
           (click)="statusFilter.set(opt.value)"
-          class="rounded-lg px-4 py-2 text-xs font-bold transition-colors duration-200"
+          class="rounded-lg px-4 py-2 text-xs font-semibold transition-colors duration-200"
           [class.bg-primary]="statusFilter() === opt.value"
           [class.text-white]="statusFilter() === opt.value"
           [class.text-muted]="statusFilter() !== opt.value"
@@ -46,12 +46,12 @@
     <table class="w-full min-w-[900px] text-left text-sm">
       <thead>
         <tr class="border-b border-border bg-surface-2/70 text-[11px] uppercase tracking-[0.12em] text-muted">
-          <th class="px-5 py-4 font-bold">From</th>
-          <th class="px-4 py-4 font-bold">Subject</th>
-          <th class="px-4 py-4 font-bold">Message</th>
-          <th class="px-4 py-4 font-bold">Status</th>
-          <th class="px-4 py-4 font-bold">Date</th>
-          <th class="px-4 py-4 text-right font-bold">Actions</th>
+          <th class="px-5 py-4 font-semibold">From</th>
+          <th class="px-4 py-4 font-semibold">Subject</th>
+          <th class="px-4 py-4 font-semibold">Message</th>
+          <th class="px-4 py-4 font-semibold">Status</th>
+          <th class="px-4 py-4 font-semibold">Date</th>
+          <th class="px-4 py-4 text-right font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
@@ -59,7 +59,7 @@
           <tr class="transition-colors hover:bg-surface-2/40">
             <td class="px-5 py-3.5">
               <div class="flex items-center gap-3">
-                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-primary">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
                   {{ initials(contact.name) }}
                 </span>
                 <div class="min-w-0">
@@ -97,7 +97,7 @@
                     type="button"
                     (click)="markReplied(contact.id)"
                     appRipple
-                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-bold text-success transition-colors duration-200 hover:bg-success/20"
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-semibold text-success transition-colors duration-200 hover:bg-success/20"
                   >
                     <svg lucideCheck class="h-3.5 w-3.5"></svg>
                     Mark Replied
@@ -107,7 +107,7 @@
                     type="button"
                     (click)="markNew(contact.id)"
                     appRipple
-                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-bold text-muted transition-colors duration-200 hover:text-text"
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-semibold text-muted transition-colors duration-200 hover:text-text"
                   >
                     <svg lucideMailOpen class="h-3.5 w-3.5"></svg>
                     Reopen
@@ -119,7 +119,7 @@
         } @empty {
           <tr>
             <td colspan="6" class="px-5 py-16 text-center">
-              <p class="font-heading text-lg font-bold text-text">No enquiries found</p>
+              <p class="font-heading text-lg font-semibold text-text">No enquiries found</p>
               <p class="mt-1 text-sm text-muted">Try adjusting your filters or search.</p>
             </td>
           </tr>

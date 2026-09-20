@@ -1,0 +1,202 @@
+<section class="bg-[#F7F9F8]">
+  <div
+    class="mx-auto max-w-[1460px]
+           px-[72px]
+           pt-[42px]
+           pb-[45px]
+           max-[1200px]:px-8
+           max-[768px]:px-[18px]"
+  >
+
+    <!-- HEADER -->
+    <div class="flex items-start justify-between">
+
+      <div>
+      <h2
+          class="font-inter
+                 text-[26px]
+                 font-[600]
+                 leading-[1.08]
+                 tracking-[-0.03em]
+                 text-[#0B1B2A]
+                 max-[1200px]:text-[24px]
+                 max-[768px]:text-[20px]"
+        >
+          Find a vehicle by budget
+        </h2>
+
+        <p
+          class="mt-[4px]
+                 font-inter
+                 text-[16px]
+                 font-[400]
+                 leading-[1.3]
+                 tracking-[-0.2px]
+                 text-[#667684]
+                 max-[1200px]:text-[12px]
+                 max-[768px]:text-[11px]"
+        >
+          Quality options for every budget.
+        </p>
+      </div>
+
+      <a
+        routerLink="/cars"
+        class="mt-[17px]
+               hidden
+               items-center
+               gap-[7px]
+               border-0
+               bg-transparent
+               font-inter
+               text-[14px]
+               font-[600]
+               text-[#0d6b32]
+               transition-colors
+               hover:text-[#39A935]
+               lg:flex"
+      >
+        <span>View all vehicles</span>
+
+        <svg
+          class="h-[15px] w-[15px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M5 12h14" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
+      </a>
+
+    </div>
+
+
+    <!-- BUDGET CARDS -->
+    <div
+      class="mt-[27px]
+             grid
+             grid-cols-5
+             gap-[14px]
+             pb-[4px]
+             max-[1400px]:gap-[10px]
+             max-[1100px]:flex
+             max-[1100px]:overflow-x-auto
+             max-[1100px]:no-scrollbar"
+    >
+
+      <article
+        *ngFor="let budget of budgets"
+        (click)="onBudgetClick(budget)"
+          class="group
+               relative
+               h-[140px]
+               min-h-[140px]
+               cursor-pointer
+               overflow-visible
+               rounded-[14px]
+               border
+               border-[#E5EAE8]
+               bg-white
+               shadow-[0_2px_8px_rgba(11,27,42,0.035)]
+               transition-all
+               duration-300
+               hover:-translate-y-[3px]
+                 hover:shadow-[0_8px_24px_rgba(11,27,42,0.09)]
+                 max-[1100px]:w-[220px]
+                 max-[1100px]:min-w-[220px]"
+      >
+
+        <!-- TEXT -->
+        <div class="relative z-10 px-[14px] pt-[12px]">
+
+          <h3
+            class="font-inter
+                   text-[17px]
+                   font-[500]
+                   leading-[1.2]
+                   tracking-[-0.02em]
+                   text-[#0B1B2A]"
+          >
+            {{ budget.title }}
+          </h3>
+
+          <p
+            class="mt-[4px]
+                   font-inter
+                   text-[12px]
+                   font-[400]
+                   leading-[1.2]
+                   text-[#667684]"
+          >
+            {{ budget.description }}
+          </p>
+
+        </div>
+
+
+        <!-- HEART -->
+        <button
+          type="button"
+          aria-label="Favourite budget"
+          (click)="$event.stopPropagation()"
+          class="absolute
+                 right-[12px]
+                 top-[11px]
+                 z-20
+                 hidden
+                 h-[26px]
+                 w-[26px]
+                 items-center
+                 justify-center
+                 rounded-full
+                 text-[#647582]
+                 transition-all
+                 hover:bg-[#F2F6F4]
+                 hover:text-[#06383A]"
+        >
+          <svg
+            class="h-[21px] w-[21px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+                 a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84
+                 a5.5 5.5 0 0 0 0-7.78Z"
+            />
+          </svg>
+        </button>
+
+
+        <!-- VEHICLE IMAGE -->
+        <div
+          class="absolute
+                 bottom-0
+                 right-0
+                 w-[70%]
+                 h-[75%]
+                 transition-transform
+                 duration-300
+                 group-hover:scale-[1.035]"
+        >
+          <img
+            [src]="budget.image"
+            [alt]="budget.title"
+            class="block
+                   h-full
+                   w-full
+                   object-contain
+                   object-bottom"
+          />
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+</section>

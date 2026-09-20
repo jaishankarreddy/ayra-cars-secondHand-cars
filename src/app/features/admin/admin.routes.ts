@@ -31,5 +31,10 @@ export const ADMIN_ROUTES: Routes = [
     path: 'contacts',
     loadComponent: () =>
       import('./contacts/pages/contacts.page').then((m) => m.AdminContactsPageComponent)
+  },
+  {
+    path: 'test-drives',
+    loadComponent: () =>
+      import('./test-drives/pages/test-drives.page').then((m) => m.AdminTestDrivesPageComponent)
   }
 ];

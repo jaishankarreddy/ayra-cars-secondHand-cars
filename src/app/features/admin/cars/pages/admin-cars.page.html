@@ -2,14 +2,14 @@
   <!-- Header -->
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
-      <h2 class="font-heading text-2xl font-bold text-text sm:text-3xl">Cars</h2>
+      <h2 class="font-heading text-2xl font-semibold text-text sm:text-2xl">Cars</h2>
       <p class="mt-1 text-sm text-muted">{{ totalCount() }} cars currently listed across Karnataka.</p>
     </div>
     <button
       type="button"
       appRipple
       (click)="openAdd()"
-      class="inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover hover:shadow-lg active:scale-[0.99]"
+      class="inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover hover:shadow-lg active:scale-[0.99]"
     >
       <svg lucidePlus class="h-4 w-4"></svg>
       Add Car
@@ -33,14 +33,14 @@
     <table class="w-full min-w-[880px] text-left text-sm">
       <thead>
         <tr class="border-b border-border bg-surface-2/70 text-[11px] uppercase tracking-[0.12em] text-muted">
-          <th class="px-5 py-4 font-bold">Car</th>
-          <th class="px-4 py-4 font-bold">Price</th>
-          <th class="px-4 py-4 font-bold">Fuel · Gearbox</th>
-          <th class="px-4 py-4 font-bold">Year · Odometer</th>
-          <th class="px-4 py-4 font-bold">Owners</th>
-          <th class="px-4 py-4 font-bold">Location</th>
-          <th class="px-4 py-4 font-bold">Status</th>
-          <th class="px-4 py-4 text-right font-bold">Actions</th>
+          <th class="px-5 py-4 font-semibold">Car</th>
+          <th class="px-4 py-4 font-semibold">Price</th>
+          <th class="px-4 py-4 font-semibold">Fuel · Gearbox</th>
+          <th class="px-4 py-4 font-semibold">Year · Odometer</th>
+          <th class="px-4 py-4 font-semibold">Owners</th>
+          <th class="px-4 py-4 font-semibold">Location</th>
+          <th class="px-4 py-4 font-semibold">Status</th>
+          <th class="px-4 py-4 text-right font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
@@ -101,7 +101,7 @@
         } @empty {
           <tr>
             <td colspan="8" class="px-5 py-16 text-center">
-              <p class="font-heading text-lg font-bold text-text">No cars found</p>
+              <p class="font-heading text-lg font-semibold text-text">No cars found</p>
               <p class="mt-1 text-sm text-muted">Try adjusting your search.</p>
             </td>
           </tr>

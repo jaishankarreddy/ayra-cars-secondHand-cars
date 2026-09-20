@@ -1,5 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { API_BASE } from '@config/api';
 import {
   LucideBadgeCheck,
@@ -7,27 +8,28 @@ import {
   LucideCheck,
   LucideChevronRight,
   LucideCircleCheck,
-  LucideClock3,
+  LucideArrowRight,
   LucideFuel,
-  LucideGauge,
+  LucideGitCompare,
   LucideHeart,
+  LucideInfo,
   LucideMapPin,
   LucideMessageCircle,
-  LucidePalette,
   LucidePhone,
+  LucideRepeat,
   LucideRoute,
   LucideSend,
-  LucideShare2,
+  LucideSettings,
   LucideShieldCheck,
-  LucideSlidersHorizontal,
-  LucideSparkles,
   LucideTag,
+  LucideTimer,
   LucideUsers,
   LucideZap
 } from '@lucide/angular';
 import { FooterComponent } from '../../../home/components/footer/footer.component';
 import { StickyContactCardComponent } from '../../components/sticky-contact-card/sticky-contact-card.component';
 import { ImageGalleryComponent } from '../../components/image-gallery/image-gallery.component';
+import { SimilarVehiclesComponent } from '../../components/similar-vehicles/similar-vehicles.component';
 import { VehicleDetailsService } from '../../services/vehicle-details.service';
 import { WishlistService } from '../../../../services/wishlist.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -39,26 +41,28 @@ import { ToastService } from '../../../../services/toast.service';
     FooterComponent,
     StickyContactCardComponent,
     ImageGalleryComponent,
+    SimilarVehiclesComponent,
+    RouterLink,
     LucideBadgeCheck,
     LucideCalendarDays,
     LucideCheck,
     LucideChevronRight,
     LucideCircleCheck,
-    LucideClock3,
+    LucideArrowRight,
     LucideFuel,
-    LucideGauge,
+    LucideGitCompare,
     LucideHeart,
+    LucideInfo,
     LucideMapPin,
     LucideMessageCircle,
-    LucidePalette,
     LucidePhone,
+    LucideRepeat,
     LucideRoute,
     LucideSend,
-    LucideShare2,
+    LucideSettings,
     LucideShieldCheck,
-    LucideSlidersHorizontal,
-    LucideSparkles,
     LucideTag,
+    LucideTimer,
     LucideUsers,
     LucideZap
   ],
@@ -84,6 +88,12 @@ export class VehicleDetailsPageComponent {
   readonly phone = signal('');
   readonly offerPrice = signal('');
   readonly message = signal('');
+
+  readonly tdName = signal('');
+  readonly tdPhone = signal('');
+  readonly tdDate = signal('');
+  readonly tdTime = signal('');
+  readonly testDriveSent = signal(false);
 
   readonly isBike = computed(() => this.vehicle()?.vehicleType === 'bike');
   readonly images = computed(() => {
@@ -118,6 +128,29 @@ export class VehicleDetailsPageComponent {
       { icon: 'shield', label: 'Safety', value: v.abs ? 'ABS equipped' : 'Standard safety' }
     ];
     return array;
+  });
+
+  readonly detailColumns = computed(() => {
+    const v = this.vehicle();
+    if (!v) return [[], []];
+    return [
+      [
+        { label: 'Make', value: v.brand },
+        { label: 'Model', value: v.model },
+        { label: 'Variant', value: v.variant },
+        { label: 'Year', value: v.year },
+        { label: 'Fuel Type', value: v.fuel },
+        { label: 'Transmission', value: v.transmission }
+      ],
+      [
+        { label: 'Kilometres Driven', value: this.formatDistance(v.kilometers) },
+        { label: 'Ownership', value: `${v.owners}st Owner`.replace('2st', '2nd').replace('3st', '3rd') },
+        { label: 'Registration', value: v.registration || 'Not provided' },
+        { label: 'Insurance Valid Till', value: v.insurance || 'Not provided' },
+        { label: 'RTO', value: v.location },
+        { label: 'Colour', value: v.color }
+      ]
+    ];
   });
 
   readonly features = computed(() => {
@@ -159,6 +192,10 @@ export class VehicleDetailsPageComponent {
     document.getElementById('offer')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  scrollToTestDrive(): void {
+    document.getElementById('test-drive')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   submitOffer(event: Event): void {
     event.preventDefault();
     const v = this.vehicle();
@@ -183,6 +220,32 @@ export class VehicleDetailsPageComponent {
         error: () => {
           this.offerSent.set(false);
           this.toast.error('Something went wrong', 'We could not submit your offer. Please try again in a moment.');
+        }
+      });
+  }
+
+  submitTestDrive(): void {
+    const v = this.vehicle();
+    if (!v) return;
+    if (!this.tdName().trim() || !this.tdPhone().trim()) {
+      this.toast.error('Please complete the form', 'Your name and phone number are required.');
+      return;
+    }
+    this.http
+      .post(`${API_BASE}/test-drives`, {
+        vehicleId: v.id,
+        name: this.tdName().trim(),
+        phone: this.tdPhone().trim(),
+        preferredDate: this.tdDate(),
+        preferredTime: this.tdTime()
+      })
+      .subscribe({
+        next: () => {
+          this.testDriveSent.set(true);
+          this.toast.success('Test drive requested!', `We'll confirm your test drive for the ${v.brand} ${v.model} shortly.`);
+        },
+        error: () => {
+          this.toast.error('Something went wrong', 'We could not submit your request. Please try again.');
         }
       });
   }

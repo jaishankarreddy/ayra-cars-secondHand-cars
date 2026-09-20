@@ -2,11 +2,11 @@
   <!-- Header -->
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
-      <h2 class="font-heading text-2xl font-bold text-text sm:text-3xl">Offers</h2>
+      <h2 class="font-heading text-2xl font-semibold text-text sm:text-2xl">Offers</h2>
       <p class="mt-1 text-sm text-muted">Review and respond to buyer offers on your vehicles.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
-      <span class="rounded-full bg-surface-2 px-3.5 py-1.5 text-xs font-bold text-muted">{{ counts().total }} total</span>
+      <span class="rounded-full bg-surface-2 px-3.5 py-1.5 text-xs font-semibold text-muted">{{ counts().total }} total</span>
       <span class="status-chip status-pending">{{ counts().pending }} pending</span>
       <span class="status-chip status-accepted">{{ counts().accepted }} accepted</span>
     </div>
@@ -19,7 +19,7 @@
         <button
           type="button"
           (click)="statusFilter.set(opt.value)"
-          class="rounded-lg px-4 py-2 text-xs font-bold transition-colors duration-200"
+          class="rounded-lg px-4 py-2 text-xs font-semibold transition-colors duration-200"
           [class.bg-primary]="statusFilter() === opt.value"
           [class.text-white]="statusFilter() === opt.value"
           [class.text-muted]="statusFilter() !== opt.value"
@@ -46,13 +46,13 @@
     <table class="w-full min-w-[900px] text-left text-sm">
       <thead>
         <tr class="border-b border-border bg-surface-2/70 text-[11px] uppercase tracking-[0.12em] text-muted">
-          <th class="px-5 py-4 font-bold">Buyer</th>
-          <th class="px-4 py-4 font-bold">Vehicle</th>
-          <th class="px-4 py-4 font-bold">Offer</th>
-          <th class="px-4 py-4 font-bold">Asking</th>
-          <th class="px-4 py-4 font-bold">Status</th>
-          <th class="px-4 py-4 font-bold">Date</th>
-          <th class="px-4 py-4 text-right font-bold">Actions</th>
+          <th class="px-5 py-4 font-semibold">Buyer</th>
+          <th class="px-4 py-4 font-semibold">Vehicle</th>
+          <th class="px-4 py-4 font-semibold">Offer</th>
+          <th class="px-4 py-4 font-semibold">Asking</th>
+          <th class="px-4 py-4 font-semibold">Status</th>
+          <th class="px-4 py-4 font-semibold">Date</th>
+          <th class="px-4 py-4 text-right font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
@@ -60,7 +60,7 @@
           <tr class="transition-colors hover:bg-surface-2/40">
             <td class="px-5 py-3.5">
               <div class="flex items-center gap-3">
-                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-primary">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
                   {{ initials(offer.customer) }}
                 </span>
                 <div class="min-w-0">
@@ -95,7 +95,7 @@
                     type="button"
                     (click)="setStatus(offer.id, 'Accepted')"
                     appRipple
-                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-bold text-success transition-colors duration-200 hover:bg-success/20"
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-success/10 px-3 py-1.5 text-xs font-semibold text-success transition-colors duration-200 hover:bg-success/20"
                   >
                     <svg lucideCheck class="h-3.5 w-3.5"></svg>
                     Accept
@@ -104,7 +104,7 @@
                     type="button"
                     (click)="setStatus(offer.id, 'Rejected')"
                     appRipple
-                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-danger/10 px-3 py-1.5 text-xs font-bold text-danger transition-colors duration-200 hover:bg-danger/20"
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger transition-colors duration-200 hover:bg-danger/20"
                   >
                     <svg lucideX class="h-3.5 w-3.5"></svg>
                     Decline
@@ -114,7 +114,7 @@
                     type="button"
                     (click)="setStatus(offer.id, 'Pending')"
                     appRipple
-                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-bold text-muted transition-colors duration-200 hover:text-text"
+                    class="inline-flex items-center gap-1 overflow-hidden rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-semibold text-muted transition-colors duration-200 hover:text-text"
                   >
                     <svg lucideTrendingUp class="h-3.5 w-3.5"></svg>
                     Reopen
@@ -126,7 +126,7 @@
         } @empty {
           <tr>
             <td colspan="7" class="px-5 py-16 text-center">
-              <p class="font-heading text-lg font-bold text-text">No offers found</p>
+              <p class="font-heading text-lg font-semibold text-text">No offers found</p>
               <p class="mt-1 text-sm text-muted">Try adjusting your filters or search.</p>
             </td>
           </tr>

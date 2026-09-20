@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   LucideX,
   LucideImagePlus,
@@ -12,6 +13,7 @@ import { CatalogService } from '../../../../../services/catalog.service';
 import { AdminService, VehicleFormPayload } from '../../../services/admin.service';
 import { compressImage } from '../../../utils/image-compress.util';
 import { AdminVehicle } from '../../../utils/vehicle.util';
+import { ToastService } from '../../../../../services/toast.service';
 
 export interface VehicleFormModel {
   brand: string;
@@ -78,6 +80,7 @@ const FUELS = ['Petrol', 'Diesel', 'CNG', 'Electric', 'Hybrid'];
 export class VehicleFormModalComponent implements OnInit {
   private readonly service = inject(AdminService);
   private readonly catalog = inject(CatalogService);
+  private readonly toast = inject(ToastService);
 
   readonly model = input<AdminVehicle | null>(null);
   readonly initialType = input<'car' | 'bike'>('car');
@@ -92,6 +95,7 @@ export class VehicleFormModalComponent implements OnInit {
   readonly totalImages = computed(() => this.photos().length + this.existingImages().length);
   readonly saving = signal(false);
   readonly error = signal('');
+  readonly brandList = signal<string[]>([]);
 
   readonly isEdit = computed(() => !!this.model());
   readonly bodyTypes = computed(() =>
@@ -108,8 +112,9 @@ export class VehicleFormModalComponent implements OnInit {
     const m = this.model();
     if (m) {
       this.type.set(m.type);
-      const existing = [m.image, ...(m.images ?? [])]
-        .filter((img): img is string => !!img);
+      this.loadBrands(m.type);
+      const allImages = m.images?.length ? m.images : [m.image];
+      const existing = [...new Set(allImages.filter((img): img is string => !!img))];
       this.existingImages.set(existing);
       const f = this.form();
       this.form.set({
@@ -133,8 +138,16 @@ export class VehicleFormModalComponent implements OnInit {
       });
     } else {
       this.type.set(this.initialType());
+      this.loadBrands(this.initialType());
       this.switchType(this.initialType());
     }
+  }
+
+  loadBrands(type: 'car' | 'bike'): void {
+    this.service.fetchFacets(type).subscribe({
+      next: (res) => this.brandList.set(res.brands.map((b) => b.charAt(0).toUpperCase() + b.slice(1)).sort()),
+      error: () => this.brandList.set([])
+    });
   }
 
   readonly set = (key: keyof VehicleFormModel, value: string) =>
@@ -142,8 +155,10 @@ export class VehicleFormModalComponent implements OnInit {
 
   switchType(type: 'car' | 'bike'): void {
     this.type.set(type);
+    this.loadBrands(type);
     this.form.update((f) => ({
       ...f,
+      brand: '',
       bodyType: '',
       fuel: type === 'bike' ? 'Petrol' : 'Petrol',
       abs: 'false'
@@ -239,7 +254,11 @@ export class VehicleFormModalComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.saving.set(false);
-        this.error.set(err instanceof Error ? err.message : 'Failed to save vehicle.');
+        const message = err instanceof HttpErrorResponse
+          ? (err.error?.message || err.message)
+          : 'Failed to save vehicle.';
+        this.error.set(message);
+        this.toast.error('Save failed', message);
       }
     });
   }

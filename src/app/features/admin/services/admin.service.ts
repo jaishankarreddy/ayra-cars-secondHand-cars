@@ -101,6 +101,10 @@ export class AdminService {
   remove(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${API}/${id}`);
   }
+
+  fetchFacets(type: 'car' | 'bike'): Observable<{ brands: string[] }> {
+    return this.http.get<{ brands: string[] }>(`${API_BASE}/facets?type=${type}`);
+  }
 }
 
 /** Minimal shape manager needs from the API response. */

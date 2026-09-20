@@ -1,168 +1,342 @@
-<div class="app-shell">
+<div class="min-h-screen bg-[#F8FAF9]">
   @if (loading() && !vehicle()) {
-    <main id="top" class="skeleton-main">
-      <div class="skeleton-block skeleton-hero"></div>
-      <div class="skeleton-block skeleton-title"></div>
-      <div class="skeleton-block skeleton-specs"></div>
+    <main id="top" class="pt-[26px]">
+      <div class="rounded-[15px] bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite] h-[420px]"></div>
+      <div class="rounded-[15px] bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite] h-[120px] mt-[22px]"></div>
+      <div class="rounded-[15px] bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite] h-[180px] mt-[18px]"></div>
     </main>
   } @else if (vehicle(); as vehicle) {
     <main id="top">
-      <div class="page-grid">
-        <section class="content-column">
-          <div class="breadcrumbs">
-            <span>Inventory</span><svg lucideChevronRight size="14"></svg>
-            <span>{{ isBike() ? 'Bikes' : 'Cars' }}</span><svg lucideChevronRight size="14"></svg>
-            <strong>{{ vehicle.brand }} {{ vehicle.model }}</strong>
-          </div>
-
-          <app-image-gallery [images]="photos()" [alt]="vehicle.brand + ' ' + vehicle.model" />
-
-          <section class="title-section">
-            <div class="status-row">
-              <span class="status featured"><svg lucideSparkles size="13"></svg> {{ vehicle.featured ? 'Featured' : 'Verified' }}</span>
-              <span class="status available"><svg lucideCircleCheck size="13"></svg> {{ vehicle.availability }}</span>
-            </div>
-            <div class="title-row">
-              <div>
-                <h1>{{ vehicle.brand }} {{ vehicle.model }}</h1>
-                <p>{{ vehicle.variant }}</p>
-              </div>
-              <div class="title-actions">
-                <button class="save-button" (click)="toggleSaved()">
-                  <svg lucideHeart size="17" [attr.fill]="saved() ? 'currentColor' : 'none'"></svg>
-                  <span>{{ saved() ? 'Saved' : 'Save' }}</span>
-                </button>
-                <button class="share-button" (click)="share()"><svg lucideShare2 size="17"></svg> <span>Share</span></button>
-              </div>
-            </div>
-            <div class="vehicle-meta">
-              <span><svg lucideMapPin size="15"></svg> {{ vehicle.district }}</span><i></i>
-              <span>{{ vehicle.year }}</span><i></i>
-              <span>{{ formatDistance(vehicle.kilometers) }}</span><i></i>
-              <span>{{ vehicle.fuel }} · {{ vehicle.transmission }}</span>
-            </div>
-          </section>
-
-          <section class="panel specs-panel">
-            <div class="panel-heading">
-              <span class="heading-icon"><svg lucideSlidersHorizontal size="17"></svg></span>
-              <div><h2>Quick specifications</h2><p>The details that matter at a glance</p></div>
-            </div>
-            <div class="spec-grid">
-              @for (spec of specs(); track spec.label) {
-                <div class="spec-item">
-                  <span class="spec-icon">
-                    @switch (spec.icon) {
-                      @case ('calendar') { <svg lucideCalendarDays size="17"></svg> }
-                      @case ('fuel') { <svg lucideFuel size="17"></svg> }
-                      @case ('sliders') { <svg lucideSlidersHorizontal size="17"></svg> }
-                      @case ('route') { <svg lucideRoute size="17"></svg> }
-                      @case ('users') { <svg lucideUsers size="17"></svg> }
-                      @case ('gauge') { <svg lucideGauge size="17"></svg> }
-                      @case ('zap') { <svg lucideZap size="17"></svg> }
-                      @case ('palette') { <svg lucidePalette size="17"></svg> }
-                      @case ('shield') { <svg lucideShieldCheck size="17"></svg> }
-                    }
-                  </span>
-                  <div><small>{{ spec.label }}</small><strong>{{ spec.value }}</strong></div>
-                </div>
-              }
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-heading">
-              <span class="heading-icon"><svg lucideSparkles size="17"></svg></span>
-              <h2>Features</h2>
-            </div>
-            <div class="feature-list">
-              @for (feature of features(); track feature) {
-                <span><svg lucideCheck size="14"></svg> {{ feature }}</span>
-              }
-            </div>
-          </section>
-
-          <section class="panel about-panel">
-            <div class="panel-heading">
-              <span class="heading-icon"><svg lucideBadgeCheck size="17"></svg></span>
-              <h2>About this vehicle</h2>
-            </div>
-            <div class="description">
-              @for (paragraph of vehicle.description; track paragraph) {
-                <p>{{ paragraph }}</p>
-              }
-            </div>
-          </section>
-
-          <section class="panel seller-panel">
-            <div class="seller-main">
-              <div class="seller-avatar"><svg lucideShieldCheck size="25"></svg></div>
-              <div>
-                <span class="verified-label"><svg lucideBadgeCheck size="13"></svg> Ayra Cars verified</span>
-                <h2>{{ vehicle.seller.name }}</h2>
-                <p><svg lucideClock3 size="13"></svg> Typically replies within 30 minutes</p>
-              </div>
-            </div>
-            <div class="seller-buttons">
-              <a [href]="'tel:' + phoneLink()" aria-label="Call the seller"><svg lucidePhone size="16"></svg> Call</a>
-              <a [href]="'https://wa.me/' + whatsappLink()" target="_blank" rel="noopener noreferrer" aria-label="Contact the seller on WhatsApp"><svg lucideMessageCircle size="16"></svg> WhatsApp</a>
-            </div>
-          </section>
-
-          <section class="panel offer-panel" id="offer">
-            <div class="panel-heading">
-              <span class="heading-icon"><svg lucideTag size="17"></svg></span>
-              <div><h2>Make an offer</h2><p>Our vehicle experts will respond within 30 minutes.</p></div>
-            </div>
-            @if (offerSent()) {
-              <div class="success-message">
-                <svg lucideCircleCheck size="29"></svg>
-                <h3>Your offer is on its way.</h3>
-                <p>Our team will reach out shortly to discuss the next step.</p>
-              </div>
-            } @else {
-              <form (submit)="submitOffer($event)">
-                <div class="form-grid">
-                  <label>Full name
-                    <input required placeholder="e.g. Ravi Kumar" [value]="name()" (input)="name.set($any($event.target).value)" />
-                  </label>
-                  <label>Phone number
-                    <input required placeholder="e.g. 98765 43210" [value]="phone()" (input)="phone.set($any($event.target).value)" />
-                  </label>
-                </div>
-                <label>Your offer price (₹)
-                  <input required type="number" placeholder="e.g. 1434500" [value]="offerPrice()" (input)="offerPrice.set($any($event.target).value)" />
-                </label>
-                <label>Message <em>(optional)</em>
-                  <textarea placeholder="Anything we should know?" [value]="message()" (input)="message.set($any($event.target).value)"></textarea>
-                </label>
-                <button class="submit-button" type="submit">Submit offer <svg lucideSend size="15"></svg></button>
-                <small class="form-note">By submitting, you agree to be contacted by Ayra Cars. No payment is taken online.</small>
-              </form>
-            }
-          </section>
-        </section>
-
-        <aside class="price-sidebar">
-          <div class="price-card">
-            <span class="eyebrow">PRICE</span>
-            <div class="price-large">{{ formatPrice(vehicle.price) }} <small>Drive-away</small></div>
-            <p>Inclusive of RTO, roadworthiness &amp; warranty</p>
-            <button class="offer-button" (click)="scrollToOffer()"><svg lucideTag size="16"></svg> Offer price</button>
-            <a class="primary-action" [href]="'tel:' + phoneLink()"><svg lucidePhone size="16"></svg> Call now</a>
-            <a class="secondary-action" [href]="'https://wa.me/' + whatsappLink()" target="_blank"><svg lucideMessageCircle size="16"></svg> WhatsApp</a>
-            <div class="trust-row">
-              <svg lucideShieldCheck size="22"></svg>
-              <div><strong>Ayra Cars certified</strong><span>200-point inspected</span></div>
-            </div>
-          </div>
-          <div class="sidebar-note">
-            <svg lucideBadgeCheck size="17"></svg>
-            <div><strong>Clear, considered buying</strong><span>Every vehicle is checked before it reaches you.</span></div>
-          </div>
-        </aside>
+      <!-- Breadcrumbs -->
+      <div class="flex items-center gap-1.5 py-5 pb-[18px] text-[13px] text-[#8a908c] max-[620px]:py-3.5 max-[620px]:text-[11px]">
+        <a routerLink="/" class="text-[#6b7370] no-underline hover:text-[#1a2c30]">Home</a>
+        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
+        <a [routerLink]="isBike() ? '/bikes' : '/cars'" class="text-[#6b7370] no-underline hover:text-[#1a2c30]">{{ isBike() ? 'Bikes' : 'Cars' }}</a>
+        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
+        <span>{{ vehicle.brand }}</span>
+        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
+        <span>{{ vehicle.model }}</span>
+        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
+        <strong class="text-[#1a2c30] font-semibold">{{ vehicle.year }}</strong>
       </div>
+
+      <!-- Hero section: Gallery + Info side by side -->
+      <section class="hero-section">
+        <div class="min-w-0">
+          <app-image-gallery [images]="photos()" [alt]="vehicle.brand + ' ' + vehicle.model" />
+        </div>
+
+        <div class="vehicle-info-panel">
+          <!-- Title + Verified Badge -->
+          <div class="flex items-start gap-2.5 flex-wrap">
+            <h1 class="m-0 font-['Poppins',sans-serif] text-[26px] font-bold leading-[1.2] text-[#0B1720] max-[620px]:text-[20px] max-[390px]:text-[18px]">{{ vehicle.year }} {{ vehicle.brand }} {{ vehicle.model }} {{ vehicle.variant }}</h1>
+            <span class="inline-flex items-center gap-[5px] h-[30px] px-[11px] py-[5px] bg-[#EDF9DF] text-[#4E8F25] rounded-[12px] text-[11px] font-semibold whitespace-nowrap shrink-0">
+              <svg lucideBadgeCheck size="14" class="text-[#4E9B2E]"></svg>
+              Verified Vehicle
+            </span>
+          </div>
+
+          <!-- Price Row -->
+          <div class="flex items-baseline gap-2.5 mt-3.5">
+            <span class="text-[29px] font-bold text-[#0B1720] leading-[1.1] max-[620px]:text-[24px] max-[390px]:text-[22px]">{{ formatPrice(vehicle.price) }}</span>
+            <span class="text-[13px] font-normal text-[#87929A] line-through">{{ formatPrice(vehicle.price * 1.12) }}</span>
+            <span class="inline-flex items-center px-2.5 py-[5px] bg-[#55A92F] text-white rounded-[10px] text-[11px] font-semibold ml-2.5">6% off</span>
+          </div>
+
+          <!-- EMI -->
+          <div class="flex items-center gap-1.5 mt-3 text-xs font-normal text-[#596771]">
+            <span>EMI starts at ₹27,512/month</span>
+            <svg lucideInfo size="14" class="text-[#64727A] shrink-0"></svg>
+          </div>
+
+          <!-- Vehicle Details Grid -->
+          <div class="vip-details-grid">
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideTimer size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ formatDistance(vehicle.kilometers) }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Kilometres driven</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideFuel size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.fuel }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Fuel type</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideCalendarDays size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.year }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Year</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideSettings size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.transmission }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Transmission</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideUsers size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.owners === 1 ? '1st Owner' : vehicle.owners + ' Owners' }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Ownership</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideMapPin size="21"></svg></div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.location }}</span>
+                <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Location</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Buttons -->
+          <div class="vip-contact-row">
+            <a class="vip-btn-contact vip-btn-dark" (click)="scrollToTestDrive()">
+              <svg lucideCalendarDays size="16"></svg>
+              Book a test drive
+            </a>
+            <a class="vip-btn-contact vip-btn-lime" (click)="scrollToOffer()">
+              <svg lucideTag size="16"></svg>
+              Make an offer
+            </a>
+          </div>
+
+          <!-- Get in Touch Card -->
+          <div class="sc-card-touch">
+            <div class="sc-touch-top">
+              <span class="sc-icon sc-icon-blue"><svg lucidePhone size="20"></svg></span>
+              <div class="sc-touch-text">
+                <h4 class="sc-title">Get in Touch</h4>
+                <p class="sc-desc">Have questions? Our team is here to help.</p>
+              </div>
+            </div>
+            <div class="sc-touch-buttons">
+              <a class="sc-btn" [href]="'tel:' + phoneLink()">
+                <svg lucidePhone size="17" class="text-[#284BC1]"></svg>
+                <span>Call Us</span>
+              </a>
+              <a class="sc-btn" [href]="'https://wa.me/' + whatsappLink()" target="_blank" rel="noopener noreferrer">
+                <svg lucideMessageCircle size="17" class="text-[#16A34A]"></svg>
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Favourite / Compare -->
+          <div class="vip-action-row">
+            <button class="vip-btn-secondary" (click)="toggleSaved()">
+              <svg lucideHeart size="19" [attr.fill]="saved() ? 'currentColor' : 'none'" class="text-[#26343B]"></svg>
+              {{ saved() ? 'Added to Favourite' : 'Add to Favourite' }}
+            </button>
+            <button class="vip-btn-secondary">
+              <svg lucideGitCompare size="19" class="text-[#26343B]"></svg>
+              Add to Compare
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Section below gallery -->
+      <section class="content-section">
+        <div class="content-grid">
+
+          <!-- LEFT COLUMN -->
+          <div class="left-col">
+
+            <!-- Overview -->
+            <div class="mb-[34px]">
+              <h2 class="m-0 mb-2.5 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Overview</h2>
+              <p class="max-w-[650px] m-0 mb-[22px] text-[#52616d] text-sm leading-[1.65]">{{ vehicle.description[0] || ('A well-maintained ' + vehicle.brand + ' ' + vehicle.model + ' ready for its next journey.') }}</p>
+              <div class="feature-pills">
+                <div class="feature-pill">
+                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideZap size="16"></svg></span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">Powerful Performance</span>
+                </div>
+                <div class="feature-pill">
+                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideUsers size="16"></svg></span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.variant || 'Premium Interiors' }}</span>
+                </div>
+                <div class="feature-pill">
+                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideShieldCheck size="16"></svg></span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.abs ? 'Advanced Safety' : 'Standard Safety' }}</span>
+                </div>
+                <div class="feature-pill">
+                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideRoute size="16"></svg></span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ isBike() ? 'Built for Every Ride' : 'All-Terrain Capability' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Specifications -->
+            <div class="mb-[34px]">
+              <div class="flex items-center justify-between mb-3.5">
+                <h2 class="m-0 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Specifications</h2>
+              </div>
+              <div class="spec-tables">
+                @for (column of detailColumns(); track $index) {
+                  <div class="bg-white border border-[#e8eceb] rounded-[8px] overflow-hidden">
+                    @for (row of column; track row.label) {
+                      <div class="grid grid-cols-2 min-h-[36px] border-b border-[#eef1f0] last:border-b-0">
+                        <span class="flex items-center px-3 bg-[#f7f9f8] text-[#4f5c67] text-xs font-normal font-['Poppins',sans-serif] border-r border-[#eef1f0]">{{ row.label }}</span>
+                        <span class="flex items-center px-3 text-[#18242c] text-xs font-medium bg-white font-['Poppins',sans-serif]">{{ row.value }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Key Features -->
+            <div class="mb-[34px]" style="display:none">
+              <div class="flex items-center justify-between mb-3.5">
+                <h2 class="m-0 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Key Features</h2>
+                <a class="text-[#5c9f1f] text-xs font-medium cursor-pointer no-underline hover:underline">View all</a>
+              </div>
+              <div class="key-features-grid">
+                @if (features().length > 0) {
+                  @for (feature of features(); track feature) {
+                    <div class="flex items-center gap-2.5 min-h-[50px] p-2 bg-white border border-[#f0f2f1] rounded-[8px]">
+                      <span class="flex items-center justify-center w-8 h-8 rounded-[8px] bg-[#f1f4f3] text-[#17252d] shrink-0"><svg lucideCheck size="14"></svg></span>
+                      <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ feature }}</span>
+                    </div>
+                  }
+                } @else {
+                  <p class="col-span-full m-0 py-5 text-[#8a969e] text-[13px] font-['Poppins',sans-serif]">No data found</p>
+                }
+              </div>
+            </div>
+
+            <!-- Make an Offer -->
+            <div class="relative bg-white border border-[#e5e9e7] rounded-[10px] p-6 overflow-hidden" id="offer">
+              <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#062d32] via-[#15803d] to-[#d7fa4c]"></div>
+              <div class="flex items-center gap-2.5">
+                <span class="flex items-center justify-center w-[34px] h-[34px] rounded-[8px] bg-[#e9ffb5] text-[#062d32] shrink-0"><svg lucideTag size="16"></svg></span>
+                <div>
+                  <h2 class="m-0 mb-0 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Make an offer</h2>
+                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our vehicle experts will respond within 30 minutes.</p>
+                </div>
+              </div>
+              @if (offerSent()) {
+                <div class="flex flex-col items-center py-7 px-3.5 rounded-[8px] bg-[#f0faf1] text-center">
+                  <span class="flex items-center justify-center w-12 h-12 rounded-full bg-[#e8f5e9] text-[#15803d] mb-1"><svg lucideCircleCheck size="28"></svg></span>
+                  <h3 class="mt-2 mb-1 text-[#0b1720] font-['Poppins',sans-serif] font-semibold text-[15px]">Your offer is on its way.</h3>
+                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our team will reach out shortly to discuss the next step.</p>
+                </div>
+              } @else {
+                <form (submit)="submitOffer($event)" class="flex flex-col">
+                  <div class="grid grid-cols-2 gap-3">
+                    <label class="block mb-3.5">
+                      <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Full name</span>
+                      <input required placeholder="e.g. Ravi Kumar" [value]="name()" (input)="name.set($any($event.target).value)" class="offer-field-input" />
+                    </label>
+                    <label class="block mb-3.5">
+                      <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Phone number</span>
+                      <input required placeholder="e.g. 98765 43210" [value]="phone()" (input)="phone.set($any($event.target).value)" class="offer-field-input" />
+                    </label>
+                  </div>
+                  <label class="block mb-3.5">
+                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Your offer price (₹)</span>
+                    <input required type="number" placeholder="e.g. 1434500" [value]="offerPrice()" (input)="offerPrice.set($any($event.target).value)" class="offer-field-input" />
+                  </label>
+                  <label class="block mb-3.5">
+                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Message <em class="text-[#8a969e] font-normal not-italic">(optional)</em></span>
+                    <textarea placeholder="Anything we should know?" [value]="message()" (input)="message.set($any($event.target).value)" class="offer-field-input offer-field-textarea"></textarea>
+                  </label>
+                  <button class="offer-submit-btn flex items-center justify-center gap-[7px] w-full py-[11px] rounded-[6px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
+                    <svg lucideSend size="14"></svg>
+                    Submit offer
+                  </button>
+                  <small class="block mt-2.5 text-[#8a969e] text-[10px] leading-[1.5] text-center font-['Poppins',sans-serif]">By submitting, you agree to be contacted by Ayra Cars. No payment is taken online.</small>
+                </form>
+              }
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="right-col">
+            <div class="td-sticky-card" id="test-drive">
+              <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#062d32] via-[#15803d] to-[#d7fa4c]"></div>
+              <div class="flex items-center gap-2.5 mb-5">
+                <span class="flex items-center justify-center w-9 h-9 rounded-[8px] bg-[#e9ffb5] text-[#062d32] shrink-0"><svg lucideCalendarDays size="18"></svg></span>
+                <div>
+                  <h3 class="m-0 font-['Poppins',sans-serif] font-semibold text-base leading-[1.3] text-[#0b1720]">Book a test drive</h3>
+                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">We'll bring the vehicle to you.</p>
+                </div>
+              </div>
+              @if (testDriveSent()) {
+                <div class="flex flex-col items-center py-7 px-3.5 rounded-[8px] bg-[#f0faf1] text-center">
+                  <span class="flex items-center justify-center w-12 h-12 rounded-full bg-[#e8f5e9] text-[#15803d] mb-1"><svg lucideCircleCheck size="28"></svg></span>
+                  <h4 class="mt-2 mb-1 text-[#0b1720] font-['Poppins',sans-serif] font-semibold text-[15px]">Request received!</h4>
+                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our team will confirm your test drive shortly.</p>
+                </div>
+              } @else {
+                <form (submit)="submitTestDrive()" class="flex flex-col">
+                  <label class="block mb-3.5">
+                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Full name</span>
+                    <input required placeholder="e.g. Ravi Kumar" [value]="tdName()" (input)="tdName.set($any($event.target).value)" class="td-field-input" />
+                  </label>
+                  <label class="block mb-3.5">
+                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Phone number</span>
+                    <input required placeholder="e.g. 98765 43210" [value]="tdPhone()" (input)="tdPhone.set($any($event.target).value)" class="td-field-input" />
+                  </label>
+                  <div class="td-field-row">
+                    <label class="block mb-3.5">
+                      <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Preferred date</span>
+                      <input type="date" [value]="tdDate()" (input)="tdDate.set($any($event.target).value)" class="td-field-input" />
+                    </label>
+                    <label class="block mb-3.5">
+                      <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Preferred time</span>
+                      <select [value]="tdTime()" (change)="tdTime.set($any($event.target).value)" class="td-field-input">
+                        <option value="" disabled>Select time</option>
+                        <option value="morning">Morning (9 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                        <option value="evening">Evening (4 PM - 7 PM)</option>
+                      </select>
+                    </label>
+                  </div>
+                  <button class="td-submit-btn flex items-center justify-center gap-[7px] w-full py-[11px] rounded-[6px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
+                    <svg lucideSend size="14"></svg>
+                    Book test drive
+                  </button>
+                  <small class="block mt-2.5 text-[#8a969e] text-[10px] leading-[1.5] text-center font-['Poppins',sans-serif]">No payment required. We'll call you to confirm.</small>
+                </form>
+              }
+            </div>
+
+            <!-- Card 2: Sell Your Car -->
+            <a class="bg-white border border-[#E7ECEA] rounded-[10px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-[border-color,background-color] duration-150 hover:border-[#d4dbd9] mt-2.5 group" routerLink="/sell">
+              <span class="flex items-center justify-center w-10 h-10 rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideTag size="19"></svg></span>
+              <div class="flex-1 min-w-0">
+                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Sell Your Car</h4>
+                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Want to sell your car? Get started with Ayra Cars today.</p>
+              </div>
+              <svg lucideArrowRight size="18" class="shrink-0 text-[#18252C] transition-transform duration-150 group-hover:translate-x-[2px]"></svg>
+            </a>
+
+            <!-- Card 3: Want to Exchange Your Car? -->
+            <div class="bg-white border border-[#E7ECEA] rounded-[10px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-[border-color,background-color] duration-150 hover:border-[#d4dbd9] mt-2.5 group">
+              <span class="flex items-center justify-center w-10 h-10 rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideRepeat size="20"></svg></span>
+              <div class="flex-1 min-w-0">
+                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Want to Exchange Your Car?</h4>
+                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Get the best value for your current car.</p>
+              </div>
+              <svg lucideArrowRight size="18" class="shrink-0 text-[#18252C] transition-transform duration-150 group-hover:translate-x-[2px]"></svg>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
     </main>
+
+    <app-similar-vehicles [vehicle]="vehicle" />
   }
 </div>
 

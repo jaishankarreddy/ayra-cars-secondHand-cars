@@ -1,42 +1,5 @@
 :host { display: block; }
 
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.field-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.field-input {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border-radius: 0.875rem;
-  border: 1.5px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-
-  &::placeholder { color: var(--text-muted); }
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--border) 40%, var(--primary));
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: var(--surface);
-    box-shadow: 0 0 0 4px var(--primary-soft);
-  }
-}
-
 .toggle-track {
   position: relative;
   width: 3rem;

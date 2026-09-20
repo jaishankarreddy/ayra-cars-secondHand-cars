@@ -1,31 +1,31 @@
-<section class="brand-explorer" id="brands">
-  <div class="explorer-head">
+<section class="brand-explorer bg-[#fbfaf7] py-20 max-[700px]:py-[55px_0_52px]" id="brands">
+  <div class="explorer-head mx-auto flex max-w-[1240px] items-end justify-between px-4 max-[640px]:px-4 max-[700px]:flex-col max-[700px]:items-start max-[700px]:gap-5">
     <div>
-      <span class="section-kicker">Popular Brands</span>
-      <h2>Shop by your favourite brand</h2>
-      <p class="section-description">From everyday hatchbacks to premium cruisers — find trusted vehicles from the brands you love.</p>
+      <span class="text-[12px] font-semibold uppercase tracking-[0.11em] text-[#eb7138]">Popular Brands</span>
+      <h2 class="mt-[11px] font-heading text-[26px] font-semibold leading-[1.08] tracking-[-0.03em]">Shop by your favourite brand</h2>
+      <p class="mt-3 max-w-[610px] text-base leading-[1.6] text-[#748079]">From everyday hatchbacks to premium cruisers — find trusted vehicles from the brands you love.</p>
     </div>
   </div>
 
-  <div class="marquee-window">
-    <div class="fade-edge fade-left"></div>
-    <div class="fade-edge fade-right"></div>
+  <div class="marquee-window relative mt-[35px] overflow-hidden pb-1 pt-2.5">
+    <div class="fade-edge fade-left pointer-events-none absolute bottom-0 left-0 top-0 z-[3] w-[14%]"></div>
+    <div class="fade-edge fade-right pointer-events-none absolute bottom-0 right-0 top-0 z-[3] w-[14%]"></div>
     @for (row of repeatedMarqueeRows(); track $index) {
-      <div class="brand-row" [class]="'marquee-row-' + ($index + 1)">
-        <div class="brand-track">
+      <div class="brand-row mb-[18px] overflow-visible" [class]="'marquee-row-' + ($index + 1)">
+        <div class="brand-track flex w-max gap-[17px]">
           @for (brand of row; track $index) {
-            <a class="brand-card" [routerLink]="[brand.type === 'Bikes' ? '/bikes' : '/cars']" [queryParams]="{ brand: brand.name }">
-              <span class="brand-logo-tile">
+            <a class="brand-card group flex h-[88px] min-w-[190px] max-[700px]:min-w-[178px] items-center rounded-2xl border border-[#e6e7e1] bg-[rgba(255,255,255,0.96)] p-[13px_14px] shadow-[0_9px_20px_rgba(35,55,45,0.06)] transition-all duration-[0.25s] hover:-translate-y-[5px] hover:shadow-[0_14px_28px_rgba(35,55,45,0.13)]" [routerLink]="[brand.type === 'Bikes' ? '/bikes' : '/cars']" [queryParams]="{ brand: brand.name }">
+              <span class="brand-logo-tile flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-xl border border-[#ecece7] bg-[#f6f6f2]">
                 @if (brand.logo && !failedLogos().has(brand.name)) {
-                  <img [src]="brand.logo" [alt]="brand.name" loading="lazy" class="brand-logo-img" (error)="onLogoError(brand.name)" />
+                  <img [src]="brand.logo" [alt]="brand.name" loading="lazy" class="h-[48px] w-[48px] object-contain" (error)="onLogoError(brand.name)" />
                 } @else {
-                  <span class="brand-mark brand-mark-fallback" [style.color]="brand.color" [attr.aria-label]="brand.name + ' logo'">
-                    @if (isRings(brand.mark)) { <span class="rings">&#x25C9;&#x25C9;&#x25C9;&#x25C9;</span> } @else { {{ brand.mark }} }
+                  <span class="brand-mark brand-mark-fallback flex min-w-[2.5rem] items-center justify-center font-heading text-[22px] font-semibold tracking-[-0.04em]" [style.color]="brand.color" [attr.aria-label]="brand.name + ' logo'">
+                    @if (isRings(brand.mark)) { <span class="rings text-[11px] tracking-[-5px] scale-x-[1.15]">&#x25C9;&#x25C9;&#x25C9;&#x25C9;</span> } @else { {{ brand.mark }} }
                   </span>
                 }
               </span>
-              <span class="brand-card-name">{{ brand.name }}</span>
-              <span class="brand-card-arrow"><svg lucideArrowRight size="14"></svg></span>
+              <span class="brand-card-name ml-3 max-w-[93px] text-left text-[14px] font-semibold normal-case text-[#32423f] leading-normal">{{ brand.name }}</span>
+              <span class="brand-card-arrow ml-auto flex h-[25px] w-[25px] items-center justify-center rounded-full bg-[#f1f2ed] text-[#73817b] opacity-0 translate-x-[-4px] transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"><svg lucideArrowRight size="14"></svg></span>
             </a>
           }
         </div>

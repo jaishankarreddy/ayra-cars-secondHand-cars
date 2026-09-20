@@ -1,1 +1,25 @@
 :host { display: block; }
+
+/* Complex composite background that cannot be a single Tailwind class */
+.sell-band {
+  background: linear-gradient(90deg, #f7f9f8 0%, #f7f9f8 20%, rgba(247, 249, 248, .92) 38%, rgba(247, 249, 248, 0) 68%),
+              url('/sell_your_vehicle_banner_home.png') center / cover no-repeat;
+}
+
+/* Pseudo-elements that cannot be expressed as inline Tailwind */
+.sell-band::before {
+  background: linear-gradient(180deg, #f7f9f8 0%, rgba(247, 249, 248, .78) 34%, rgba(247, 249, 248, 0) 100%);
+  content: '';
+  height: 72px;
+  inset: 0 0 auto;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.why-image::after {
+  background: linear-gradient(0deg, #10252b99, transparent 55%);
+  content: '';
+  inset: 0;
+  position: absolute;
+}

@@ -1,14 +1,212 @@
 <app-landing />
 
-<main>
-  <app-featured-vehicles />
-  <app-popular-brands />
-  <app-brand-directory />
-  <app-statistics />
-  <app-why-choose-us />
-  <app-testimonials />
-  <app-faq />
-  <app-cta />
+<main class="bg-[#f7f9f8] text-[#0b1b2a] font-['Poppins',sans-serif]">
+  <!-- Trust Rail -->
+  <section class="px-[5vw] max-[800px]:px-[18px] pt-8 pb-6 max-[480px]:pt-6 max-[480px]:pb-4">
+    <div class="grid gap-4 grid-cols-4 max-[800px]:grid-cols-2 max-[480px]:gap-3">
+      <div class="flex items-center gap-3 bg-white border border-[#E6ECEA] rounded-[10px] p-4 shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 max-[480px]:p-3 max-[480px]:gap-2.5">
+        <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0 max-[480px]:w-[34px] max-[480px]:h-[34px]"><svg lucideShieldCheck size="20"></svg></span>
+        <div class="min-w-0">
+          <strong class="block text-[13px] font-semibold text-[#0B1720] max-[480px]:text-[12px]">Verified Vehicles</strong>
+          <small class="block text-[#7c8987] text-[11px] leading-[1.35] mt-[3px] max-[480px]:text-[10px]">Inspected for your peace of mind</small>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 bg-white border border-[#E6ECEA] rounded-[10px] p-4 shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 max-[480px]:p-3 max-[480px]:gap-2.5">
+        <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0 max-[480px]:w-[34px] max-[480px]:h-[34px]"><svg lucideCheck size="20"></svg></span>
+        <div class="min-w-0">
+          <strong class="block text-[13px] font-semibold text-[#0B1720] max-[480px]:text-[12px]">Transparent Pricing</strong>
+          <small class="block text-[#7c8987] text-[11px] leading-[1.35] mt-[3px] max-[480px]:text-[10px]">Fair and market-aligned prices</small>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 bg-white border border-[#E6ECEA] rounded-[10px] p-4 shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 max-[480px]:p-3 max-[480px]:gap-2.5">
+        <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0 max-[480px]:w-[34px] max-[480px]:h-[34px]"><svg lucideCarFront size="20"></svg></span>
+        <div class="min-w-0">
+          <strong class="block text-[13px] font-semibold text-[#0B1720] max-[480px]:text-[12px]">Wide Range</strong>
+          <small class="block text-[#7c8987] text-[11px] leading-[1.35] mt-[3px] max-[480px]:text-[10px]">Cars and bikes from top brands</small>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 bg-white border border-[#E6ECEA] rounded-[10px] p-4 shadow-[0_3px_15px_rgba(6,45,50,0.04)] transition-[box-shadow,transform] duration-200 hover:shadow-[0_6px_20px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 max-[480px]:p-3 max-[480px]:gap-2.5">
+        <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0 max-[480px]:w-[34px] max-[480px]:h-[34px]"><svg lucideUsers size="20"></svg></span>
+        <div class="min-w-0">
+          <strong class="block text-[13px] font-semibold text-[#0B1720] max-[480px]:text-[12px]">Hassle-Free Experience</strong>
+          <small class="block text-[#7c8987] text-[11px] leading-[1.35] mt-[3px] max-[480px]:text-[10px]">Simple, transparent and reliable</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Vehicles Section -->
+  <section class="px-[5vw] max-[800px]:px-[18px] pt-9 pb-[54px] font-['Poppins',sans-serif] max-[480px]:pb-[38px] max-[480px]:pt-[25px]">
+    <div class="flex items-end justify-between mb-[27px] max-[480px]:items-start max-[480px]:flex-col max-[480px]:gap-[9px]">
+      <div>
+        <h2 class="text-[#0b1b2a] text-[26px] tracking-[-0.03em] mt-0 font-['Poppins',sans-serif] font-semibold max-[480px]:text-[22px]">Handpicked for you</h2>
+        <p class="text-[#5d6d7e] text-base mt-1 font-['Poppins',sans-serif] max-[480px]:text-[14px]">Quality pre-owned vehicles ready for their next chapter.</p>
+      </div>
+      <a routerLink="/cars" class="inline-flex items-center text-[#0d6b32] text-sm font-semibold gap-[7px] whitespace-nowrap hover:text-[#39A935] transition-colors">View all vehicles <svg lucideArrowRight class="h-[15px] w-[15px]"></svg></a>
+    </div>
+    @if (loading()) {
+      <div class="grid gap-3 grid-cols-4 max-[800px]:grid-cols-2">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="border border-[#e7ece9] rounded-lg overflow-hidden" style="pointer-events:none">
+            <div class="bg-[#e9e8e2] h-32 relative max-[480px]:h-[110px]"></div>
+            <div class="p-[10px_11px_11px]">
+              <div style="height:14px;width:70%;background:#e9e8e2;border-radius:4px"></div>
+              <div style="height:12px;width:50%;background:#e9e8e2;border-radius:4px;margin-top:8px"></div>
+              <div style="height:12px;width:40%;background:#e9e8e2;border-radius:4px;margin-top:8px"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (vehicles().length > 0) {
+      <div class="grid gap-3 grid-cols-4 max-[800px]:grid-cols-2">
+        @for (vehicle of vehicles(); track vehicle.id) {
+          <a class="vehicle-tile border border-[#e7ece9] rounded-lg overflow-hidden bg-white transition-[box-shadow,transform] duration-200 ease-out hover:shadow-[0_8px_24px_#17372b14] hover:-translate-y-0.5" [routerLink]="['/vehicles', vehicle.id]">
+            <div class="bg-[#eef2ee] h-32 relative max-[480px]:h-auto">
+              <img [src]="vehicle.image" [alt]="vehicle.name" loading="lazy" class="h-full object-cover w-full">
+              <span class="absolute bottom-2 left-2.5 inline-flex items-center bg-white rounded-[14px] text-[#278c32] text-[10px] font-semibold gap-1 py-[5px] px-2"><svg lucideCheck class="h-[14px] w-[14px]"></svg> Verified</span>
+              <span class="absolute right-2.5 top-2.5 flex items-center justify-center bg-white rounded-full h-8 w-8 transition-colors hover:text-red-500"><svg lucideHeart class="h-[17px] w-[17px] stroke-[2]"></svg></span>
+            </div>
+            <div class="flex flex-col min-h-[155px] p-[14px_16px_12px] max-[480px]:min-h-[170px] max-[480px]:p-[11px_10px_12px]">
+              <h3 class="text-[#0b1b2a] text-[17px] tracking-[-0.02em] leading-[1.2] mb-2.5 font-['Poppins',sans-serif] font-medium max-[480px]:text-[12px]">{{ vehicle.name }}</h3>
+              <div class="flex flex-row items-center text-[#4a5a6a] text-[13px] gap-[10px] leading-[1.2] whitespace-nowrap max-[480px]:text-[9px] max-[480px]:items-start max-[480px]:flex-col max-[480px]:gap-[5px]">
+                <span class="inline-flex items-center gap-1"><svg lucideCalendarDays class="text-[#6b7c8c] h-[15px] w-[15px]"></svg>{{ vehicle.mileage }}</span>
+                <span class="inline-flex items-center gap-1"><svg lucideFuel class="text-[#6b7c8c] h-[15px] w-[15px]"></svg>{{ vehicle.fuel }}</span>
+                <span class="inline-flex items-center gap-1"><svg lucideGauge class="text-[#6b7c8c] h-[15px] w-[15px]"></svg>{{ vehicle.transmission }}</span>
+              </div>
+              <div class="flex items-center text-[#4a5a6a] text-[13px] gap-[6px] justify-start mt-1"><svg lucideMapPin class="text-[#6b7c8c] h-[15px] w-[15px]"></svg> {{ vehicle.location }}</div>
+              <div class="flex items-center border-t border-[#eef1f0] flex-nowrap justify-between mt-auto min-w-0 pt-2 w-full">
+                <strong class="text-[#092f32] shrink-0 text-[18px] tracking-[-0.02em] whitespace-nowrap font-['Poppins',sans-serif] font-semibold max-[480px]:text-[14px]">{{ vehicle.price }}</strong>
+                <span class="inline-flex items-center shrink-0 text-[#0d6b32] text-[13px] font-medium gap-[6px] underline underline-offset-4 whitespace-nowrap max-[480px]:text-[10px]">View details <svg lucideArrowRight class="h-4 w-4"></svg></span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </section>
+
+  <app-budget-section />
+
+  <!-- Brands Section -->
+  <section class="px-[5vw] max-[800px]:px-[18px] pt-8 pb-8 font-['Poppins',sans-serif] max-[480px]:pb-[38px] max-[480px]:pt-[25px]">
+    <div class="flex items-end justify-between mb-[27px] max-[480px]:items-start max-[480px]:flex-col max-[480px]:gap-[9px]">
+      <div>
+        <span class="block text-[#809e39] text-[10px] font-semibold tracking-[.12em] uppercase">TOP BRANDS</span>
+        <h2 class="text-[#0b1b2a] text-[26px] tracking-[-0.03em] mt-0 font-['Poppins',sans-serif] font-semibold max-[480px]:text-[22px]">Explore vehicles from your favourite brands.</h2>
+      </div>
+      <a routerLink="/brands" class="inline-flex items-center text-[#0d6b32] text-sm font-semibold gap-[7px] whitespace-nowrap hover:text-[#39A935] transition-colors">View all brands <svg lucideArrowRight class="h-[15px] w-[15px]"></svg></a>
+    </div>
+    <div class="grid gap-[10px] grid-cols-8 max-[800px]:grid-cols-4">
+      @for (brand of brands; track brand.name) {
+        <a routerLink="/brands" class="flex flex-col items-center justify-center bg-white border border-[#e7ece9] rounded-lg overflow-hidden transition-[box-shadow,transform] duration-200 ease-out hover:shadow-[0_8px_24px_#17372b14] hover:-translate-y-0.5 gap-2 min-h-[118px] p-[14px_8px] max-[800px]:min-h-[105px]">
+          <img [src]="brand.logo" [alt]="brand.name + ' logo'" loading="lazy" class="h-12 max-w-[92px] object-contain w-full">
+          <small class="block text-[#304454] text-xs font-medium whitespace-nowrap">{{ brand.name }}</small>
+        </a>
+      }
+    </div>
+  </section>
+
+  <app-vehicle-category-section />
+
+  <!-- Sell Band -->
+  <section class="sell-band overflow-hidden relative pt-8 pb-8">
+    <div class="sell-grid min-h-[260px] relative z-[1] px-[5vw] max-[800px]:px-[18px] max-[800px]:py-[18px]">
+      <div>
+        <span class="block text-[#809e39] text-[11px] font-semibold tracking-[.12em] uppercase">SELL YOUR VEHICLE</span>
+        <h2 class="font-['Poppins',sans-serif] text-[30px] font-semibold tracking-[-0.03em] leading-[1.08] mt-[6px] max-[480px]:text-[22px]">Looking to sell your vehicle?</h2>
+        <p class="text-[#6c7c78] text-base leading-[1.5] mt-2 mb-[15px] max-[480px]:text-[14px]">Get a fair quote and a hassle-free selling experience.</p>
+        <a class="inline-flex items-center bg-[#caff38] rounded-md text-[#10252b] text-xs font-semibold gap-2 mt-[15px] px-[18px] py-[11px] hover:bg-[#b8e630] transition-colors" routerLink="/sell">Sell your vehicle <svg lucideArrowRight class="h-[14px] w-[14px]"></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Band -->
+  <section class="bg-[#f7faf7] hidden py-7">
+    <div class="grid items-center gap-[34px] grid-cols-2 max-[800px]:grid-cols-1 px-[5vw] max-[800px]:px-[18px]">
+      <div class="rounded-[15px] h-[290px] overflow-hidden relative max-[800px]:h-[220px]">
+        <img src="https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1100" alt="Car ready for its next journey" loading="lazy" class="h-full object-cover w-full">
+        <span class="absolute bottom-[25px] left-[32px] text-white font-['Poppins',sans-serif] text-[26px] leading-[.9] -rotate-[5deg] z-[1]">Good Cars.<br><em class="text-[#d7fa4c] not-italic">Brighter Journeys.</em></span>
+      </div>
+      <div>
+        <span class="block text-[#809e39] text-[10px] font-semibold tracking-[.12em] uppercase">WHY AYRA CARS</span>
+        <h2 class="font-['Poppins',sans-serif] text-[30px] font-semibold tracking-[-0.03em] leading-[1.08] mt-[6px] max-[480px]:text-[22px]">More than just a marketplace.</h2>
+        <p class="text-[#6c7c78] text-base leading-[1.5] mt-2 mb-[15px] max-[480px]:text-[14px]">We make buying and selling pre-owned vehicles simple, safe and rewarding.</p>
+        <div class="grid gap-2 grid-cols-2">
+          <div class="flex items-center bg-white border border-[#ebefeb] rounded-lg gap-2 p-[9px]">
+            <svg lucideShieldCheck class="text-[#718d35] h-[19px] w-[19px]"></svg>
+            <span><strong class="block text-[9px]">Quality Checks</strong><small class="block text-[#899590] text-[8px] mt-0.5">200+ point inspection</small></span>
+          </div>
+          <div class="flex items-center bg-white border border-[#ebefeb] rounded-lg gap-2 p-[9px]">
+            <svg lucideHeart class="text-[#718d35] h-[19px] w-[19px]"></svg>
+            <span><strong class="block text-[9px]">Trusted by Locals</strong><small class="block text-[#899590] text-[8px] mt-0.5">Bengaluru focused</small></span>
+          </div>
+          <div class="flex items-center bg-white border border-[#ebefeb] rounded-lg gap-2 p-[9px]">
+            <svg lucideCheck class="text-[#718d35] h-[19px] w-[19px]"></svg>
+            <span><strong class="block text-[9px]">Easy Process</strong><small class="block text-[#899590] text-[8px] mt-0.5">From search to ownership</small></span>
+          </div>
+          <div class="flex items-center bg-white border border-[#ebefeb] rounded-lg gap-2 p-[9px]">
+            <svg lucideUsers class="text-[#718d35] h-[19px] w-[19px]"></svg>
+            <span><strong class="block text-[9px]">Ongoing Support</strong><small class="block text-[#899590] text-[8px] mt-0.5">We're with you always</small></span>
+          </div>
+        </div>
+        <a class="inline-flex items-center border border-[#ccd5d0] rounded-lg text-[#10252b] text-[10px] font-semibold gap-[7px] mt-[15px] px-3.5 py-[9px] hover:bg-[#f0f3f0] transition-colors" routerLink="/about">Learn more <svg lucideArrowRight class="h-[14px] w-[14px]"></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customer Reviews -->
+  <section class="px-[5vw] max-[800px]:px-[18px] pb-[62px] pt-[34px] font-['Poppins',sans-serif] max-[480px]:pb-[38px] max-[480px]:pt-[25px]">
+    <div class="flex items-end justify-between mb-[27px] max-[480px]:items-start max-[480px]:flex-col max-[480px]:gap-[9px]">
+      <div>
+        <span class="block text-[#809e39] text-[10px] font-semibold tracking-[.12em] uppercase">WHAT OUR CUSTOMERS SAY</span>
+        <h2 class="text-[#0b1b2a] text-[26px] tracking-[-0.03em] mt-0 font-semibold max-[480px]:text-[22px]">Real people. Real journeys.</h2>
+      </div>
+      <a routerLink="/about" class="inline-flex items-center text-[#0d6b32] text-sm font-semibold gap-[7px] whitespace-nowrap hover:text-[#39A935] transition-colors">View all reviews <svg lucideArrowRight class="h-[15px] w-[15px]"></svg></a>
+    </div>
+    <div class="grid gap-4 grid-cols-3 max-[480px]:grid-cols-1">
+      <article class="flex flex-col border border-[#e6ece8] rounded-xl min-h-[154px] p-[18px_22px_17px] relative">
+        <b class="block text-[#0b1b2a] font-['Poppins',sans-serif] text-[35px] font-semibold leading-[.65]">&ldquo;</b>
+        <p class="text-[#4f606d] text-[13px] font-normal leading-[1.45] mt-[13px] mb-[22px] max-w-[235px]">Great collection and very professional team. They made the entire experience hassle-free.</p>
+        <div class="flex items-center gap-[9px] mt-auto">
+          <span class="flex items-center justify-center bg-[#dbe8df] rounded-full text-[#315443] flex-none text-[10px] font-semibold h-8 w-8">SM</span>
+          <span class="min-w-0"><strong class="block text-[#1c2d38] text-sm font-semibold">Sneha K.</strong><small class="block text-[#829098] text-xs mt-0.5">Whitefield</small></span>
+          <span class="text-[#f4ae16] text-base tracking-wider leading-none ml-auto" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
+      </article>
+      <article class="flex flex-col border border-[#e6ece8] rounded-xl min-h-[154px] p-[18px_22px_17px] relative">
+        <b class="block text-[#0b1b2a] font-['Poppins',sans-serif] text-[35px] font-semibold leading-[.65]">&ldquo;</b>
+        <p class="text-[#4f606d] text-[13px] font-normal leading-[1.45] mt-[13px] mb-[22px] max-w-[235px]">Smooth and transparent process. Found the perfect car for my family. Highly recommend.</p>
+        <div class="flex items-center gap-[9px] mt-auto">
+          <span class="flex items-center justify-center bg-[#dbe8df] rounded-full text-[#315443] flex-none text-[10px] font-semibold h-8 w-8">AM</span>
+          <span class="min-w-0"><strong class="block text-[#1c2d38] text-sm font-semibold">Arjun M.</strong><small class="block text-[#829098] text-xs mt-0.5">Bengaluru</small></span>
+          <span class="text-[#f4ae16] text-base tracking-wider leading-none ml-auto" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
+      </article>
+      <article class="flex flex-col border border-[#e6ece8] rounded-xl min-h-[154px] p-[18px_22px_17px] relative">
+        <b class="block text-[#0b1b2a] font-['Poppins',sans-serif] text-[35px] font-semibold leading-[.65]">&ldquo;</b>
+        <p class="text-[#4f606d] text-[13px] font-normal leading-[1.45] mt-[13px] mb-[22px] max-w-[235px]">Sold my car with Ayra Cars and it was incredibly easy. No stress, no hidden costs.</p>
+        <div class="flex items-center gap-[9px] mt-auto">
+          <span class="flex items-center justify-center bg-[#dbe8df] rounded-full text-[#315443] flex-none text-[10px] font-semibold h-8 w-8">RP</span>
+          <span class="min-w-0"><strong class="block text-[#1c2d38] text-sm font-semibold">Rohan P.</strong><small class="block text-[#829098] text-xs mt-0.5">HSR Layout</small></span>
+          <span class="text-[#f4ae16] text-base tracking-wider leading-none ml-auto" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="bg-[url('/above_footer_banner.png')] bg-center bg-cover bg-no-repeat bg-[#062e35] text-white min-h-[270px] p-0">
+    <div class="px-[5vw] max-[800px]:px-[18px] flex items-center justify-between min-h-[270px] max-[800px]:items-start max-[800px]:flex-col max-[800px]:justify-center max-[800px]:min-h-[360px]">
+      <div class="newsletter-copy">
+        <h2 class="text-white text-[30px] leading-[1.08] m-0 font-['Poppins',sans-serif] font-semibold max-[480px]:text-[22px]">Good Cars.<br>Brighter Journeys<span class="text-[#caff38]">.</span></h2>
+        <p class="text-[#d8e3e0] text-base mt-3 mb-5 max-[480px]:text-[14px]">Your next vehicle is closer than you think.</p>
+        <div class="newsletter-actions flex items-center gap-[14px] max-[800px]:items-stretch max-[800px]:flex-col max-[800px]:w-max">
+          <a class="newsletter-primary inline-flex items-center bg-[#caff38] rounded-[9px] text-[#10252b] text-sm font-semibold gap-[10px] justify-center min-h-12 px-6" routerLink="/cars">Explore vehicles <svg lucideArrowRight class="h-[18px] w-[18px]"></svg></a>
+          <a class="newsletter-secondary inline-flex items-center border-2 border-white/80 rounded-[9px] text-white text-sm font-semibold gap-[10px] justify-center min-h-12 px-6" routerLink="/sell">Sell your vehicle</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <app-footer />

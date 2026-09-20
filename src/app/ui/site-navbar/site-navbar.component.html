@@ -1,52 +1,124 @@
-<header class="inventory-nav" [class.home-navbar]="navActive().home">
-  <a class="brand" routerLink="/"><span class="brand-symbol"><svg lucideCarFront size="19"></svg></span>Ayra Cars<span>.</span></a>
-  <nav>
-    <a routerLink="/cars" [class.active-link]="navActive().cars">Find a vehicle</a>
-    <a routerLink="/brands" [class.active-link]="navActive().brands">Brands</a>
-    <a routerLink="/about" [class.active-link]="navActive().about">Why Ayra Cars</a>
-    <a routerLink="/contact" [class.active-link]="navActive().contact">Help</a>
-    <a routerLink="/sell" [class.active-link]="navActive().sell">Sell your vehicle</a>
-  </nav>
-  <div class="nav-right">
-    <a class="icon-link" routerLink="/wishlist" aria-label="Wishlist"><svg lucideHeart size="18"></svg><span class="nav-badge" [hidden]="wishlistCount() === 0">{{ wishlistCount() }}</span></a>
-    <a class="icon-link" routerLink="/compare" aria-label="Compare vehicles"><svg lucideScale size="18"></svg><span class="nav-badge nav-badge-primary" [hidden]="compareCount() === 0">{{ compareCount() }}</span></a>
-    @if (isLoggedIn()) {
-      <a class="user-chip" routerLink="/wishlist" [title]="userName()">{{ userInitials() }}</a>
-      <button class="logout-button" (click)="logout()" aria-label="Logout"><svg lucideLogOut size="16"></svg></button>
-    } @else {
-      <a class="login-link" routerLink="/auth/login">Login</a>
-    }
-    <a class="sell-link" routerLink="/cars">Explore <svg lucideArrowRight size="15"></svg></a>
-    <button class="menu-button" (click)="menuOpen.set(!menuOpen())" aria-label="Open menu"><svg lucideMenu size="20"></svg></button>
+<header class="site-header" [class.is-home]="navActive().home" [class.menu-open]="menuOpen()">
+
+  <!-- ===== Desktop / Tablet Header ===== -->
+  <div class="header-inner">
+
+    <!-- LEFT: Logo + Nav -->
+    <div class="header-left">
+      <a class="header-logo" routerLink="/">
+        <img src="/logo.png" alt="Ayra Cars" class="logo-img" />
+      </a>
+      <nav class="header-nav">
+        <a routerLink="/cars" [class.active]="navActive().cars">Find a Vehicle</a>
+        <a routerLink="/brands" [class.active]="navActive().brands">Brands</a>
+        <a routerLink="/about" [class.active]="navActive().about">Why Ayra Cars</a>
+        <a routerLink="/contact" [class.active]="navActive().contact">Help</a>
+        <a routerLink="/sell" [class.active]="navActive().sell">Sell Your Vehicle</a>
+      </nav>
+    </div>
+
+    <!-- MIDDLE: flexible spacer -->
+    <div class="header-spacer"></div>
+
+    <!-- RIGHT: Search + Actions + Login -->
+    <div class="header-right">
+      <form class="header-search" [class.focused]="searchFocused()" (submit)="onSearch($event)">
+        <svg lucideSearch size="15" class="search-icon"></svg>
+        <input
+          type="text"
+          placeholder="Search vehicle, brand..."
+          class="search-input"
+          [value]="searchQuery()"
+          (input)="onSearchInput($event)"
+          (focus)="searchFocused.set(true)"
+          (blur)="searchFocused.set(false)"
+        />
+        <button type="submit" class="search-submit" [class.visible]="searchQuery()">
+          <svg lucideArrowRight size="14"></svg>
+        </button>
+      </form>
+
+      <div class="header-actions">
+        <a class="action-icon" routerLink="/wishlist" aria-label="Wishlist">
+          <svg lucideHeart size="18"></svg>
+          <span class="badge badge-red" [hidden]="wishlistCount() === 0">{{ wishlistCount() }}</span>
+        </a>
+        <a class="action-icon" routerLink="/compare" aria-label="Compare vehicles">
+          <svg lucideScale size="18"></svg>
+          <span class="badge badge-orange" [hidden]="compareCount() === 0">{{ compareCount() }}</span>
+        </a>
+        @if (isLoggedIn()) {
+          <a class="user-avatar" routerLink="/wishlist" [title]="userName()">{{ userInitials() }}</a>
+          <button class="action-icon logout-btn" (click)="logout()" aria-label="Logout">
+            <svg lucideLogOut size="16"></svg>
+          </button>
+        } @else {
+          <a class="login-btn" routerLink="/auth/login">
+            <svg lucideCircleUser size="15"></svg>
+            <span>Login</span>
+          </a>
+        }
+        <button class="hamburger" (click)="menuOpen.set(!menuOpen())" aria-label="Open menu">
+          <svg lucideMenu size="22"></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </header>
 
+<!-- ===== Mobile Drawer ===== -->
 @if (menuOpen()) {
-  <div class="mobile-nav">
-    <div class="mobile-nav-panel">
-      <div class="mobile-nav-head">
-        <a class="brand" routerLink="/" (click)="menuOpen.set(false)"><span class="brand-symbol"><svg lucideCarFront size="18"></svg></span>Ayra Cars<span>.</span></a>
-        <button class="menu-close" (click)="menuOpen.set(false)" aria-label="Close menu"><svg lucideX size="20"></svg></button>
-      </div>
-      <nav class="mobile-nav-links">
-        <a routerLink="/cars" [class.active-link]="navActive().cars" (click)="menuOpen.set(false)">Find a vehicle</a>
-        <a routerLink="/brands" [class.active-link]="navActive().brands" (click)="menuOpen.set(false)">Brands</a>
-        <a routerLink="/about" [class.active-link]="navActive().about" (click)="menuOpen.set(false)">Why Ayra Cars</a>
-        <a routerLink="/contact" [class.active-link]="navActive().contact" (click)="menuOpen.set(false)">Help</a>
-        <a routerLink="/sell" [class.active-link]="navActive().sell" (click)="menuOpen.set(false)">Sell your vehicle</a>
-        <a routerLink="/wishlist" (click)="menuOpen.set(false)">Wishlist</a>
-        <a routerLink="/compare" (click)="menuOpen.set(false)">Compare</a>
-      </nav>
-      <div class="mobile-nav-actions">
-        @if (isLoggedIn()) {
-          <a routerLink="/wishlist" (click)="menuOpen.set(false)">{{ userName() }}</a>
-          <button (click)="logout()">Logout</button>
-        } @else {
-          <a routerLink="/auth/login" (click)="menuOpen.set(false)">Login</a>
-        }
-        <a routerLink="/cars" (click)="menuOpen.set(false)">Explore <svg lucideArrowRight size="15"></svg></a>
-      </div>
+  <div class="mobile-overlay" (click)="closeMenu()"></div>
+  <div class="mobile-drawer">
+    <div class="drawer-header">
+      <a class="header-logo" routerLink="/" (click)="closeMenu()">
+        <img src="/logo.png" alt="Ayra Cars" class="logo-img" />
+      </a>
+      <button class="drawer-close" (click)="closeMenu()" aria-label="Close menu">
+        <svg lucideX size="20"></svg>
+      </button>
     </div>
-    <button class="mobile-nav-backdrop" (click)="menuOpen.set(false)" aria-label="Close menu"></button>
+
+    <!-- Mobile Search -->
+    <form class="drawer-search" (submit)="onMobileSearch($event)">
+      <svg lucideSearch size="15" class="search-icon"></svg>
+      <input
+        type="text"
+        placeholder="Search cars & bikes..."
+        class="search-input"
+        [value]="mobileSearchQuery()"
+        (input)="onMobileSearchInput($event)"
+      />
+    </form>
+
+    <!-- Mobile Nav Links -->
+    <nav class="drawer-nav">
+      <a routerLink="/cars" [class.active]="navActive().cars" (click)="closeMenu()">Find a Vehicle</a>
+      <a routerLink="/brands" [class.active]="navActive().brands" (click)="closeMenu()">Brands</a>
+      <a routerLink="/about" [class.active]="navActive().about" (click)="closeMenu()">Why Ayra Cars</a>
+      <a routerLink="/contact" [class.active]="navActive().contact" (click)="closeMenu()">Help</a>
+      <a routerLink="/sell" [class.active]="navActive().sell" (click)="closeMenu()">Sell Your Vehicle</a>
+    </nav>
+
+    <!-- Mobile Actions -->
+    <div class="drawer-actions">
+      <a routerLink="/wishlist" (click)="closeMenu()">
+        <svg lucideHeart size="16"></svg> Wishlist
+      </a>
+      <a routerLink="/compare" (click)="closeMenu()">
+        <svg lucideScale size="16"></svg> Compare
+      </a>
+    </div>
+
+    <div class="drawer-footer">
+      @if (isLoggedIn()) {
+        <a class="drawer-user" routerLink="/wishlist" (click)="closeMenu()">{{ userName() }}</a>
+        <button class="drawer-logout" (click)="logout()">Logout</button>
+      } @else {
+        <a class="drawer-login" routerLink="/auth/login" (click)="closeMenu()">
+          <svg lucideCircleUser size="16"></svg> Login
+        </a>
+      }
+    </div>
   </div>
 }

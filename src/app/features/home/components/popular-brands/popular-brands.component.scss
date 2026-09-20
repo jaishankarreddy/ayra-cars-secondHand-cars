@@ -3,41 +3,12 @@
 @keyframes glide-right { from { transform: translateX(-18%); } to { transform: translateX(0); } }
 @keyframes glide-left { from { transform: translateX(0); } to { transform: translateX(-18%); } }
 
-.brand-explorer { background: #fbfaf7; margin: 0; padding: 80px 0 72px; position: relative; }
-.section-kicker { color: #eb7138; font-size: 12px; font-weight: 700; letter-spacing: 0.11em; }
-.explorer-head, .explorer-tools { align-items: flex-end; display: flex; justify-content: space-between; margin: 0 auto; max-width: 1240px; padding: 0 1rem; }
-.explorer-head h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.875rem, 4vw, 2.6rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1.08; margin: 11px 0 0; }
-.section-description { color: #748079; font-size: 16px; line-height: 1.6; margin: 12px 0 0; max-width: 610px; }
-.marquee-window { margin-top: 35px; overflow: hidden; padding: 10px 0 4px; position: relative; }
-.brand-row { margin-bottom: 18px; overflow: visible; }
-.brand-track { display: flex; gap: 17px; width: max-content; }
 .marquee-row-1 .brand-track, .marquee-row-3 .brand-track { animation: glide-right 42s linear infinite; }
 .marquee-row-2 .brand-track { animation: glide-left 46s linear infinite; }
-.brand-card { align-items: center; background: rgba(255, 255, 255, 0.96); border: 1px solid #e6e7e1; border-radius: 16px; box-shadow: 0 9px 20px rgba(35, 55, 45, 0.06); display: flex; height: 88px; min-width: 190px; padding: 13px 14px; position: relative; transition: transform 0.25s ease, box-shadow 0.25s ease; }
-.brand-card:hover { box-shadow: 0 14px 28px rgba(35, 55, 45, 0.13); transform: translateY(-5px); }
-.brand-logo-tile { align-items: center; background: #f6f6f2; border: 1px solid #ecece7; border-radius: 12px; display: flex; height: 60px; justify-content: center; overflow: hidden; width: 60px; }
-.brand-logo-img { height: 48px; object-fit: contain; width: 48px; }
-.brand-mark { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.06em; }
-.brand-mark-fallback { align-items: center; display: flex; justify-content: center; min-width: 2.5rem; }
-.rings { font-size: 11px; letter-spacing: -5px; transform: scaleX(1.15); }
-.brand-card-name { color: #32423f; font-size: 14px; font-weight: 700; margin-left: 12px; max-width: 93px; text-align: left; white-space: normal; }
-.brand-card-arrow { align-items: center; background: #f1f2ed; border-radius: 50%; color: #73817b; display: flex; height: 25px; justify-content: center; margin-left: auto; opacity: 0; transform: translateX(-4px); transition: opacity 0.2s ease, transform 0.2s ease; width: 25px; }
-.brand-card:hover .brand-card-arrow { opacity: 1; transform: translateX(0); }
-.fade-edge { bottom: 0; pointer-events: none; position: absolute; top: 0; width: 14%; z-index: 3; }
-.fade-left { background: linear-gradient(90deg, #fbfaf7 8%, rgba(251, 250, 247, 0.83) 35%, transparent); left: 0; }
-.fade-right { background: linear-gradient(270deg, #fbfaf7 8%, rgba(251, 250, 247, 0.83) 35%, transparent); right: 0; }
 
-@media (max-width: 700px) {
-  .brand-explorer { padding: 55px 0 52px; }
-  .explorer-head { align-items: flex-start; flex-direction: column; gap: 20px; }
-  .brand-card { min-width: 178px; }
-}
-
-@media (min-width: 640px) {
-  .explorer-head { padding-inline: 0; }
-}
+.fade-left { background: linear-gradient(90deg, #fbfaf7 8%, rgba(251, 250, 247, 0.83) 35%, transparent); }
+.fade-right { background: linear-gradient(270deg, #fbfaf7 8%, rgba(251, 250, 247, 0.83) 35%, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-row-1 .brand-track, .marquee-row-2 .brand-track, .marquee-row-3 .brand-track { animation: none; }
-  .brand-card:hover { transform: none; }
 }

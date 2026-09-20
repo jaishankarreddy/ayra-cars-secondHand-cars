@@ -1,55 +1,55 @@
-<main class="site-shell">
+<main class="min-h-screen overflow-x-hidden font-['Poppins',sans-serif]">
   @if (searchOpen()) {
-    <div class="search-panel">
-      <svg lucideSearch size="18"></svg>
-      <input autofocus placeholder="Search by make, model or city" />
-      <button (click)="searchOpen.set(false)" aria-label="Close search"><svg lucideX size="18"></svg></button>
+    <div class="flex items-center bg-white border-b border-[#e5e2da] gap-3 py-3.5 px-[5vw]">
+      <svg lucideSearch size="18" class="text-[#7a8783]"></svg>
+      <input autofocus placeholder="Search by make, model or city" class="bg-transparent border-0 outline-0 flex-1 py-1.5 px-0" />
+      <button (click)="searchOpen.set(false)" aria-label="Close search"><svg lucideX size="18" class="text-[#7a8783]"></svg></button>
     </div>
   }
 
   <!-- ===== Hero ===== -->
   <section class="hero" id="top">
     <div class="hero-image" [style.background-image]="'url(' + heroImage + ')'" [style.--hero-mobile-image]="'url(' + heroMobileImage + ')'" ></div>
-    <div class="hero-content">
-      <div class="eyebrow"><svg lucideShieldCheck size="14"></svg> Verified vehicles, better journeys</div>
-      <h1>Find the one<br /><span>that feels right.</span></h1>
-      <p>Premium pre-owned cars and bikes, inspected end to end<br class="desktop-only" /> and ready for their next chapter.</p>
-      <div class="hero-actions">
-        <a class="primary-button" routerLink="/cars">Browse vehicles <svg lucideArrowRight size="17"></svg></a>
-        <a class="ghost-button" routerLink="/sell">Sell with us <svg lucideTag size="16"></svg></a>
+    <div class="text-[#10262d] max-w-[560px] pb-[30px] relative z-[1] max-[700px]:pb-5">
+      <div class="inline-flex items-center bg-white/64 border border-[#10262d]/12 rounded-[30px] text-[#10262d] text-xs font-semibold gap-[7px] px-[15px] py-2"><svg lucideShieldCheck size="14"></svg> Verified vehicles, better journeys</div>
+      <h1 class="font-['Poppins',sans-serif] text-[clamp(2.2rem,4vw,3.5rem)] font-semibold tracking-[-0.04em] leading-[0.94] mt-6 mb-[22px]">Find the one<br /><span class="text-[#8ca910]">that feels right.</span></h1>
+      <p class="text-[#344c51] text-base leading-[1.6] mb-7 max-[700px]:text-[14px]">Premium pre-owned cars and bikes, inspected end to end<br class="max-[700px]:hidden" /> and ready for their next chapter.</p>
+      <div class="flex gap-[14px] max-[700px]:flex-col max-[700px]:gap-[10px]">
+        <a class="flex items-center bg-[#d7fa4c] rounded-[10px] text-[#14272c] text-sm font-semibold gap-2 px-[22px] py-[15px] transition-[transform,box-shadow] duration-200 ease-out hover:shadow-[0_10px_25px_rgba(215,250,76,0.3)] hover:-translate-y-[3px] max-[700px]:justify-center" routerLink="/cars">Browse vehicles <svg lucideArrowRight size="17"></svg></a>
+        <a class="flex items-center bg-white/70 border border-[#10262d]/14 rounded-[10px] text-[#10262d] text-sm font-semibold gap-2 px-[22px] py-[15px] transition-[background] duration-200 ease-out hover:bg-white/[0.55] max-[700px]:justify-center" routerLink="/sell">Sell with us <svg lucideTag size="16"></svg></a>
       </div>
     </div>
-    <div class="hero-feature-strip" aria-label="Ayra Cars benefits">
-      <div class="hero-feature"><span class="feature-icon"><svg lucideShieldCheck size="19"></svg></span><div><strong>Verified Vehicles</strong><small>Inspected for your peace of mind</small></div></div>
-      <div class="hero-feature"><span class="feature-icon"><svg lucideCarFront size="19"></svg></span><div><strong>Wide Range</strong><small>Cars and bikes from top brands</small></div></div>
-      <div class="hero-feature"><span class="feature-icon"><svg lucideTag size="19"></svg></span><div><strong>Great Value</strong><small>Quality vehicles at the right price</small></div></div>
-      <div class="hero-feature"><span class="feature-icon"><svg lucideUsers size="19"></svg></span><div><strong>Hassle-Free Experience</strong><small>Simple, transparent and reliable</small></div></div>
+    <div class="grid items-center self-stretch text-white gap-[18px] grid-cols-4 mt-auto ml-auto py-4 relative w-full z-[1] max-[700px]:gap-[10px] max-[700px]:grid-cols-2 max-[700px]:ml-0 max-[700px]:p-3.5" aria-label="Ayra Cars benefits">
+      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideShieldCheck size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Verified Vehicles</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Inspected for your peace of mind</small></div></div>
+      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideCarFront size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Wide Range</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Cars and bikes from top brands</small></div></div>
+      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideTag size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Great Value</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Quality vehicles at the right price</small></div></div>
+      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideUsers size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Hassle-Free Experience</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Simple, transparent and reliable</small></div></div>
     </div>
   </section>
 
   <!-- ===== Quick search ===== -->
   <section class="quick-search" aria-label="Find your vehicle" hidden>
-    <div class="search-intro"><span>01</span><div><strong>Start your search</strong><small>Make the first move</small></div></div>
+    <div class="search-intro"><span class="text-[#c9c6bc] font-['Poppins',sans-serif] text-[26px] font-semibold">01</span><div><strong class="block text-[14px]">Start your search</strong><small class="block text-[#8a948f] text-[12px]">Make the first move</small></div></div>
     <form class="quick-search-form" (submit)="submitSearch($event)">
       <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'type'">
-        <svg lucideCarFront size="18"></svg>
+        <svg lucideCarFront size="18" class="flex-none"></svg>
         <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'type'" aria-haspopup="listbox" (click)="toggleDropdown('type')">
-          <span>{{ searchType() === 'car' ? 'Cars' : 'Bikes' }}</span><svg lucideChevronDown size="16"></svg>
+          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ searchType() === 'car' ? 'Cars' : 'Bikes' }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
         </button>
         @if (dropdownOpen() === 'type') {
           <div class="dropdown-menu" role="listbox">
-            <button type="button" [class.option-selected]="searchType() === 'car'" (click)="selectType('car')">Cars <span>Car</span></button>
-            <button type="button" [class.option-selected]="searchType() === 'bike'" (click)="selectType('bike')">Bikes <span>Bike</span></button>
+            <button type="button" [class.option-selected]="searchType() === 'car'" (click)="selectType('car')">Cars <span class="text-[#8a948f] text-[10px] font-medium">Car</span></button>
+            <button type="button" [class.option-selected]="searchType() === 'bike'" (click)="selectType('bike')">Bikes <span class="text-[#8a948f] text-[10px] font-medium">Bike</span></button>
           </div>
         }
       </div>
       <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'brand'">
         <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'brand'" aria-haspopup="listbox" (click)="toggleDropdown('brand')">
-          <span>{{ searchBrand() || 'Select brand' }}</span><svg lucideChevronDown size="16"></svg>
+          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ searchBrand() || 'Select brand' }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
         </button>
         @if (dropdownOpen() === 'brand') {
           <div class="dropdown-menu" role="listbox">
-            <button type="button" [class.option-selected]="!searchBrand()" (click)="selectBrand('')">All brands <span>Any</span></button>
+            <button type="button" [class.option-selected]="!searchBrand()" (click)="selectBrand('')">All brands <span class="text-[#8a948f] text-[10px] font-medium">Any</span></button>
             @for (brand of brands(); track brand) {
               <button type="button" [class.option-selected]="searchBrand() === brand" (click)="selectBrand(brand)">{{ brand }}</button>
             }
@@ -58,11 +58,11 @@
       </div>
       <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'budget'">
         <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'budget'" aria-haspopup="listbox" (click)="toggleDropdown('budget')">
-          <span>{{ budgetLabel() }}</span><svg lucideChevronDown size="16"></svg>
+          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ budgetLabel() }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
         </button>
         @if (dropdownOpen() === 'budget') {
           <div class="dropdown-menu" role="listbox">
-            <button type="button" [class.option-selected]="!searchBudget()" (click)="selectBudget('')">Any budget <span>All prices</span></button>
+            <button type="button" [class.option-selected]="!searchBudget()" (click)="selectBudget('')">Any budget <span class="text-[#8a948f] text-[10px] font-medium">All prices</span></button>
             @for (option of budgetOptions; track option.value) {
               <button type="button" [class.option-selected]="searchBudget() === option.value" (click)="selectBudget(option.value)">{{ option.label }}</button>
             }
@@ -73,18 +73,19 @@
     </form>
   </section>
 
-  <!-- ===== Trust ===== -->
-  <section class="trust-section" id="why-ayra-cars">
-    <div class="trust-copy">
-      <span class="section-kicker">WHY AYRA CARS</span>
-      <h2>Buy with your<br /><em>mind at ease.</em></h2>
-      <p>Every vehicle earns its place here. We inspect the details, make the history clear, and stay close until the keys are in your hand.</p>
-      <a class="text-link" routerLink="/sell">How it works <svg lucideArrowRight size="16"></svg></a>
+  <!-- ===== Trust ===== (hidden per request)
+  <section class="bg-[#14272c] rounded-[24px] text-white grid gap-[60px] grid-cols-[1fr_1.1fr] my-20 mx-auto max-w-[1240px] py-16 px-10 max-[900px]:grid-cols-1 max-[900px]:gap-10 max-[900px]:py-11 max-[900px]:px-8" id="why-ayra-cars">
+    <div>
+      <span class="text-[#d7fa4c]">WHY AYRA CARS</span>
+      <h2 class="font-['Poppins',sans-serif] text-[30px] font-semibold tracking-[-0.03em] leading-none mt-3 mb-[18px]">Buy with your<br /><em class="text-[#d7fa4c] not-italic">mind at ease.</em></h2>
+      <p class="text-white/72 text-base leading-[1.6] mb-[22px]">Every vehicle earns its place here. We inspect the details, make the history clear, and stay close until the keys are in your hand.</p>
+      <a class="text-[#d7fa4c] inline-flex items-center gap-1.5 text-sm font-semibold" routerLink="/sell">How it works <svg lucideArrowRight size="16"></svg></a>
     </div>
-    <div class="trust-points">
-      <div class="trust-point"><span><svg lucideCheck size="17"></svg></span><div><strong>200-point inspection</strong><p>Every car and bike is checked by a trained specialist.</p></div></div>
-      <div class="trust-point"><span><svg lucideShieldCheck size="17"></svg></span><div><strong>Verified history</strong><p>No hidden surprises. Just the full story, upfront.</p></div></div>
-      <div class="trust-point"><span><svg lucideTruck size="17"></svg></span><div><strong>Delivered to your door</strong><p>Choose delivery from home; additional charges may apply by location.</p></div></div>
+    <div class="flex flex-col gap-7">
+      <div class="flex items-start gap-[18px]"><span class="flex items-center bg-[rgba(215,250,76,0.16)] border border-[rgba(215,250,76,0.3)] rounded-xl text-[#d7fa4c] justify-center h-[46px] w-[46px]"><svg lucideCheck size="17"></svg></span><div><strong class="block text-lg font-semibold mb-[5px]">200-point inspection</strong><p class="text-white/62 text-sm leading-[1.5] m-0">Every car and bike is checked by a trained specialist.</p></div></div>
+      <div class="flex items-start gap-[18px]"><span class="flex items-center bg-[rgba(215,250,76,0.16)] border border-[rgba(215,250,76,0.3)] rounded-xl text-[#d7fa4c] justify-center h-[46px] w-[46px]"><svg lucideShieldCheck size="17"></svg></span><div><strong class="block text-lg font-semibold mb-[5px]">Verified history</strong><p class="text-white/62 text-sm leading-[1.5] m-0">No hidden surprises. Just the full story, upfront.</p></div></div>
+      <div class="flex items-start gap-[18px]"><span class="flex items-center bg-[rgba(215,250,76,0.16)] border border-[rgba(215,250,76,0.3)] rounded-xl text-[#d7fa4c] justify-center h-[46px] w-[46px]"><svg lucideTruck size="17"></svg></span><div><strong class="block text-lg font-semibold mb-[5px]">Delivered to your door</strong><p class="text-white/62 text-sm leading-[1.5] m-0">Choose delivery from home; additional charges may apply by location.</p></div></div>
     </div>
   </section>
+  -->
 </main>

@@ -32,6 +32,7 @@ export interface Bike {
   bodyType: BikeBodyType;
   color: string;
   image: string;
+  images?: string[];
   featured?: boolean;
   rating?: number;
 }

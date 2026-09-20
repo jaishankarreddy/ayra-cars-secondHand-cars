@@ -1,43 +1,42 @@
 ﻿import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE } from '@config/api';
+import { RouterLink } from '@angular/router';
 import {
   LucidePhone,
   LucideMail,
   LucideMapPin,
   LucideMessageCircle,
   LucideSend,
-  LucideCheckCircle2,
-  LucideClock
+  LucideClock,
+  LucideLock,
+  LucideCar,
+  LucideCircleDot,
+  LucideTag,
+  LucideChevronRight,
+  LucideArrowRight
 } from '@lucide/angular';
 import { FooterComponent } from '../../home/components/footer/footer.component';
-import { FaqComponent } from '../../home/components/faq/faq.component';
-import { RippleDirective } from '../../cars/directives/ripple.directive';
-import { RevealDirective } from '../../home/directives/reveal.directive';
 import { ToastService } from '../../../services/toast.service';
-
-interface ContactChannel {
-  icon: 'phone' | 'mail' | 'mapPin' | 'messageCircle';
-  title: string;
-  value: string;
-  detail: string;
-}
 
 @Component({
   selector: 'app-contact-page',
   standalone: true,
   imports: [
+    RouterLink,
     FooterComponent,
-    FaqComponent,
-    RippleDirective,
-    RevealDirective,
     LucidePhone,
     LucideMail,
     LucideMapPin,
     LucideMessageCircle,
     LucideSend,
-    LucideCheckCircle2,
-    LucideClock
+    LucideClock,
+    LucideLock,
+    LucideCar,
+    LucideCircleDot,
+    LucideTag,
+    LucideChevronRight,
+    LucideArrowRight
   ],
   templateUrl: './contact.page.html',
   styleUrl: './contact.page.scss'
@@ -49,51 +48,43 @@ export class ContactPageComponent {
   readonly name = signal('');
   readonly email = signal('');
   readonly phone = signal('');
-  readonly subject = signal('');
+  readonly enquiryType = signal('');
   readonly message = signal('');
   readonly submitted = signal(false);
+  readonly expandedFaq = signal<number | null>(null);
 
-  readonly channels: ContactChannel[] = [
+  readonly faqs = [
     {
-      icon: 'phone',
-      title: 'Call us',
-      value: '+91 98765 43210',
-      detail: 'Mon – Sat · 9 AM – 8 PM'
+      icon: 'car' as const,
+      question: 'How can I enquire\nabout a vehicle?',
+      answer: 'You can fill out the enquiry form on the vehicle details page or contact us directly by phone or WhatsApp.'
     },
     {
-      icon: 'mail',
-      title: 'Email us',
-      value: 'aayracars@gmail.com',
-      detail: 'Replies within 24 hours'
+      icon: 'steering' as const,
+      question: 'Can I schedule a\ntest drive?',
+      answer: 'Yes, absolutely. Contact us and we\'ll help you schedule a test drive at a convenient time.'
     },
     {
-      icon: 'mapPin',
-      title: 'Visit our hub',
-      value: 'Koramangala, Bengaluru',
-      detail: 'Open every day · 10 AM – 7 PM'
+      icon: 'whatsapp' as const,
+      question: 'Can I contact you\nthrough WhatsApp?',
+      answer: 'Yes, you can reach us on WhatsApp for quick assistance, vehicle details and more.'
     },
     {
-      icon: 'messageCircle',
-      title: 'WhatsApp',
-      value: '+91 98765 43210',
-      detail: 'Chat with our experts'
+      icon: 'tag' as const,
+      question: 'How can I sell\nmy vehicle?',
+      answer: 'You can use our Sell Your Vehicle page or get in touch with our team for a free evaluation.'
     }
   ];
+
+  toggleFaq(index: number): void {
+    this.expandedFaq.set(this.expandedFaq() === index ? null : index);
+  }
 
   onSubmit(event: Event): void {
     event.preventDefault();
     const email = this.email().trim();
-    if (
-      !this.name().trim() ||
-      !email ||
-      !this.phone().trim() ||
-      !this.message().trim()
-    ) {
-      this.toast.error('Please complete the form', 'Name, email, phone and message are all required.');
-      return;
-    }
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      this.toast.error('Invalid email', 'Please enter a valid email address.');
+    if (!this.name().trim() || !this.phone().trim() || !this.message().trim()) {
+      this.toast.error('Please complete the form', 'Name, phone and message are required.');
       return;
     }
     this.http
@@ -101,7 +92,7 @@ export class ContactPageComponent {
         name: this.name().trim(),
         email,
         phone: this.phone().trim(),
-        subject: this.subject().trim(),
+        subject: this.enquiryType().trim(),
         message: this.message().trim()
       })
       .subscribe({
@@ -120,7 +111,7 @@ export class ContactPageComponent {
     this.name.set('');
     this.email.set('');
     this.phone.set('');
-    this.subject.set('');
+    this.enquiryType.set('');
     this.message.set('');
     this.submitted.set(false);
   }

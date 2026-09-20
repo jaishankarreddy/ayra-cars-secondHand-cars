@@ -1,27 +1,48 @@
-<section class="py-16 sm:py-24" appReveal>
-  <div class="container-am">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <app-section-heading
-        eyebrow="Similar Vehicles"
-        title="You may also like"
-        subtitle="Hand-picked alternatives that match this vehicle's class and budget."
-      />
-      <div class="mb-1 flex items-center gap-2">
-        <button type="button" (click)="scroll(-1)" appRipple aria-label="Scroll left" class="slider-btn">
-          <svg lucideChevronLeft class="h-5 w-5"></svg>
-        </button>
-        <button type="button" (click)="scroll(1)" appRipple aria-label="Scroll right" class="slider-btn">
-          <svg lucideChevronRight class="h-5 w-5"></svg>
-        </button>
-      </div>
+@if (similarVehicles().length > 0) {
+  <section class="similar-section">
+    <div class="similar-header">
+      <h2 class="similar-title">Similar {{ (vehicle().vehicleType || 'car') === 'bike' ? 'Bikes' : 'Cars' }} You May Like</h2>
+      <a [routerLink]="viewAllLink()" class="view-all-link">
+        View all
+        <svg lucideArrowRight size="14"></svg>
+      </a>
     </div>
 
-    <div #track class="no-scrollbar mt-10 flex snap-x gap-6 overflow-x-auto pb-2">
-      @for (car of vehicles(); track car.id) {
-        <div class="w-[270px] shrink-0 snap-start sm:w-[300px] lg:w-[320px]">
-          <app-car-card [car]="car" />
-        </div>
+    <div class="carousel-wrapper">
+      @if (showArrows()) {
+        <button class="carousel-arrow carousel-arrow-left" (click)="scrollLeft(carousel)" aria-label="Scroll left">
+          <svg lucideChevronLeft size="20"></svg>
+        </button>
+      }
+
+      <div class="carousel-track" #carousel>
+        @for (v of similarVehicles(); track v.id) {
+          <a [routerLink]="['/vehicles', v.id]" class="similar-card">
+            <div class="card-image">
+              <img [src]="v.image" [alt]="v.name" loading="lazy" />
+              <button
+                class="heart-btn"
+                [class.wishlisted]="isWishlisted(v.id)"
+                (click)="toggleWishlist($event, v.id)"
+                aria-label="Toggle favourite"
+              >
+                <svg lucideHeart size="16" [attr.fill]="isWishlisted(v.id) ? 'currentColor' : 'none'"></svg>
+              </button>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">{{ v.name }}</h3>
+              <p class="card-meta">{{ v.year }} | {{ formatKm(v.kilometers) }} | {{ v.fuel }}</p>
+              <span class="card-price">{{ formatPrice(v.price) }}</span>
+            </div>
+          </a>
+        }
+      </div>
+
+      @if (showArrows()) {
+        <button class="carousel-arrow carousel-arrow-right" (click)="scrollRight(carousel)" aria-label="Scroll right">
+          <svg lucideChevronRight size="20"></svg>
+        </button>
       }
     </div>
-  </div>
-</section>
+  </section>
+}

@@ -1,121 +1,132 @@
-<div class="gallery">
-  <!-- Hero image -->
-  <div class="gallery-hero group relative overflow-hidden rounded-2xl border border-border bg-surface-2 shadow-sm">
-    <!-- Main image (zoom on hover) -->
+<div class="gallery-container">
+  <!-- Main hero image -->
+  <div class="gallery-main" (click)="openFullscreen()">
     <img
       [src]="activeImage()"
       [alt]="alt() + ' — main image'"
-      class="hero-img h-full w-full object-cover"
+      class="main-img"
     />
 
-    <!-- Bottom gradient for controls legibility -->
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-
-    <!-- Zoom hint -->
-    <!-- <div class="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-ink/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-0">
-      <svg lucideZoomIn class="h-3.5 w-3.5"></svg>
-      Hover to zoom
-    </div> -->
-
-    <!-- Counter -->
-    <!-- <div class="pointer-events-none absolute bottom-4 left-4 inline-flex items-center rounded-full bg-ink/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
-      {{ activeIndex() + 1 }} / {{ images().length }}
-    </div> -->
-
-    <!-- Fullscreen -->
-    <!-- <button
-      type="button"
-      (click)="openFullscreen()"
-      appRipple
-      aria-label="Open fullscreen preview"
-      class="absolute bottom-3.5 right-3.5 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur transition-transform duration-200 hover:scale-110 active:scale-95"
-    >
-      <svg lucideMaximize2 class="h-[18px] w-[18px]"></svg>
-    </button> -->
+    <!-- Verified badge -->
+    <div class="verified-badge">
+      <svg lucideBadgeCheck size="15"></svg>
+      Verified Vehicle
+    </div>
 
     <!-- Nav arrows -->
-    <!-- <button
+    <button
       type="button"
-      (click)="prev()"
-      appRipple
+      (click)="prev(); $event.stopPropagation()"
       aria-label="Previous image"
-      class="nav-btn left-3"
+      class="nav-arrow nav-prev"
     >
-      <svg lucideChevronLeft class="h-5 w-5"></svg>
+      <svg lucideChevronLeft size="20"></svg>
     </button>
     <button
       type="button"
-      (click)="next()"
-      appRipple
+      (click)="next(); $event.stopPropagation()"
       aria-label="Next image"
-      class="nav-btn right-3"
+      class="nav-arrow nav-next"
     >
-      <svg lucideChevronRight class="h-5 w-5"></svg>
-    </button> -->
-  </div>
+      <svg lucideChevronRight size="20"></svg>
+    </button>
 
-  <!-- Thumbnails -->
-  <div class="mt-4">
-    <app-thumbnail-gallery
-      [images]="images()"
-      [alt]="alt()"
-      [activeIndex]="activeIndex()"
-      (select)="selectIndex($event)"
-    />
-  </div>
-
-  <!-- Fullscreen overlay -->
-  @if (fullscreen()) {
-    <div class="fs-overlay" (click)="closeFullscreen()" role="dialog" aria-modal="true" aria-label="Image preview">
-      <!-- Close -->
-      <button
-        type="button"
-        (click)="closeFullscreen()"
-        appRipple
-        aria-label="Close preview"
-        class="fs-btn absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20"
-      >
-        <svg lucideX class="h-6 w-6"></svg>
-      </button>
-
-      <!-- Image -->
-      <div class="relative flex h-full w-full items-center justify-center p-6 sm:p-16" (click)="$event.stopPropagation()">
-        <img
-          [src]="activeImage()"
-          [alt]="alt() + ' — fullscreen'"
-          class="fs-img max-h-full max-w-full rounded-xl object-contain shadow-lg"
-          [class.fs-zoomed]="zoomed()"
-          (click)="zoomed.set(!zoomed())"
-        />
-        <p class="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 text-xs font-medium text-white/70">
-          Click the image to {{ zoomed() ? 'zoom out' : 'zoom in' }}
-        </p>
-      </div>
-
-      <!-- Nav -->
-      <button
-        type="button"
-        (click)="prev(); $event.stopPropagation()"
-        appRipple
-        aria-label="Previous image"
-        class="fs-btn absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20 sm:left-6"
-      >
-        <svg lucideChevronLeft class="h-6 w-6"></svg>
-      </button>
-      <button
-        type="button"
-        (click)="next(); $event.stopPropagation()"
-        appRipple
-        aria-label="Next image"
-        class="fs-btn absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20 sm:right-6"
-      >
-        <svg lucideChevronRight class="h-6 w-6"></svg>
-      </button>
-
-      <!-- Counter -->
-      <div class="pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
-        {{ activeIndex() + 1 }} / {{ images().length }}
-      </div>
+    <!-- Counter -->
+    <div class="image-counter">
+      {{ activeIndex() + 1 }} / {{ images().length }}
     </div>
-  }
+
+    <!-- Fullscreen button -->
+    <button
+      type="button"
+      (click)="openFullscreen(); $event.stopPropagation()"
+      aria-label="Open fullscreen preview"
+      class="fullscreen-btn"
+    >
+      <svg lucideMaximize2 size="17"></svg>
+    </button>
+  </div>
+
+  <!-- Vertical thumbnails -->
+  <div class="gallery-thumbs">
+    @for (image of visibleThumbs(); track $index) {
+      <button
+        type="button"
+        class="thumb-item"
+        [class.thumb-active]="activeIndex() === $index"
+        [attr.aria-label]="'View image ' + ($index + 1)"
+        (click)="selectIndex($index)"
+      >
+        <img
+          [src]="image"
+          [alt]="alt() + ' — image ' + ($index + 1)"
+          loading="lazy"
+        />
+      </button>
+    }
+    <!-- "View all photos" card -->
+    @if (remainingCount() > 0) {
+      <button
+        type="button"
+        class="thumb-more-card"
+        (click)="openFullscreen()"
+        aria-label="View all photos"
+      >
+        <span class="thumb-more-count">+{{ remainingCount() }}</span>
+        <span class="thumb-more-label">View all photos</span>
+      </button>
+    }
+  </div>
 </div>
+
+<!-- Fullscreen overlay -->
+@if (fullscreen()) {
+  <div class="fs-overlay" (click)="closeFullscreen()" role="dialog" aria-modal="true" aria-label="Image preview">
+    <!-- Close -->
+    <button
+      type="button"
+      (click)="closeFullscreen()"
+      aria-label="Close preview"
+      class="fs-btn fs-close"
+    >
+      <svg lucideX size="24"></svg>
+    </button>
+
+    <!-- Image -->
+    <div class="fs-content" (click)="$event.stopPropagation()">
+      <img
+        [src]="activeImage()"
+        [alt]="alt() + ' — fullscreen'"
+        class="fs-img"
+        [class.fs-zoomed]="zoomed()"
+        (click)="zoomed.set(!zoomed())"
+      />
+      <p class="fs-hint">
+        Click the image to {{ zoomed() ? 'zoom out' : 'zoom in' }}
+      </p>
+    </div>
+
+    <!-- Nav -->
+    <button
+      type="button"
+      (click)="prev(); $event.stopPropagation()"
+      aria-label="Previous image"
+      class="fs-btn fs-nav-prev"
+    >
+      <svg lucideChevronLeft size="24"></svg>
+    </button>
+    <button
+      type="button"
+      (click)="next(); $event.stopPropagation()"
+      aria-label="Next image"
+      class="fs-btn fs-nav-next"
+    >
+      <svg lucideChevronRight size="24"></svg>
+    </button>
+
+    <!-- Counter -->
+    <div class="fs-counter">
+      {{ activeIndex() + 1 }} / {{ images().length }}
+    </div>
+  </div>
+}

@@ -1,43 +1,86 @@
 :host { display: block; }
 
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, #F1F8F4 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
-.field-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
+.hero > * {
+  position: relative;
+  z-index: 2;
 }
 
 .field-input {
   width: 100%;
-  padding: 0.8rem 1rem;
-  border-radius: 0.875rem;
-  border: 1.5px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #DDE6E3;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #0B1720;
+  background: #FFFFFF;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
 
-  &::placeholder { color: var(--text-muted); }
+.field-input::placeholder {
+  color: #71808A;
+}
 
-  &:hover {
-    border-color: color-mix(in srgb, var(--border) 40%, var(--primary));
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: var(--surface);
-    box-shadow: 0 0 0 4px var(--primary-soft);
-  }
+.field-input:focus {
+  border-color: #062D32;
 }
 
 .field-textarea {
+  height: auto;
+  padding: 12px 14px;
   resize: vertical;
-  min-height: 6rem;
+  min-height: 100px;
+}
+
+select.field-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371808A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.phone-field {
+  flex: 1;
+  min-width: 0;
+  border-radius: 0 8px 8px 0;
+  border-left: none;
+}
+
+.cta-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(5, 43, 48) 0%, rgb(5, 43, 48, 0.9) 40%, transparent 100%);
+  z-index: 1;
+}
+
+.faq-card.expanded {
+  border-color: #062D32;
+}
+
+.faq-answer {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #52616D;
+  display: none;
+}
+
+.faq-card.expanded .faq-answer {
+  display: block;
 }

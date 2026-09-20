@@ -4,11 +4,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import {
   LucideArrowRight,
-  LucideCarFront,
+  LucideCircleUser,
   LucideHeart,
   LucideLogOut,
   LucideMenu,
   LucideScale,
+  LucideSearch,
   LucideX
 } from '@lucide/angular';
 import { WishlistService } from '../../services/wishlist.service';
@@ -22,11 +23,12 @@ import { ToastService } from '../../services/toast.service';
   imports: [
     RouterLink,
     LucideArrowRight,
-    LucideCarFront,
+    LucideCircleUser,
     LucideHeart,
     LucideLogOut,
     LucideMenu,
     LucideScale,
+    LucideSearch,
     LucideX
   ],
   templateUrl: './site-navbar.component.html',
@@ -40,6 +42,9 @@ export class SiteNavbarComponent {
   private readonly router = inject(Router);
 
   readonly menuOpen = signal(false);
+  readonly searchQuery = signal('');
+  readonly mobileSearchQuery = signal('');
+  readonly searchFocused = signal(false);
   readonly currentUrl = signal(this.router.url);
 
   constructor() {
@@ -80,5 +85,35 @@ export class SiteNavbarComponent {
     this.auth.logout();
     this.menuOpen.set(false);
     this.toast.info('Logged out', 'You have been signed out. See you soon!');
+  }
+
+  onSearchInput(event: Event): void {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  onSearch(event: Event): void {
+    event.preventDefault();
+    const trimmed = this.searchQuery().trim();
+    if (!trimmed) return;
+    this.router.navigate(['/cars'], { queryParams: { q: trimmed } });
+    this.searchQuery.set('');
+    this.searchFocused.set(false);
+  }
+
+  onMobileSearchInput(event: Event): void {
+    this.mobileSearchQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  onMobileSearch(event: Event): void {
+    event.preventDefault();
+    const trimmed = this.mobileSearchQuery().trim();
+    if (!trimmed) return;
+    this.router.navigate(['/cars'], { queryParams: { q: trimmed } });
+    this.mobileSearchQuery.set('');
+    this.menuOpen.set(false);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
   }
 }

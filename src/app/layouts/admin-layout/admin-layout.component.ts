@@ -10,6 +10,7 @@ import {
   LucideBike,
   LucideHandCoins,
   LucideMail,
+  LucideCalendarDays,
   LucideSettings,
   LucideExternalLink,
   LucideLogOut,
@@ -28,8 +29,8 @@ import { AdminAuthService } from '../../features/admin/services/admin-auth.servi
 interface NavItem {
   path: string;
   label: string;
-  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'settings';
-  badgeKey?: 'vehicles' | 'offers' | 'contacts';
+  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'settings';
+  badgeKey?: 'vehicles' | 'offers' | 'contacts' | 'testDrives';
 }
 
 const PAGE_TITLES: Record<string, string> = {
@@ -39,6 +40,7 @@ const PAGE_TITLES: Record<string, string> = {
   bikes: 'Bikes',
   offers: 'Offers',
   contacts: 'Contact Enquiries',
+  'test-drives': 'Test Drives',
   settings: 'Settings',
   login: 'Sign in'
 };
@@ -49,6 +51,7 @@ interface DashboardSummary {
   totalVehicles: number;
   pendingOffers: number;
   newContacts: number;
+  pendingTestDrives: number;
 }
 
 @Component({
@@ -64,6 +67,7 @@ interface DashboardSummary {
     LucideBike,
     LucideHandCoins,
     LucideMail,
+    LucideCalendarDays,
     LucideSettings,
     LucideExternalLink,
     LucideLogOut,
@@ -103,6 +107,7 @@ export class AdminLayoutComponent implements OnInit {
   readonly vehiclesBadge = computed(() => this.summary()?.totalVehicles ?? 0);
   readonly offersBadge = computed(() => this.summary()?.pendingOffers ?? 0);
   readonly contactsBadge = computed(() => this.summary()?.newContacts ?? 0);
+  readonly testDrivesBadge = computed(() => this.summary()?.pendingTestDrives ?? 0);
 
   readonly adminName = computed(() => this.auth.admin()?.name ?? 'Admin User');
   readonly adminInitials = computed(() =>
@@ -120,7 +125,8 @@ export class AdminLayoutComponent implements OnInit {
     { path: '/admin/cars', label: 'Cars', icon: 'car' },
     { path: '/admin/bikes', label: 'Bikes', icon: 'bike' },
     { path: '/admin/offers', label: 'Offers', icon: 'offers', badgeKey: 'offers' },
-    { path: '/admin/contacts', label: 'Contacts', icon: 'mail', badgeKey: 'contacts' }
+    { path: '/admin/contacts', label: 'Contacts', icon: 'mail', badgeKey: 'contacts' },
+    { path: '/admin/test-drives', label: 'Test Drives', icon: 'calendar', badgeKey: 'testDrives' }
   ];
 
   readonly notifications = signal<{ id: number; title: string; detail: string }[]>([]);
@@ -149,6 +155,7 @@ export class AdminLayoutComponent implements OnInit {
       case 'vehicles': return this.vehiclesBadge();
       case 'offers': return this.offersBadge();
       case 'contacts': return this.contactsBadge();
+      case 'testDrives': return this.testDrivesBadge();
       default: return 0;
     }
   }

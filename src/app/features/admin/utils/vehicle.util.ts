@@ -49,6 +49,7 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
       bodyType: c.bodyType,
       abs: '—',
       image: c.image,
+      images: c.images,
       status: SOLD_IDS.has(c.id) ? 'Sold' : 'Available',
       rating: c.rating
     };
@@ -73,6 +74,7 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
     bodyType: b.bodyType,
     abs: b.abs ? 'Yes' : 'No',
     image: b.image,
+    images: b.images,
     status: SOLD_IDS.has(b.id) ? 'Sold' : 'Available',
     rating: b.rating
   };

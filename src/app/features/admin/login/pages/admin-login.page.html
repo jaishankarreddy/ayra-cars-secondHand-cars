@@ -6,24 +6,22 @@
        style="background-image: linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px); background-size: 56px 56px;"></div>
 
   <div class="relative w-full max-w-md">
-    <div class="rounded-3xl border border-white/10 bg-white/5 p-7 shadow-2xl backdrop-blur-xl sm:p-9">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-7 shadow-2xl backdrop-blur-xl sm:p-9">
       <div class="text-center">
-        <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-white shadow-primary">
-          <svg lucideShieldCheck class="h-7 w-7"></svg>
-        </span>
-        <h1 class="mt-5 font-heading text-2xl font-bold">Ayra Cars <span class="text-primary">Admin</span></h1>
+        <img src="/logo.png" alt="Ayra Cars" class="mx-auto h-12 w-auto">
+        <h1 class="mt-5 font-heading text-2xl font-semibold"><span class="text-primary">Admin</span></h1>
         <p class="mt-1 text-sm text-white/60">Sign in to the marketplace control panel</p>
       </div>
 
       <form class="mt-8 space-y-5" (submit)="onSubmit($event)">
-        <div class="field-group">
-          <label for="admin-email" class="field-label">Email Address</label>
+        <div class="field-group flex flex-col gap-[0.45rem]">
+          <label for="admin-email" class="field-label text-[0.8rem] font-semibold text-white/80">Email Address</label>
           <div class="relative">
-            <svg lucideMail class="field-icon"></svg>
+            <svg lucideMail class="field-icon absolute left-4 top-1/2 h-[1.1rem] w-[1.1rem] -translate-y-1/2 text-white/40 pointer-events-none transition-colors"></svg>
             <input
               id="admin-email"
               type="email"
-              class="field-input has-icon"
+              class="field-input has-icon w-full rounded-[0.875rem] border-[1.5px] border-white/[0.12] bg-white/[0.06] py-[0.8rem] pl-[2.7rem] pr-4 text-[0.9rem] font-medium text-white placeholder:text-white/35 focus:border-[var(--primary)] focus:bg-white/[0.08] focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_25%,transparent)] focus:outline-none"
               placeholder="Email address"
               autocomplete="username"
               [value]="email()"
@@ -32,14 +30,14 @@
           </div>
         </div>
 
-        <div class="field-group">
-          <label for="admin-password" class="field-label">Password</label>
+        <div class="field-group flex flex-col gap-[0.45rem]">
+          <label for="admin-password" class="field-label text-[0.8rem] font-semibold text-white/80">Password</label>
           <div class="relative">
-            <svg lucideLock class="field-icon"></svg>
+            <svg lucideLock class="field-icon absolute left-4 top-1/2 h-[1.1rem] w-[1.1rem] -translate-y-1/2 text-white/40 pointer-events-none transition-colors"></svg>
             <input
               id="admin-password"
               [type]="showPassword() ? 'text' : 'password'"
-              class="field-input has-icon pr-12"
+              class="field-input has-icon w-full rounded-[0.875rem] border-[1.5px] border-white/[0.12] bg-white/[0.06] py-[0.8rem] pl-[2.7rem] pr-12 text-[0.9rem] font-medium text-white placeholder:text-white/35 focus:border-[var(--primary)] focus:bg-white/[0.08] focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_25%,transparent)] focus:outline-none"
               placeholder="••••••••"
               autocomplete="current-password"
               [value]="password()"
@@ -70,7 +68,7 @@
           type="submit"
           appRipple
           [disabled]="loading()"
-          class="flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-4 text-sm font-bold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          class="flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-4 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           @if (loading()) {
             <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg>

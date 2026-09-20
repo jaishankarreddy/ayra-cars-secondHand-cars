@@ -1,12 +1,10 @@
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
-import { LucideChevronLeft, LucideChevronRight, LucideX } from '@lucide/angular';
-import { RippleDirective } from '../../../cars/directives/ripple.directive';
-import { ThumbnailGalleryComponent } from '../thumbnail-gallery/thumbnail-gallery.component';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { LucideBadgeCheck, LucideChevronLeft, LucideChevronRight, LucideMaximize2, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
-  imports: [ThumbnailGalleryComponent, RippleDirective, LucideChevronLeft, LucideChevronRight, LucideX],
+  imports: [LucideBadgeCheck, LucideChevronLeft, LucideChevronRight, LucideX, LucideMaximize2],
   templateUrl: './image-gallery.component.html',
   styleUrl: './image-gallery.component.scss'
 })
@@ -17,6 +15,12 @@ export class ImageGalleryComponent {
   readonly activeIndex = signal(0);
   readonly fullscreen = signal(false);
   readonly zoomed = signal(false);
+
+  /** Show at most 4 thumbnails, then the 5th slot becomes "+N View all" */
+  readonly maxThumbs = 4;
+
+  readonly visibleThumbs = computed(() => this.images().slice(0, this.maxThumbs));
+  readonly remainingCount = computed(() => Math.max(0, this.images().length - this.maxThumbs));
 
   private readonly destroyRef = inject(DestroyRef);
 

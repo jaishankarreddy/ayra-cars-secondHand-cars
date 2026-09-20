@@ -15,6 +15,7 @@ const Vehicle = require('./models/vehicle.model');
 const Brand = require('./models/brand.model');
 const VehicleOffer = require('./models/vehicle-offer.model');
 const ContactMessage = require('./models/contact-message.model');
+const TestDrive = require('./models/test-drive.model');
 const Testimonial = require('./models/testimonial.model');
 const Faq = require('./models/faq.model');
 const HomepageStat = require('./models/homepage-stat.model');
@@ -416,7 +417,10 @@ app.get('/api/vehicles', async (req, res, next) => {
 
     const filter = {};
     if (type) filter.vehicleType = type;
-    if (asArray(brand)?.length) filter.brand = { $in: asArray(brand) };
+    if (asArray(brand)?.length) {
+      const brandPatterns = asArray(brand).map((b) => new RegExp(`^${b.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'));
+      filter.brand = { $in: brandPatterns };
+    }
     if (asArray(model)?.length) filter.model = { $in: asArray(model) };
     if (asArray(fuel)?.length) filter.fuel = { $in: asArray(fuel) };
     if (asArray(transmission)?.length) filter.transmission = { $in: asArray(transmission) };
@@ -469,7 +473,7 @@ app.get('/api/vehicles', async (req, res, next) => {
     const LIST_PROJECTION =
       'id vehicleType brand model variant year price rating featured availability ' +
       'fuel transmission mileage kilometers district location owners bodyType color ' +
-      'engineCC abs engine power registration insurance image';
+      'engineCC abs engine power registration insurance image images';
     const [items, total] = await Promise.all([
       Vehicle.find(filter).select(LIST_PROJECTION).sort(sort).skip(skip).limit(Number(limit)).lean(),
       Vehicle.countDocuments(filter)
@@ -530,7 +534,7 @@ app.get('/api/facets', async (req, res, next) => {
   try {
     const type = req.query.type === 'bike' ? 'bike' : 'car';
     const base = { vehicleType: type };
-    const [brands, models, years, fuels, transmissions, owners, bodyTypes, districts, colors, price, engineCc, mileage, count] =
+    const [rawBrands, models, years, fuels, transmissions, owners, bodyTypes, districts, colors, price, engineCc, mileage, count] =
       await Promise.all([
         Vehicle.distinct('brand', base),
         Vehicle.distinct('model', base),
@@ -598,6 +602,8 @@ app.get('/api/facets', async (req, res, next) => {
         { threshold: 20000, count: b.k20 ?? 0 }
       ];
     }
+
+    const brands = rawBrands.map((b) => b.toLowerCase());
 
     res.json({
       type,
@@ -700,16 +706,40 @@ app.post('/api/contacts', async (req, res, next) => {
   }
 });
 
+// POST /api/test-drives — book a test drive
+app.post('/api/test-drives', async (req, res, next) => {
+  try {
+    const { vehicleId, name, phone, preferredDate, preferredTime } = req.body;
+    if (!vehicleId || !name || !phone) {
+      return res.status(400).json({ message: 'vehicleId, name and phone are required' });
+    }
+    const vehicle = await Vehicle.findOne({ id: vehicleId });
+    if (!vehicle) return res.status(404).json({ message: 'Vehicle not found' });
+    const testDrive = await TestDrive.create({
+      vehicleId,
+      vehicleLabel: `${vehicle.brand} ${vehicle.model} ${vehicle.variant || ''}`.trim(),
+      name,
+      phone,
+      preferredDate: preferredDate || '',
+      preferredTime: preferredTime || ''
+    });
+    res.status(201).json(testDrive);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Admin: dashboard summary counts
 app.get('/api/admin/dashboard', adminRequired, async (_req, res, next) => {
   try {
-    const [totalCars, totalBikes, pendingOffers, newContacts] = await Promise.all([
+    const [totalCars, totalBikes, pendingOffers, newContacts, pendingTestDrives] = await Promise.all([
       Vehicle.countDocuments({ vehicleType: 'car' }),
       Vehicle.countDocuments({ vehicleType: 'bike' }),
       VehicleOffer.countDocuments({ status: 'Pending' }),
-      ContactMessage.countDocuments({ status: 'New' })
+      ContactMessage.countDocuments({ status: 'New' }),
+      TestDrive.countDocuments({ status: 'Pending' })
     ]);
-    res.json({ totalCars, totalBikes, totalVehicles: totalCars + totalBikes, pendingOffers, newContacts });
+    res.json({ totalCars, totalBikes, totalVehicles: totalCars + totalBikes, pendingOffers, newContacts, pendingTestDrives });
   } catch (err) {
     next(err);
   }
@@ -788,6 +818,44 @@ app.patch('/api/admin/contacts/:id', adminRequired, async (req, res, next) => {
     if (status) contact.status = status;
     await contact.save();
     res.json(contact);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin: list test drives
+app.get('/api/admin/test-drives', adminRequired, async (_req, res, next) => {
+  try {
+    const list = await TestDrive.find().sort({ createdAt: -1 }).lean();
+    res.json(list.map((t) => ({
+      id: t.id,
+      vehicleId: t.vehicleId,
+      vehicleLabel: t.vehicleLabel,
+      name: t.name,
+      phone: t.phone,
+      preferredDate: t.preferredDate,
+      preferredTime: t.preferredTime,
+      status: t.status,
+      note: t.note,
+      date: t.createdAt
+    })));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin: update test drive status
+app.patch('/api/admin/test-drives/:id', adminRequired, async (req, res, next) => {
+  try {
+    const { status, note } = req.body;
+    const query = { $or: [{ id: req.params.id }] };
+    if (/^[0-9a-fA-F]{24}$/.test(req.params.id)) query.$or.push({ _id: req.params.id });
+    const testDrive = await TestDrive.findOne(query);
+    if (!testDrive) return res.status(404).json({ message: 'Test drive not found' });
+    if (status) testDrive.status = status;
+    if (note !== undefined) testDrive.note = note;
+    await testDrive.save();
+    res.json(testDrive);
   } catch (err) {
     next(err);
   }

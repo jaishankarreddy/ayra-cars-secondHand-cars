@@ -120,4 +120,9 @@ VehicleSchema.index({ brand: 1, model: 1, variant: 1 });
 VehicleSchema.index({ vehicleType: 1, price: 1 });
 VehicleSchema.index({ vehicleType: 1, year: -1 });
 
+VehicleSchema.pre('save', function (next) {
+  if (this.brand) this.brand = this.brand.toLowerCase();
+  next();
+});
+
 module.exports = mongoose.model('Vehicle', VehicleSchema);

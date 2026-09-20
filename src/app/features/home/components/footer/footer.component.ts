@@ -1,6 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LucideCar, LucideMapPin, LucidePhoneCall, LucideMail, LucideMessageCircle } from '@lucide/angular';
+import { LucideCarFront, LucideMapPin, LucidePhoneCall, LucideMail, LucideMessageCircle } from '@lucide/angular';
 import { NAV_LINKS, FOOTER_QUICK_LINKS, FOOTER_LEGAL_LINKS } from '../../data/home.data';
 
 @Component({
@@ -8,7 +8,7 @@ import { NAV_LINKS, FOOTER_QUICK_LINKS, FOOTER_LEGAL_LINKS } from '../../data/ho
   standalone: true,
   imports: [
     RouterLink,
-    LucideCar,
+    LucideCarFront,
     LucideMapPin,
     LucidePhoneCall,
     LucideMail,

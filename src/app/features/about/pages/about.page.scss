@@ -1,0 +1,21 @@
+:host { display: block; }
+
+/* CTA gradient overlay pseudo-element */
+.cta-content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6,45,50,0.85) 0%, rgba(6,45,50,0.5) 50%, rgba(6,45,50,0.2) 100%);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+/* FAQ open/close state (parent-child) */
+.faq-open .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-open .faq-answer {
+  max-height: 200px;
+  padding: 0 16px 14px;
+}
