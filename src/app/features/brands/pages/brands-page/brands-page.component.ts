@@ -1,9 +1,16 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   LucideArrowRight,
   LucideSearch,
-  LucideX
+  LucideX,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideCarFront,
+  LucideBike,
+  LucideHeadset,
+  LucidePercent,
+  LucideShieldCheck
 } from '@lucide/angular';
 import { FooterComponent } from '../../../home/components/footer/footer.component';
 import { CatalogService, CatalogVehicle } from '../../../../services/catalog.service';
@@ -58,6 +65,22 @@ const LOGO_MAP: Record<string, string> = {
   'kawasaki': '/vehicle_logos/India_Kawasaki_Motors-Logo.wine.svg',
 };
 
+export interface MostSearchedBrand {
+  name: string;
+  key: string;
+  logo: string;
+  countLabel: string;
+  image: string;
+  type: 'Cars';
+}
+
+export interface MiniBrand {
+  name: string;
+  key: string;
+  logo: string;
+  type: 'Cars' | 'Bikes';
+}
+
 @Component({
   selector: 'app-brands-page',
   standalone: true,
@@ -66,7 +89,14 @@ const LOGO_MAP: Record<string, string> = {
     FooterComponent,
     LucideArrowRight,
     LucideSearch,
-    LucideX
+    LucideX,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideCarFront,
+    LucideBike,
+    LucideHeadset,
+    LucidePercent,
+    LucideShieldCheck
   ],
   templateUrl: './brands-page.component.html',
   styleUrl: './brands-page.component.scss'
@@ -77,6 +107,61 @@ export class BrandsPageComponent implements OnInit {
   readonly type = signal<VehicleType>('All');
   readonly query = signal('');
   readonly failedLogos = signal<Set<string>>(new Set());
+
+  @ViewChild('mostSearchedTrack') mostSearchedTrack?: ElementRef<HTMLDivElement>;
+
+  readonly mostSearchedBrands: MostSearchedBrand[] = [
+    {
+      name: 'Toyota',
+      key: 'toyota',
+      logo: '/vehicle_logos/toyota-logo.png',
+      countLabel: '80+ Vehicles',
+      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800',
+      type: 'Cars'
+    },
+    {
+      name: 'Hyundai',
+      key: 'hyundai',
+      logo: '/vehicle_logos/hyundai-logo.png',
+      countLabel: '65+ Vehicles',
+      image: 'https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=800',
+      type: 'Cars'
+    },
+    {
+      name: 'Maruti Suzuki',
+      key: 'maruti suzuki',
+      logo: '/vehicle_logos/suzuki-logo.png',
+      countLabel: '120+ Vehicles',
+      image: 'https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg?auto=compress&cs=tinysrgb&w=800',
+      type: 'Cars'
+    },
+    {
+      name: 'Kia',
+      key: 'kia',
+      logo: '/vehicle_logos/kia-logo.png',
+      countLabel: '45+ Vehicles',
+      image: 'https://images.pexels.com/photos/3311573/pexels-photo-3311573.jpeg?auto=compress&cs=tinysrgb&w=800',
+      type: 'Cars'
+    }
+  ];
+
+  readonly carPanelBrands: MiniBrand[] = [
+    { name: 'Toyota', key: 'toyota', logo: '/vehicle_logos/toyota-logo.png', type: 'Cars' },
+    { name: 'Hyundai', key: 'hyundai', logo: '/vehicle_logos/hyundai-logo.png', type: 'Cars' },
+    { name: 'Maruti Suzuki', key: 'maruti suzuki', logo: '/vehicle_logos/suzuki-logo.png', type: 'Cars' },
+    { name: 'Honda', key: 'honda', logo: '/vehicle_logos/honda-logo.png', type: 'Cars' },
+    { name: 'Tata', key: 'tata', logo: '/vehicle_logos/tata-logo.png', type: 'Cars' },
+    { name: 'Kia', key: 'kia', logo: '/vehicle_logos/kia-logo.png', type: 'Cars' }
+  ];
+
+  readonly bikePanelBrands: MiniBrand[] = [
+    { name: 'Royal Enfield', key: 'royal enfield', logo: '/vehicle_logos/Royal-Enfield-Logo.png', type: 'Bikes' },
+    { name: 'Yamaha', key: 'yamaha', logo: '/vehicle_logos/Yamaha_Motor_Company-Logo.wine.svg', type: 'Bikes' },
+    { name: 'Bajaj', key: 'bajaj', logo: '', type: 'Bikes' },
+    { name: 'TVS', key: 'tvs', logo: '/vehicle_logos/TVS_Motor_Company-Logo.wine.svg', type: 'Bikes' },
+    { name: 'Hero', key: 'hero', logo: '/vehicle_logos/Hero_Motors-Logo.wine.svg', type: 'Bikes' },
+    { name: 'Honda', key: 'honda', logo: '/vehicle_logos/honda-logo.png', type: 'Bikes' }
+  ];
 
   readonly brandCounts = computed(() => {
     const vehicles = this.catalog.vehicles();
@@ -166,5 +251,29 @@ export class BrandsPageComponent implements OnInit {
 
   getBrandQueryParams(brand: BrandData): Record<string, string> {
     return { brand: brand.key };
+  }
+
+  getMiniBrandRoute(brand: MiniBrand): string {
+    return brand.type === 'Bikes' ? '/bikes' : '/cars';
+  }
+
+  getMiniBrandQueryParams(brand: MiniBrand): Record<string, string> {
+    return { brand: brand.key };
+  }
+
+  getMostSearchedRoute(brand: MostSearchedBrand): string {
+    return '/cars';
+  }
+
+  getMostSearchedQueryParams(brand: MostSearchedBrand): Record<string, string> {
+    return { brand: brand.key };
+  }
+
+  scrollMostSearched(direction: 'prev' | 'next'): void {
+    const el = this.mostSearchedTrack?.nativeElement;
+    if (!el) return;
+    const cardWidth = el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetWidth + 16 : 300;
+    const amount = direction === 'next' ? cardWidth : -cardWidth;
+    el.scrollBy({ left: amount, behavior: 'smooth' });
   }
 }

@@ -36,3 +36,12 @@
 .cta-overlay {
   background: linear-gradient(90deg, rgba(6, 45, 50, 0.88) 0%, rgba(6, 45, 50, 0.5) 50%, transparent 100%);
 }
+
+/* Most Searched scrollbar hide for clean carousel */
+.most-searched-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.most-searched-track::-webkit-scrollbar {
+  display: none;
+}

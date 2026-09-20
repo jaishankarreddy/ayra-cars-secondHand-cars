@@ -1,0 +1,98 @@
+@if (post(); as p) {
+  <!-- Breadcrumb -->
+  <div class="container-am pt-6">
+    <nav class="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+      <a routerLink="/" class="hover:text-[#14272c]">Home</a>
+      <span>›</span>
+      <a routerLink="/blog" class="hover:text-[#14272c]">Blog</a>
+      <span>›</span>
+      <span class="truncate font-medium text-[var(--text)]">{{ p.category }}</span>
+    </nav>
+  </div>
+
+  <!-- Header -->
+  <article class="container-am pb-16 pt-6">
+    <div class="grid gap-8 lg:grid-cols-[1fr_340px]">
+      <div>
+        <span class="inline-flex rounded-full bg-[#d7fa4c] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#14272c]">{{ p.category }}</span>
+        <h1 class="mt-4 max-w-3xl font-heading text-[28px] font-semibold leading-tight tracking-tight text-[#14272c] lg:text-[36px]">{{ p.title }}</h1>
+        <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--text-muted)]">{{ p.excerpt }}</p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-4 border-y border-[var(--border)] py-4">
+          <img [src]="p.authorAvatar" [alt]="p.author" class="h-10 w-10 rounded-full object-cover" />
+          <div>
+            <p class="text-sm font-semibold text-[var(--text)]">{{ p.author }}</p>
+            <p class="text-xs text-[var(--text-muted)]">{{ p.date | date:'longDate' }} · {{ p.readMinutes }} min read</p>
+          </div>
+          <span class="hidden h-8 w-px bg-[var(--border)] lg:block"></span>
+          <div class="flex flex-wrap gap-2">
+            @for (t of p.tags; track t) {
+              <span class="rounded-full border border-[var(--border)] bg-[var(--bg)] px-3 py-1 text-xs font-medium text-[var(--text-muted)]">#{{ t }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="mt-6 overflow-hidden rounded-[12px] border border-[var(--border)]">
+          <img [src]="p.cover" [alt]="p.title" class="aspect-[16/9] w-full object-cover" />
+        </div>
+
+        <!-- Content -->
+        <div class="blog-content prose prose-sm mt-8 max-w-none lg:prose-base prose-headings:font-heading prose-headings:font-semibold prose-headings:text-[#14272c] prose-p:text-[15px] prose-p:leading-relaxed prose-p:text-[var(--text)] prose-a:font-semibold prose-a:text-[#14272c] prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-[#d7fa4c] prose-blockquote:bg-[#f7f9f8] prose-blockquote:px-4 prose-blockquote:py-3 prose-li:text-[15px]" [innerHTML]="safeContent(p.content)"></div>
+
+        <!-- Share -->
+        <div class="mt-8 flex flex-wrap items-center gap-3 rounded-[12px] border border-[var(--border)] bg-white p-4">
+          <span class="text-sm font-semibold text-[#14272c]">Share:</span>
+          <a [href]="'https://wa.me/?text=' + shareUrl()" target="_blank" rel="noopener" class="rounded-full bg-[#25D366] px-4 py-2 text-xs font-bold text-white">WhatsApp</a>
+          <a [href]="'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl()" target="_blank" rel="noopener" class="rounded-full bg-[#1877F2] px-4 py-2 text-xs font-bold text-white">Facebook</a>
+          <a [href]="'https://twitter.com/intent/tweet?url=' + shareUrl()" target="_blank" rel="noopener" class="rounded-full bg-black px-4 py-2 text-xs font-bold text-white">X</a>
+          <a routerLink="/blog" class="ml-auto rounded-full border border-[var(--border)] px-4 py-2 text-xs font-semibold">← Back to Blog</a>
+        </div>
+
+        <!-- JSON-LD for SEO (Article) -->
+        <script type="application/ld+json" [textContent]="'{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;BlogPosting&quot;,&quot;headline&quot;:&quot;'+p.title+'&quot;,&quot;image&quot;:&quot;'+p.cover+'&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;'+p.author+'&quot;},&quot;datePublished&quot;:&quot;'+p.date+'&quot;}'"></script>
+      </div>
+
+      <!-- Sticky sidebar -->
+      <aside class="h-fit lg:sticky lg:top-24">
+        <div class="rounded-[12px] border border-[var(--border)] bg-white p-6">
+          <h3 class="font-heading text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">On this page</h3>
+          <ul class="mt-3 space-y-2 text-sm text-[var(--text-muted)]">
+            <li>• Buying checklist</li>
+            <li>• Inspection & RC</li>
+            <li>• Price & EMI</li>
+            <li>• Next steps</li>
+          </ul>
+          <div class="mt-6 rounded-[12px] bg-[#14272c] p-5 text-white">
+            <h4 class="font-heading text-[16px] font-semibold">Find your next car</h4>
+            <p class="mt-1 text-sm text-white/70">Browse verified cars & bikes with transparent pricing.</p>
+            <a routerLink="/cars" class="mt-4 inline-flex w-full justify-center rounded-full bg-[#d7fa4c] px-4 py-2.5 text-sm font-bold text-[#14272c]">Browse Inventory →</a>
+            <a routerLink="/sell" class="mt-2 inline-flex w-full justify-center rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white">Sell Your Vehicle</a>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-[12px] border border-[var(--border)] bg-[var(--bg)] p-6">
+          <h3 class="font-heading text-sm font-semibold text-[#14272c]">Need help choosing?</h3>
+          <p class="mt-1 text-sm text-[var(--text-muted)]">Chat with Ayra experts on WhatsApp — free, instant guidance.</p>
+          <a href="https://wa.me/919844555308" target="_blank" class="mt-3 inline-flex rounded-full bg-[#14272c] px-4 py-2 text-sm font-semibold text-white">Chat on WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+
+    @if (related().length) {
+      <div class="mt-14 border-t border-[var(--border)] pt-10">
+        <h3 class="font-heading text-xl font-semibold text-[#14272c]">Related articles</h3>
+        <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          @for (r of related(); track r.id) {
+            <app-blog-card [post]="r"></app-blog-card>
+          }
+        </div>
+      </div>
+    }
+  </article>
+} @else {
+  <div class="container-am py-20 text-center">
+    <h1 class="font-heading text-2xl font-semibold text-[#14272c]">Article not found</h1>
+    <p class="mt-2 text-sm text-[var(--text-muted)]">The post you’re looking for doesn’t exist.</p>
+    <a routerLink="/blog" class="mt-6 inline-flex rounded-full bg-[#14272c] px-6 py-3 text-sm font-semibold text-white">Go to Blog</a>
+  </div>
+}

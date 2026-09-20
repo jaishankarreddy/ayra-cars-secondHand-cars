@@ -167,6 +167,7 @@ export const FAQS: FaqItem[] = [
 export const FOOTER_QUICK_LINKS: FooterLink[] = [
   { label: 'Cars', path: '/cars' },
   { label: 'Bikes', path: '/bikes' },
+  { label: 'Blog', path: '/blog' },
   { label: 'About Us', path: '/about' },
   { label: 'Contact', path: '/contact' },
   { label: 'Wishlist', path: '/wishlist' }

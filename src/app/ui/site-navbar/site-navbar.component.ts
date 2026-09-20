@@ -61,6 +61,7 @@ export class SiteNavbarComponent {
     return {
       cars: url.startsWith('/cars') || url.startsWith('/bikes'),
       brands: url.startsWith('/brands'),
+      blog: url.startsWith('/blog'),
       about: url.startsWith('/about'),
       contact: url.startsWith('/contact'),
       sell: url.startsWith('/sell'),

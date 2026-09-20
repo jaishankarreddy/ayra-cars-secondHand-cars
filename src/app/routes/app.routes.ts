@@ -128,6 +128,17 @@ export const routes: Routes = [
         loadChildren: () => import('@features/sell/sell.routes').then(m => m.SELL_ROUTES)
       },
       {
+        path: 'blog',
+        data: {
+          seo: {
+            title: 'Ayra Cars Blog | Used Car Buying Guides & Tips in Bangalore',
+            description: 'Expert guides on buying, selling, financing and maintaining used cars and bikes in Bangalore and Karnataka — trusted advice from Ayra Cars.',
+            keywords: 'used car blog Bangalore, car buying guide Karnataka, used bike tips, car loan EMI, car maintenance, Ayra Cars blog'
+          }
+        },
+        loadChildren: () => import('@features/blog/blog.routes').then(m => m.BLOG_ROUTES)
+      },
+      {
         path: 'privacy',
         loadChildren: () => import('@features/common/common.routes').then(m => m.COMMON_ROUTES)
       },
