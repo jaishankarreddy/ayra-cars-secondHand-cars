@@ -6,7 +6,8 @@ import {
   LucideLock,
   LucideSmartphone,
   LucideShieldCheck,
-  LucideLoaderCircle
+  LucideLoaderCircle,
+  LucideArrowRight
 } from '@lucide/angular';
 import { RippleDirective } from '../../cars/directives/ripple.directive';
 import { AuthService } from '../services/auth.service';
@@ -23,7 +24,8 @@ import { ToastService } from '../../../services/toast.service';
     LucideLock,
     LucideSmartphone,
     LucideShieldCheck,
-    LucideLoaderCircle
+    LucideLoaderCircle,
+    LucideArrowRight
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'

@@ -14,7 +14,9 @@ import {
   LucideCircleDot,
   LucideTag,
   LucideChevronRight,
-  LucideArrowRight
+  LucideArrowRight,
+  LucideCalendarCheck,
+  LucideBadgeCheck
 } from '@lucide/angular';
 import { FooterComponent } from '../../home/components/footer/footer.component';
 import { ToastService } from '../../../services/toast.service';
@@ -36,7 +38,9 @@ import { ToastService } from '../../../services/toast.service';
     LucideCircleDot,
     LucideTag,
     LucideChevronRight,
-    LucideArrowRight
+    LucideArrowRight,
+    LucideCalendarCheck,
+    LucideBadgeCheck
   ],
   templateUrl: './contact.page.html',
   styleUrl: './contact.page.scss'

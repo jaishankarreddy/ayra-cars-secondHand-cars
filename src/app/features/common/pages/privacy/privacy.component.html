@@ -1,0 +1,101 @@
+<main class="bg-[#f7f9f8] font-['Poppins',sans-serif]">
+  <!-- Hero -->
+  <section class="bg-[url('/wishlist_hero_bg.png')] bg-cover bg-center border-b border-[#E6ECEA]">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 pt-8 pb-10 max-[768px]:pt-6 max-[768px]:pb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-[12px] font-medium text-[#5F7078]">
+        <a routerLink="/" class="hover:text-[#062D32] transition-colors">Home</a>
+        <svg lucideChevronRight size="13" class="text-[#A9B6B0]"></svg>
+        <span class="text-[#062D32] font-semibold">Privacy Policy</span>
+      </nav>
+
+      <div class="mt-6 flex items-end justify-between gap-6 flex-wrap">
+        <div class="max-w-[640px]">
+          <span class="section-eyebrow">Legal</span>
+          <h1 class="section-title mt-2 !text-[34px] max-[768px]:!text-[26px]">Privacy Policy</h1>
+          <p class="section-subtitle mt-3">How Ayra Cars collects, uses and protects your personal information when you buy, sell or enquire about a pre-owned vehicle in Karnataka.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-white border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]">
+            <svg lucideShieldCheck size="13" class="text-[#5C9F1F]"></svg>
+            Last updated: {{ lastUpdated }}
+          </span>
+          <span class="inline-flex items-center h-8 px-3.5 rounded-full bg-[#062D32] text-[11px] font-semibold text-white">Applies to ayracars.in</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Body: TOC + Content -->
+  <section class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-12 max-[768px]:py-8">
+    <div class="grid grid-cols-[280px_1fr] gap-7 items-start max-[1024px]:grid-cols-1">
+
+      <!-- Table of contents -->
+      <aside class="bg-white border border-[#E6ECEA] rounded-[16px] p-5">
+        <span class="section-eyebrow">On this page</span>
+        <nav class="mt-3.5 flex flex-col gap-0.5">
+          @for (section of sections; track section.id) {
+            <a
+              [routerLink]="['/privacy']"
+              [fragment]="section.id"
+              class="group flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-[12.5px] font-medium text-[#52616D] transition-colors hover:bg-[#F4F7F5] hover:text-[#062D32]"
+            >
+              <span class="w-5 shrink-0 font-['Poppins',sans-serif] text-[10px] font-bold text-[#A9B6B0] group-hover:text-[#5C9F1F]">{{ section.number }}</span>
+              <span class="min-w-0 leading-snug">{{ section.title }}</span>
+            </a>
+          }
+        </nav>
+        <div class="mt-4 pt-4 border-t border-[#EEF3F1]">
+          <p class="m-0 text-[11.5px] leading-[1.6] text-[#66757A]">Questions about your data? Write to us at <span class="font-semibold text-[#062D32]">aayracars&#64;gmail.com</span></p>
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <div class="bg-white border border-[#E6ECEA] rounded-[16px] p-8 max-[768px]:p-5">
+        @for (section of sections; track section.id) {
+          <article [id]="section.id" class="scroll-mt-[130px] border-b border-[#EEF3F1] pb-7 mb-7 last:border-0 last:pb-0 last:mb-0">
+            <div class="flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-[9px] bg-[#F4F7F5] border border-[#EAEFE9] font-['Poppins',sans-serif] text-[11px] font-bold text-[#5C9F1F] shrink-0">{{ section.number }}</span>
+              <h2 class="m-0 font-['Poppins',sans-serif] text-[18px] font-semibold leading-[1.25] tracking-[-0.01em] text-[#0B1720]">{{ section.title }}</h2>
+            </div>
+
+            @for (paragraph of section.paragraphs; track paragraph) {
+              <p class="mt-3.5 mb-0 text-[13.5px] leading-[1.75] text-[#4A5A6A]">{{ paragraph }}</p>
+            }
+
+            @if (section.bullets.length) {
+              <ul class="mt-3.5 mb-0 flex flex-col gap-2 pl-0 list-none">
+                @for (bullet of section.bullets; track bullet) {
+                  <li class="relative pl-5 text-[13.5px] leading-[1.7] text-[#4A5A6A]">
+                    <span class="absolute left-0 top-[9px] w-[7px] h-[7px] rounded-full bg-[#B9F24A]" aria-hidden="true"></span>
+                    {{ bullet }}
+                  </li>
+                }
+              </ul>
+            }
+
+            @if (section.callout) {
+              <div class="mt-4 rounded-[12px] bg-[#F8FBF4] border border-[#E4F0D4] border-l-4 border-l-[#B9F24A] px-4 py-3.5">
+                <p class="m-0 text-[13px] leading-[1.7] font-medium text-[#2F4A2A]">{{ section.callout }}</p>
+              </div>
+            }
+          </article>
+        }
+
+        <!-- Contact footer card -->
+        <div class="mt-8 rounded-[14px] bg-[#062D32] px-6 py-6 flex items-center justify-between gap-5 flex-wrap">
+          <div class="min-w-0">
+            <strong class="block font-['Poppins',sans-serif] text-[15px] font-semibold text-white">Need help with a privacy request?</strong>
+            <span class="mt-1 block text-[12.5px] leading-[1.6] text-white/70">Our Bengaluru team responds within 7 working days.</span>
+          </div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <a routerLink="/contact" class="inline-flex items-center gap-1.5 h-10 px-4.5 rounded-[9px] bg-[#B9F24A] text-[#062D32] text-[12.5px] font-bold transition-colors hover:bg-[#C8F54A]">Contact us <svg lucideArrowRight size="14"></svg></a>
+            <a href="mailto:aayracars@gmail.com" class="inline-flex items-center gap-1.5 h-10 px-4.5 rounded-[9px] border border-white/20 text-white text-[12.5px] font-semibold transition-colors hover:bg-white/10"><svg lucideMail size="14"></svg> Email</a>
+            <a href="tel:+919844555308" class="inline-flex items-center gap-1.5 h-10 px-4.5 rounded-[9px] border border-white/20 text-white text-[12.5px] font-semibold transition-colors hover:bg-white/10"><svg lucidePhone size="14"></svg> Call</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer />

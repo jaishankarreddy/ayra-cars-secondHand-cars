@@ -1,5 +1,13 @@
 :host { display: block; }
 
+.wishlist-hero {
+  position: relative;
+  overflow: hidden;
+  background: url('/wishlist_hero_bg.png') center / cover no-repeat;
+  background-color: #ffffff;
+}
+.wishlist-hero > * { position: relative; z-index: 1; }
+
 .picker-disabled {
   opacity: 0.55;
   pointer-events: none;
@@ -7,42 +15,57 @@
 
 .compare-grid {
   display: grid;
-  grid-template-columns: 180px repeat(var(--count, 3), minmax(220px, 1fr));
+  grid-template-columns: 160px repeat(4, minmax(240px, 1fr));
 }
 
 .cell {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  font-size: 0.9rem;
+  border-bottom: 1px solid #E2E9E7;
+  border-right: 1px solid #E2E9E7;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text);
+  color: #10212B;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 0.15rem;
+  background: #FFFFFF;
 }
 
 .label-cell {
   position: sticky;
   left: 0;
   z-index: 2;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  background: #F7FAF9;
+  border-right: 1px solid #E2E9E7;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: #5F7078;
 }
 
 .vehicle-cell {
   min-height: 18rem;
   justify-content: flex-start;
+  background: #FFFFFF;
 }
 
 .best-cell {
-  color: var(--success);
+  background: #F1F8E1 !important;
+  color: #0a3622;
   font-weight: 700;
+}
+
+.diff-row {
+  background: #F3F8F6 !important;
+}
+
+@media (max-width: 768px) {
+  .compare-grid {
+    grid-template-columns: 120px repeat(4, minmax(180px, 1fr));
+  }
+  .cell { padding: 0.75rem 0.9rem; font-size: 0.8rem; }
+  .label-cell { font-size: 0.6rem; }
 }

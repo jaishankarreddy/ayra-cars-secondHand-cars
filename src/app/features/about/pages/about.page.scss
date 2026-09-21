@@ -5,9 +5,16 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(6,45,50,0.85) 0%, rgba(6,45,50,0.5) 50%, rgba(6,45,50,0.2) 100%);
-  border-radius: 14px;
+  background: linear-gradient(90deg, rgba(6,45,50,0.88) 0%, rgba(6,45,50,0.55) 50%, rgba(6,45,50,0.2) 100%);
+  border-radius: 18px;
   pointer-events: none;
+}
+
+/* Hero legibility on small screens */
+@media (max-width: 768px) {
+  section:first-child {
+    background-position: 68% center;
+  }
 }
 
 /* FAQ open/close state (parent-child) */

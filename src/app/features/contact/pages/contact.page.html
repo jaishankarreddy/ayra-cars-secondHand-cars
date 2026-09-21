@@ -1,25 +1,37 @@
 <div class="bg-[#F8FAF9] font-['Inter',sans-serif]">
 
   <!-- Hero -->
-  <section class="hero relative w-full min-h-[380px] bg-[url('/contact_header.png')] bg-center bg-cover flex items-center max-[768px]:min-h-[300px]">
-    <div class="hero-inner w-full max-w-[1460px] mx-auto px-[72px] flex items-center justify-between gap-10 max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:flex-col max-[768px]:gap-6 max-[768px]:py-6">
-      <div class="hero-content max-w-[520px] w-full">
-        <span class="inline-block text-[11px] font-bold tracking-[1px] text-[#5C9F1F] uppercase">GET IN TOUCH</span>
-        <h1 class="mt-[18px] font-['Inter',sans-serif] text-[38px] font-bold leading-[1.08] tracking-[-1.2px] text-[#0B1720] max-[768px]:text-[28px]">We're Here to Help<br>You Drive Forward.</h1>
-        <p class="mt-[18px] max-w-[480px] font-['Poppins',sans-serif] text-[14px] font-normal leading-[1.6] text-[#52616D] max-[768px]:text-[13px]">Whether you're looking for your next vehicle, have a question about a listing, or simply want to know more about Ayra Cars, our team is here to help.</p>
+  <section class="hero relative w-full min-h-[400px] bg-[url('/contact_header.png')] bg-center bg-cover flex items-center overflow-hidden max-[768px]:min-h-[320px]">
+    <div class="hero-inner w-full max-w-[1460px] mx-auto px-[72px] flex items-center justify-between gap-10 max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:flex-col max-[768px]:gap-6 max-[768px]:py-8">
+      <div class="hero-content max-w-[560px] w-full">
+        <nav class="flex items-center gap-1.5 text-[12px] font-medium text-[#66757A] font-['Inter',sans-serif]" aria-label="Breadcrumb">
+          <a routerLink="/" class="hover:text-[#062D32] transition-colors">Home</a>
+          <span class="text-[#B6C2C6]">/</span>
+          <span class="text-[#062D32] font-semibold">Contact</span>
+        </nav>
+        <div class="mt-4 flex items-center gap-[7px]">
+          <span class="font-['Poppins',sans-serif] text-[11px] font-bold tracking-[0.14em] text-[#5C9F1F] uppercase leading-none">GET IN TOUCH</span>
+          <span class="inline-block w-[25px] h-[2px] bg-[#B9F24A]"></span>
+        </div>
+        <h1 class="mt-4 font-['Poppins',sans-serif] text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] text-[#0B1720] max-[768px]:text-[30px]">Let's talk <span class="relative inline-block">cars &amp; bikes<svg class="absolute -bottom-1 left-0 w-full" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 Q 60 0 118 5" stroke="#B9F24A" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>.</h1>
+        <p class="mt-4 max-w-[480px] font-['Poppins',sans-serif] text-[13px] font-normal leading-[1.65] text-[#34454F]">Buying, selling or scheduling a test drive at our office — pick a topic below and reach us in your language. We reply within 24 hours.</p>
         <div class="mt-[10px] ml-[44px]">
           <img src="/lets_talk.png" alt="Let's Talk" class="h-20 w-auto object-contain" />
         </div>
+        <div class="mt-5 flex items-center gap-2 flex-wrap">
+          <a href="tel:+919876543210" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-[10px] bg-[#062D32] text-white text-[12px] font-semibold font-['Inter',sans-serif] hover:bg-[#0A3B40] transition-colors"><svg lucidePhone size="14"></svg> +91 98765 43210</a>
+          <a href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-[10px] bg-[#B9F24A] text-[#062D32] text-[12px] font-bold font-['Inter',sans-serif] hover:bg-[#C8F54A] transition-colors"><svg lucideMessageCircle size="14"></svg> WhatsApp</a>
+          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32] font-['Inter',sans-serif]"><svg lucideMapPin size="13"></svg> Bengaluru</span>
+        </div>
       </div>
-      <div class="hero-image hidden"></div>
     </div>
   </section>
 
   <!-- Contact Methods -->
-  <section class="pt-[50px] pb-0 max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:mt-[-20px]">
+  <section class="pt-10 pb-0 max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5">
     <div class="grid grid-cols-3 gap-4 max-[768px]:grid-cols-1 max-[768px]:gap-3">
-      <div class="bg-white border border-[#E5EBE9] rounded-xl p-5 flex items-center gap-4 transition-[box-shadow] duration-200 hover:shadow-[0_4px_16px_rgba(6,45,50,0.06)]">
-        <div class="w-[44px] h-[44px] rounded-[10px] bg-[#F1F8F1] flex items-center justify-center text-[#062D32] shrink-0"><svg lucidePhone size="20"></svg></div>
+      <div class="bg-white border border-[#E5EBE9] rounded-[16px] p-5 flex items-center gap-4 transition-all duration-200 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 hover:border-[#C8D8D2]">
+        <div class="w-[44px] h-[44px] rounded-[10px] bg-[#F4F7F5] border border-[#EAEFE9] flex items-center justify-center text-[#062D32] shrink-0"><svg lucidePhone size="20"></svg></div>
         <div class="flex flex-col min-w-0">
           <h3 class="m-0 font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">Call Us</h3>
           <p class="mt-[2px] text-xs text-[#52616D]">Talk to our team directly</p>
@@ -27,7 +39,7 @@
           <span class="block mt-[2px] text-[11px] text-[#71808A]">Mon – Sat, 9:30 AM – 7:00 PM</span>
         </div>
       </div>
-      <div class="bg-[#F1F9EE] border-[#D4EBCC] border rounded-xl p-5 flex items-center gap-4 transition-[box-shadow] duration-200 hover:shadow-[0_4px_16px_rgba(6,45,50,0.06)]">
+      <div class="bg-[#F1F9EE] border-[#D4EBCC] border rounded-[16px] p-5 flex items-center gap-4 transition-all duration-200 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5">
         <div class="w-[44px] h-[44px] rounded-[10px] bg-[#B9F24A] flex items-center justify-center text-[#062D32] shrink-0"><svg lucideMessageCircle size="20"></svg></div>
         <div class="flex flex-col min-w-0">
           <h3 class="m-0 font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">WhatsApp</h3>
@@ -36,8 +48,8 @@
           <a href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center gap-[5px] mt-1 text-xs font-semibold text-[#062D32] no-underline hover:underline">Open WhatsApp <svg lucideArrowRight size="14"></svg></a>
         </div>
       </div>
-      <div class="bg-white border border-[#E5EBE9] rounded-xl p-5 flex items-center gap-4 transition-[box-shadow] duration-200 hover:shadow-[0_4px_16px_rgba(6,45,50,0.06)]">
-        <div class="w-[44px] h-[44px] rounded-[10px] bg-[#F1F8F1] flex items-center justify-center text-[#062D32] shrink-0"><svg lucideMail size="20"></svg></div>
+      <div class="bg-white border border-[#E5EBE9] rounded-[16px] p-5 flex items-center gap-4 transition-all duration-200 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 hover:border-[#C8D8D2]">
+        <div class="w-[44px] h-[44px] rounded-[10px] bg-[#F4F7F5] border border-[#EAEFE9] flex items-center justify-center text-[#062D32] shrink-0"><svg lucideMail size="20"></svg></div>
         <div class="flex flex-col min-w-0">
           <h3 class="m-0 font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">Email Us</h3>
           <p class="mt-[2px] text-xs text-[#52616D]">Send us your enquiry</p>
@@ -49,12 +61,13 @@
   </section>
 
   <!-- Main Contact Area -->
-  <section class="py-[60px] px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:py-10">
+  <section class="py-10 px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5">
     <div class="grid grid-cols-[1.2fr_1fr] gap-6 items-stretch max-[768px]:grid-cols-1">
       <!-- Left: Form -->
-      <div class="bg-white border border-[#E5EBE9] rounded-[14px] p-8">
-        <h2 class="m-0 font-['Poppins',sans-serif] text-[24px] font-semibold leading-[1.2] tracking-[-0.4px] text-[#0B1720]">Send Us a Message</h2>
-        <p class="mt-1.5 text-[13px] font-normal leading-[1.6] text-[#52616D]">Fill in the details below and we'll get back to you shortly.</p>
+      <div class="bg-white border border-[#E5EBE9] rounded-[16px] p-8 max-[768px]:p-5">
+        <span class="section-eyebrow">Write to us</span>
+        <h2 class="section-title mt-2">Send us a message</h2>
+        <p class="section-subtitle mt-2">Fill in the details — we reply within 24 hours, in your language.</p>
 
         @if (submitted()) {
           <div class="text-center py-10">
@@ -65,8 +78,8 @@
           </div>
         } @else {
           <form (submit)="onSubmit($event)">
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block mt-[24px]">
+            <div class="grid grid-cols-2 gap-4 max-[768px]:grid-cols-1 max-[768px]:gap-0">
+              <label class="block mt-[24px] max-[768px]:mt-[18px]">
                 <span class="block mb-1.5 text-[13px] font-semibold text-[#0B1720]">Full Name <span class="text-[#e53e3e]">*</span></span>
                 <input type="text" [value]="name()" (input)="name.set($any($event.target).value)" placeholder="Enter your full name" class="field-input" required />
               </label>
@@ -79,23 +92,21 @@
                   </span>
                   <input type="tel" [value]="phone()" (input)="phone.set($any($event.target).value)" placeholder="Mobile number" class="field-input phone-field" required />
                 </div>
+                <span class="mt-1 block text-[11px] text-[#8A969D]">10-digit mobile — we call or WhatsApp you here.</span>
               </label>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block mt-[18px]">
-                <span class="block mb-1.5 text-[13px] font-semibold text-[#0B1720]">Email Address</span>
-                <input type="email" [value]="email()" (input)="email.set($any($event.target).value)" placeholder="Enter your email address" class="field-input" />
-              </label>
-              <label class="block mt-[18px]">
-                <span class="block mb-1.5 text-[13px] font-semibold text-[#0B1720]">Enquiry Type</span>
-                <select [value]="enquiryType()" (change)="enquiryType.set($any($event.target).value)" class="field-input">
-                  <option value="">Select an option</option>
-                  <option value="buying">Buying a vehicle</option>
-                  <option value="selling">Selling a vehicle</option>
-                  <option value="test-drive">Test drive</option>
-                  <option value="general">General enquiry</option>
-                </select>
-              </label>
+            <label class="block mt-[18px]">
+              <span class="block mb-1.5 text-[13px] font-semibold text-[#0B1720]">Email Address</span>
+              <input type="email" [value]="email()" (input)="email.set($any($event.target).value)" placeholder="Enter your email address" class="field-input" />
+            </label>
+            <div class="mt-[22px]">
+              <span class="block mb-2 text-[13px] font-semibold text-[#0B1720]">What is this about?</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" (click)="enquiryType.set('buying')" [class]="enquiryType() === 'buying' ? 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#062D32] text-white border border-[#062D32] shadow-sm transition-all' : 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#F7FAF9] text-[#52616D] border border-[#E2E9E7] hover:border-[#062D32] hover:text-[#062D32] transition-all'">Buying a vehicle</button>
+                <button type="button" (click)="enquiryType.set('selling')" [class]="enquiryType() === 'selling' ? 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#062D32] text-white border border-[#062D32] shadow-sm transition-all' : 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#F7FAF9] text-[#52616D] border border-[#E2E9E7] hover:border-[#062D32] hover:text-[#062D32] transition-all'">Selling a vehicle</button>
+                <button type="button" (click)="enquiryType.set('test-drive')" [class]="enquiryType() === 'test-drive' ? 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#062D32] text-white border border-[#062D32] shadow-sm transition-all' : 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#F7FAF9] text-[#52616D] border border-[#E2E9E7] hover:border-[#062D32] hover:text-[#062D32] transition-all'">Test drive</button>
+                <button type="button" (click)="enquiryType.set('general')" [class]="enquiryType() === 'general' ? 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#062D32] text-white border border-[#062D32] shadow-sm transition-all' : 'h-10 px-4 rounded-[10px] text-[13px] font-semibold bg-[#F7FAF9] text-[#52616D] border border-[#E2E9E7] hover:border-[#062D32] hover:text-[#062D32] transition-all'">General enquiry</button>
+              </div>
             </div>
             <label class="block mt-[18px]">
               <span class="block mb-1.5 text-[13px] font-semibold text-[#0B1720]">Message <span class="text-[#e53e3e]">*</span></span>
@@ -110,9 +121,10 @@
       </div>
 
       <!-- Right: Visit -->
-      <div class="bg-white border border-[#E5EBE9] rounded-[14px] p-8">
-        <h2 class="m-0 font-['Poppins',sans-serif] text-[24px] font-semibold leading-[1.2] tracking-[-0.4px] text-[#0B1720]">Visit Ayra Cars</h2>
-        <p class="mt-1.5 text-[13px] font-normal leading-[1.6] text-[#52616D]">We'd love to meet you in person. Drop by our showroom.</p>
+      <div class="bg-white border border-[#E5EBE9] rounded-[16px] p-8 max-[768px]:p-5">
+        <span class="section-eyebrow">Visit us</span>
+        <h2 class="section-title mt-2">Visit Ayra Cars</h2>
+        <p class="section-subtitle mt-2">Meet us in person or schedule your test drive at the vehicle.</p>
 
         <div class="flex gap-4 mt-5">
           <div class="flex-1 flex flex-col gap-4">
@@ -136,7 +148,7 @@
           </div>
         </div>
 
-        <a href="https://maps.google.com" target="_blank" class="inline-flex items-center gap-[7px] mt-5 h-10 px-[18px] bg-[#062D32] text-white border-0 rounded-lg font-['Inter',sans-serif] text-[13px] font-semibold no-underline cursor-pointer transition-[background] duration-150 hover:bg-[#0A3B40]">Get Directions <svg lucideArrowRight size="14"></svg></a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Ayra+Cars+Bannerghatta+Road+JP+Nagar+Bengaluru" target="_blank" class="inline-flex items-center gap-[7px] mt-5 h-10 px-[18px] bg-[#062D32] text-white border-0 rounded-lg font-['Inter',sans-serif] text-[13px] font-semibold no-underline cursor-pointer transition-[background] duration-150 hover:bg-[#0A3B40]">Get Directions <svg lucideArrowRight size="14"></svg></a>
 
         <div class="mt-4">
           <iframe
@@ -149,25 +161,43 @@
             referrerpolicy="strict-origin-when-cross-origin">
           </iframe>
         </div>
+
+        <div class="mt-5 rounded-[12px] bg-[#F4F9F7] border border-[rgba(7,26,31,0.06)] p-4">
+          <span class="block text-[12px] font-bold tracking-[0.08em] uppercase text-[#5C9F1F]">What happens next?</span>
+          <div class="mt-3 flex flex-col gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="flex items-center justify-center w-8 h-8 rounded-[9px] bg-[#062D32] text-white text-[12px] font-bold shrink-0">1</span>
+              <span class="text-[12px] leading-[1.55] text-[#34454F]"><strong class="text-[#0B1720]">We reply within 24 hours</strong> — in your language, on call or WhatsApp.</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="flex items-center justify-center w-8 h-8 rounded-[9px] bg-white border border-[#E2E9E7] text-[#062D32] shrink-0"><svg lucideCalendarCheck size="15"></svg></span>
+              <span class="text-[12px] leading-[1.55] text-[#34454F]"><strong class="text-[#0B1720]">We schedule your visit</strong> — test drive at our office or the vehicle.</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="flex items-center justify-center w-8 h-8 rounded-[9px] bg-white border border-[#E2E9E7] text-[#062D32] shrink-0"><svg lucideBadgeCheck size="15"></svg></span>
+              <span class="text-[12px] leading-[1.55] text-[#34454F]"><strong class="text-[#0B1720]">Done right</strong> — fair price, RC transfer and support included.</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="py-[60px] px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:py-10">
+  <section class="py-10 px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5">
     <div>
       <div class="flex justify-between items-start gap-5 max-[768px]:flex-col">
         <div>
-          <span class="inline-block text-[11px] font-bold tracking-[1px] text-[#5C9F1F] uppercase">HAVE A QUESTION?</span>
-          <h2 class="m-0 font-['Poppins',sans-serif] text-[26px] font-semibold leading-[1.2] tracking-[-0.4px] text-[#0B1720]">Frequently Asked Questions</h2>
-          <p class="mt-1.5 text-[13px] font-normal leading-[1.6] text-[#52616D]">Quick answers to common questions. Can't find what you're looking for? Feel free to contact us.</p>
+          <span class="section-eyebrow">Have a question?</span>
+          <h2 class="section-title mt-2">Frequently asked questions</h2>
+          <p class="section-subtitle mt-2">Quick answers — or just call us, we reply in your language.</p>
         </div>
-        <a routerLink="/about" class="inline-flex items-center gap-[5px] mt-2 text-[13px] font-semibold text-[#062D32] no-underline whitespace-nowrap hover:underline">View All FAQs <svg lucideArrowRight size="14"></svg></a>
+        <a routerLink="/about" class="inline-flex items-center gap-1.5 text-sm font-medium text-[#0d6b32] hover:text-[#062D32] transition-colors whitespace-nowrap mt-2">Learn more about us <svg lucideArrowRight size="14"></svg></a>
       </div>
       <div class="grid grid-cols-4 gap-4 mt-7 max-[1024px]:grid-cols-2 max-[768px]:grid-cols-1">
         @for (faq of faqs; track $index) {
-          <div class="faq-card bg-white border border-[#E5EBE9] rounded-xl p-6 cursor-pointer transition-all duration-200 relative hover:border-[#C8D8D2]" [class.expanded]="expandedFaq() === $index" (click)="toggleFaq($index)">
-            <div class="w-10 h-10 rounded-[10px] bg-[#F1F8F1] text-[#062D32] flex items-center justify-center mb-4">
+          <div class="faq-card bg-white border border-[#E5EBE9] rounded-[16px] p-6 cursor-pointer transition-all duration-200 relative hover:border-[#062D32]/30 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5" [class.expanded]="expandedFaq() === $index" (click)="toggleFaq($index)">
+            <div class="faq-icon w-10 h-10 rounded-[10px] bg-[#F4F7F5] border border-[#EAEFE9] text-[#062D32] flex items-center justify-center mb-4 transition-colors duration-200">
               @switch (faq.icon) {
                 @case ('car') { <svg lucideCar size="20"></svg> }
                 @case ('steering') { <svg lucideCircleDot size="20"></svg> }
@@ -175,13 +205,13 @@
                 @case ('tag') { <svg lucideTag size="20"></svg> }
               }
             </div>
-            <h3 class="m-0 font-['Poppins',sans-serif] text-sm font-semibold leading-[1.35] text-[#0B1720] whitespace-pre-line">{{ faq.question }}</h3>
+            <h3 class="m-0 pr-6 font-['Poppins',sans-serif] text-sm font-semibold leading-[1.35] text-[#0B1720] whitespace-pre-line">{{ faq.question }}</h3>
             <p class="faq-answer">{{ faq.answer }}</p>
-            <span class="faq-expand absolute top-6 right-5 text-[#71808A]">
+            <span class="faq-expand absolute top-6 right-5 flex h-7 w-7 items-center justify-center rounded-full border border-[#E2E9E7] text-[#71808A] transition-all duration-200">
               @if (expandedFaq() === $index) {
-                <svg lucideChevronRight size="16" class="rotate-90"></svg>
+                <svg lucideChevronRight size="14" class="rotate-90"></svg>
               } @else {
-                <svg lucideChevronRight size="16"></svg>
+                <svg lucideChevronRight size="14"></svg>
               }
             </span>
           </div>
@@ -191,16 +221,23 @@
   </section>
 
   <!-- Final CTA -->
-  <section class="pb-[60px] px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5 max-[768px]:pb-10">
-    <div class="cta-inner relative bg-[url('/contact_bottom.png')] bg-center bg-cover rounded-[14px] overflow-hidden min-h-[280px] flex items-center justify-between px-[60px] max-[768px]:py-8 max-[768px]:px-6 max-[768px]:min-h-0 max-[768px]:flex-col">
+  <section class="pb-12 px-[72px] max-w-[1460px] mx-auto max-[1024px]:px-10 max-[768px]:px-5">
+    <div class="cta-inner relative bg-[url('/contact_bottom.png')] bg-center bg-cover rounded-[18px] overflow-hidden min-h-[280px] flex items-center justify-between px-[60px] max-[768px]:py-8 max-[768px]:px-6 max-[768px]:min-h-0 max-[768px]:flex-col">
       <div class="cta-bg-overlay"></div>
       <div class="cta-content relative z-[2] max-w-[520px]">
-        <span class="text-[10px] font-bold tracking-[1px] text-[#B9F24A] uppercase">STILL HAVE QUESTIONS?</span>
-        <h2 class="mt-3 font-['Poppins',sans-serif] text-[28px] font-semibold leading-[1.15] text-white max-[768px]:text-[22px]">Your next journey starts<br>with a conversation.</h2>
-        <p class="mt-[10px] text-[13px] text-[#D5E0DD]">Our team is just a call or message away.</p>
+        <span class="text-[11px] font-bold tracking-[0.14em] text-[#B9F24A] uppercase">STILL HAVE QUESTIONS?</span>
+        <h2 class="mt-3 font-['Poppins',sans-serif] text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-white max-[768px]:text-[22px]">Your next journey starts<br>with a conversation.</h2>
+        <p class="mt-3 max-w-[440px] text-[13px] leading-[1.6] text-[#D5E0DD]">Call, WhatsApp or visit us — in your language, at your time.</p>
         <div class="flex gap-[10px] mt-[22px] max-[768px]:flex-col">
-          <a href="tel:+919876543210" class="inline-flex items-center justify-center h-[44px] px-5 bg-[#E9FFB5] text-[#062D32] border-0 rounded-lg font-['Inter',sans-serif] text-[13px] font-semibold no-underline cursor-pointer transition-[background] duration-150 hover:bg-[#d9f59a] max-[768px]:w-full max-[768px]:justify-center">Call Us Now</a>
-          <a href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center justify-center h-[44px] px-5 bg-transparent text-white border border-white/40 rounded-lg font-['Inter',sans-serif] text-[13px] font-semibold no-underline cursor-pointer transition-[border-color] duration-150 hover:border-white max-[768px]:w-full max-[768px]:justify-center">WhatsApp Us</a>
+          <a href="tel:+919876543210" class="inline-flex items-center justify-center h-[44px] px-5 bg-[#B9F24A] text-[#062D32] border-0 rounded-[10px] font-['Inter',sans-serif] text-[13px] font-bold no-underline cursor-pointer transition-all duration-200 hover:bg-[#C8F54A] hover:-translate-y-px max-[768px]:w-full max-[768px]:justify-center">Call Us Now</a>
+          <a href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center justify-center h-[44px] px-5 bg-transparent text-white border border-white/40 rounded-[10px] font-['Inter',sans-serif] text-[13px] font-semibold no-underline cursor-pointer transition-all duration-200 hover:border-white hover:bg-white/[0.08] max-[768px]:w-full max-[768px]:justify-center">WhatsApp Us</a>
+        </div>
+        <div class="mt-5 flex items-center gap-4 flex-wrap">
+          <span class="text-[11px] font-medium text-white/60">Replies in ~24 hrs</span>
+          <span class="h-3 w-px bg-white/20"></span>
+          <span class="text-[11px] font-medium text-white/60">All languages</span>
+          <span class="h-3 w-px bg-white/20"></span>
+          <span class="text-[11px] font-medium text-white/60">Bengaluru office</span>
         </div>
       </div>
       <div class="cta-right relative z-[2] max-[768px]:hidden">

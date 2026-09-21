@@ -16,6 +16,7 @@ const Brand = require('./models/brand.model');
 const VehicleOffer = require('./models/vehicle-offer.model');
 const ContactMessage = require('./models/contact-message.model');
 const TestDrive = require('./models/test-drive.model');
+const SellRequest = require('./models/sell-request.model');
 const Testimonial = require('./models/testimonial.model');
 const Faq = require('./models/faq.model');
 const HomepageStat = require('./models/homepage-stat.model');
@@ -332,8 +333,8 @@ app.post('/api/compare', async (req, res, next) => {
       comp = await Comparison.create({ sessionId, vehicleIds: [vehicleId] });
     } else {
       if (!comp.vehicleIds.includes(vehicleId)) {
-        if (comp.vehicleIds.length >= 3) {
-          return res.status(400).json({ message: 'Comparison basket is full (max 3 vehicles)' });
+        if (comp.vehicleIds.length >= 4) {
+          return res.status(400).json({ message: 'Comparison basket is full (max 4 vehicles)' });
         }
         comp.vehicleIds.push(vehicleId);
         await comp.save();
@@ -729,17 +730,45 @@ app.post('/api/test-drives', async (req, res, next) => {
   }
 });
 
+// POST /api/sell-requests — submit a sell-your-vehicle request (guest allowed)
+app.post('/api/sell-requests', async (req, res, next) => {
+  try {
+    const { vehicleType, brand, model, year, kilometers, fuel, transmission, name, phone, district, expectedPrice, notes } = req.body;
+    if (!brand || !model || !name || !phone) {
+      return res.status(400).json({ message: 'brand, model, name and phone are required' });
+    }
+    const request = await SellRequest.create({
+      vehicleType: vehicleType === 'bike' ? 'bike' : 'car',
+      brand,
+      model,
+      year: year ? Number(year) : null,
+      kilometers: kilometers ? Number(kilometers) : null,
+      fuel: fuel || '',
+      transmission: transmission || '',
+      name,
+      phone,
+      district: district || '',
+      expectedPrice: expectedPrice ? Number(expectedPrice) : null,
+      notes: notes || ''
+    });
+    res.status(201).json(request);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Admin: dashboard summary counts
 app.get('/api/admin/dashboard', adminRequired, async (_req, res, next) => {
   try {
-    const [totalCars, totalBikes, pendingOffers, newContacts, pendingTestDrives] = await Promise.all([
+    const [totalCars, totalBikes, pendingOffers, newContacts, pendingTestDrives, newSellRequests] = await Promise.all([
       Vehicle.countDocuments({ vehicleType: 'car' }),
       Vehicle.countDocuments({ vehicleType: 'bike' }),
       VehicleOffer.countDocuments({ status: 'Pending' }),
       ContactMessage.countDocuments({ status: 'New' }),
-      TestDrive.countDocuments({ status: 'Pending' })
+      TestDrive.countDocuments({ status: 'Pending' }),
+      SellRequest.countDocuments({ status: 'New' })
     ]);
-    res.json({ totalCars, totalBikes, totalVehicles: totalCars + totalBikes, pendingOffers, newContacts, pendingTestDrives });
+    res.json({ totalCars, totalBikes, totalVehicles: totalCars + totalBikes, pendingOffers, newContacts, pendingTestDrives, newSellRequests });
   } catch (err) {
     next(err);
   }
@@ -856,6 +885,48 @@ app.patch('/api/admin/test-drives/:id', adminRequired, async (req, res, next) =>
     if (note !== undefined) testDrive.note = note;
     await testDrive.save();
     res.json(testDrive);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin: list sell requests (latest first)
+app.get('/api/admin/sell-requests', adminRequired, async (_req, res, next) => {
+  try {
+    const list = await SellRequest.find().sort({ createdAt: -1 }).lean();
+    res.json(list.map((r) => ({
+      id: r.id,
+      vehicleType: r.vehicleType,
+      brand: r.brand,
+      model: r.model,
+      year: r.year,
+      kilometers: r.kilometers,
+      fuel: r.fuel,
+      transmission: r.transmission,
+      name: r.name,
+      phone: r.phone,
+      district: r.district,
+      expectedPrice: r.expectedPrice,
+      notes: r.notes,
+      status: r.status,
+      date: r.createdAt
+    })));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin: update sell request status (New / Contacted / Closed)
+app.patch('/api/admin/sell-requests/:id', adminRequired, async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    const query = { $or: [{ id: req.params.id }] };
+    if (/^[0-9a-fA-F]{24}$/.test(req.params.id)) query.$or.push({ _id: req.params.id });
+    const request = await SellRequest.findOne(query);
+    if (!request) return res.status(404).json({ message: 'Sell request not found' });
+    if (status) request.status = status;
+    await request.save();
+    res.json(request);
   } catch (err) {
     next(err);
   }

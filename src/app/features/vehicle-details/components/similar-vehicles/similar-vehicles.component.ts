@@ -17,6 +17,7 @@ interface SimilarVehicle {
   model: string;
   bodyType: string;
   vehicleType: string;
+  location: string;
 }
 
 @Component({
@@ -101,6 +102,7 @@ export class SimilarVehiclesComponent implements OnInit {
         model: v.model,
         bodyType: v.bodyType,
         vehicleType: v.vehicleType,
+        location: v.district || 'Bengaluru',
       }));
   });
 

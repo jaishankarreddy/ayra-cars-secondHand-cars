@@ -8,7 +8,7 @@ import { CompareService } from '../../features/compare/services/compare.service'
   standalone: true,
   imports: [RouterLink, LucideScale, LucideX, LucideArrowRight, LucideCar, LucideBike],
   template: `
-    @if (service.count() > 0 && publicRoute()) {
+    @if (service.count() > 0 && isComparePage()) {
       <div class="fixed bottom-6 left-1/2 z-40 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2">
         <div class="flex items-center gap-3 rounded-2xl border border-border bg-surface/95 p-3 shadow-lg backdrop-blur">
           <span class="ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
@@ -49,8 +49,7 @@ export class CompareBarComponent {
   private readonly router = inject(Router);
   readonly service = inject(CompareService);
 
-  publicRoute(): boolean {
-    const url = this.router.url;
-    return !url.startsWith('/admin') && !url.startsWith('/auth');
+  isComparePage(): boolean {
+    return this.router.url.startsWith('/compare');
   }
 }

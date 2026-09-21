@@ -50,3 +50,23 @@ export interface BrandStat {
   brand: string;
   count: number;
 }
+
+export type SellRequestStatus = 'New' | 'Contacted' | 'Closed';
+
+export interface AdminSellRequest {
+  id: string;
+  vehicleType: 'car' | 'bike';
+  brand: string;
+  model: string;
+  year: number | null;
+  kilometers: number | null;
+  fuel: string;
+  transmission: string;
+  name: string;
+  phone: string;
+  district: string;
+  expectedPrice: number | null;
+  notes: string;
+  status: SellRequestStatus;
+  date: string;
+}

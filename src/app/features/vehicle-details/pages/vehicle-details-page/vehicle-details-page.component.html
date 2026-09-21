@@ -8,16 +8,21 @@
   } @else if (vehicle(); as vehicle) {
     <main id="top">
       <!-- Breadcrumbs -->
-      <div class="flex items-center gap-1.5 py-5 pb-[18px] text-[13px] text-[#8a908c] max-[620px]:py-3.5 max-[620px]:text-[11px]">
-        <a routerLink="/" class="text-[#6b7370] no-underline hover:text-[#1a2c30]">Home</a>
-        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
-        <a [routerLink]="isBike() ? '/bikes' : '/cars'" class="text-[#6b7370] no-underline hover:text-[#1a2c30]">{{ isBike() ? 'Bikes' : 'Cars' }}</a>
-        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
-        <span>{{ vehicle.brand }}</span>
-        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
-        <span>{{ vehicle.model }}</span>
-        <svg lucideChevronRight size="14" class="text-[#c0c5c2]"></svg>
-        <strong class="text-[#1a2c30] font-semibold">{{ vehicle.year }}</strong>
+      <div class="flex items-center justify-between gap-3 py-5 pb-[18px] max-[620px]:py-3.5">
+        <div class="flex items-center gap-1.5 text-[13px] text-[#8a908c] max-[620px]:text-[11px] min-w-0">
+          <a routerLink="/" class="text-[#6b7370] no-underline hover:text-[#1a2c30] shrink-0">Home</a>
+          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
+          <a [routerLink]="isBike() ? '/bikes' : '/cars'" class="text-[#6b7370] no-underline hover:text-[#1a2c30] shrink-0">{{ isBike() ? 'Bikes' : 'Cars' }}</a>
+          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
+          <span class="truncate">{{ vehicle.brand }}</span>
+          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
+          <span class="truncate">{{ vehicle.model }}</span>
+          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
+          <strong class="text-[#1a2c30] font-semibold shrink-0">{{ vehicle.year }}</strong>
+        </div>
+        <button type="button" (click)="share()" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[9px] border border-[#E2E9E7] bg-white text-[12px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors shrink-0" aria-label="Share this vehicle">
+          <svg lucideShare2 size="14"></svg><span class="max-[620px]:hidden">Share</span>
+        </button>
       </div>
 
       <!-- Hero section: Gallery + Info side by side -->
@@ -26,26 +31,21 @@
           <app-image-gallery [images]="photos()" [alt]="vehicle.brand + ' ' + vehicle.model" />
         </div>
 
-        <div class="vehicle-info-panel">
-          <!-- Title + Verified Badge -->
+        <div class="vehicle-info-panel vip-info-card">
+          <!-- Title -->
           <div class="flex items-start gap-2.5 flex-wrap">
-            <h1 class="m-0 font-['Poppins',sans-serif] text-[26px] font-bold leading-[1.2] text-[#0B1720] max-[620px]:text-[20px] max-[390px]:text-[18px]">{{ vehicle.year }} {{ vehicle.brand }} {{ vehicle.model }} {{ vehicle.variant }}</h1>
-            <span class="inline-flex items-center gap-[5px] h-[30px] px-[11px] py-[5px] bg-[#EDF9DF] text-[#4E8F25] rounded-[12px] text-[11px] font-semibold whitespace-nowrap shrink-0">
-              <svg lucideBadgeCheck size="14" class="text-[#4E9B2E]"></svg>
-              Verified Vehicle
-            </span>
+            <h1 class="m-0 font-['Poppins',sans-serif] text-[24px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#0B1720] max-[620px]:text-[20px] max-[390px]:text-[18px]">{{ vehicle.year }} {{ vehicle.brand }} {{ vehicle.model }} {{ vehicle.variant }}</h1>
           </div>
 
           <!-- Price Row -->
-          <div class="flex items-baseline gap-2.5 mt-3.5">
+          <div class="flex items-center gap-2.5 mt-3.5 flex-wrap">
             <span class="text-[29px] font-bold text-[#0B1720] leading-[1.1] max-[620px]:text-[24px] max-[390px]:text-[22px]">{{ formatPrice(vehicle.price) }}</span>
-            <span class="text-[13px] font-normal text-[#87929A] line-through">{{ formatPrice(vehicle.price * 1.12) }}</span>
-            <span class="inline-flex items-center px-2.5 py-[5px] bg-[#55A92F] text-white rounded-[10px] text-[11px] font-semibold ml-2.5">6% off</span>
+            <span class="inline-flex items-center px-2.5 py-[5px] bg-[#EEF8E8] border border-[#D4EBCC] text-[#0d6b32] rounded-[10px] text-[11px] font-semibold ml-2.5">Fixed price · No haggling</span>
           </div>
 
           <!-- EMI -->
           <div class="flex items-center gap-1.5 mt-3 text-xs font-normal text-[#596771]">
-            <span>EMI starts at ₹27,512/month</span>
+            <span>{{ emiText() }}</span>
             <svg lucideInfo size="14" class="text-[#64727A] shrink-0"></svg>
           </div>
 
@@ -82,7 +82,7 @@
             <div class="flex items-start gap-2.5">
               <div class="flex items-center justify-center shrink-0 text-[#26343B] mt-[1px]"><svg lucideUsers size="21"></svg></div>
               <div class="flex flex-col">
-                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ vehicle.owners === 1 ? '1st Owner' : vehicle.owners + ' Owners' }}</span>
+                <span class="text-sm font-semibold text-[#17232B] leading-[1.2] whitespace-nowrap">{{ ownerLabel() }}</span>
                 <span class="text-[11px] font-normal text-[#71808A] mt-[5px]">Ownership</span>
               </div>
             </div>
@@ -101,28 +101,28 @@
               <svg lucideCalendarDays size="16"></svg>
               Book a test drive
             </a>
-            <a class="vip-btn-contact vip-btn-lime" (click)="scrollToOffer()">
+            <a class="vip-btn-contact vip-btn-outline" (click)="scrollToOffer()">
               <svg lucideTag size="16"></svg>
               Make an offer
             </a>
           </div>
 
           <!-- Get in Touch Card -->
-          <div class="sc-card-touch">
+          <div class="sc-card-touch vip-touch-card">
             <div class="sc-touch-top">
-              <span class="sc-icon sc-icon-blue"><svg lucidePhone size="20"></svg></span>
+              <span class="sc-icon vip-touch-icon"><svg lucidePhone size="18"></svg></span>
               <div class="sc-touch-text">
-                <h4 class="sc-title">Get in Touch</h4>
-                <p class="sc-desc">Have questions? Our team is here to help.</p>
+                <h4 class="sc-title">Talk to us in your language</h4>
+                <p class="sc-desc">Questions on price, RC or test drive? Call or WhatsApp.</p>
               </div>
             </div>
             <div class="sc-touch-buttons">
               <a class="sc-btn" [href]="'tel:' + phoneLink()">
-                <svg lucidePhone size="17" class="text-[#284BC1]"></svg>
+                <svg lucidePhone size="16"></svg>
                 <span>Call Us</span>
               </a>
               <a class="sc-btn" [href]="'https://wa.me/' + whatsappLink()" target="_blank" rel="noopener noreferrer">
-                <svg lucideMessageCircle size="17" class="text-[#16A34A]"></svg>
+                <svg lucideMessageCircle size="16" class="text-[#16A34A]"></svg>
                 <span>WhatsApp</span>
               </a>
             </div>
@@ -134,9 +134,9 @@
               <svg lucideHeart size="19" [attr.fill]="saved() ? 'currentColor' : 'none'" class="text-[#26343B]"></svg>
               {{ saved() ? 'Added to Favourite' : 'Add to Favourite' }}
             </button>
-            <button class="vip-btn-secondary">
+            <button class="vip-btn-secondary" [class.active-compare]="isCompared()" (click)="toggleCompare()">
               <svg lucideGitCompare size="19" class="text-[#26343B]"></svg>
-              Add to Compare
+              {{ isCompared() ? 'Added to Compare' : 'Add to Compare' }}
             </button>
           </div>
         </div>
@@ -156,19 +156,19 @@
               <div class="feature-pills">
                 <div class="feature-pill">
                   <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideZap size="16"></svg></span>
-                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">Powerful Performance</span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.mileage }} km/l mileage</span>
                 </div>
                 <div class="feature-pill">
-                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideUsers size="16"></svg></span>
-                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.variant || 'Premium Interiors' }}</span>
+                  <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideSettings size="16"></svg></span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.engine || vehicle.transmission }}</span>
                 </div>
                 <div class="feature-pill">
                   <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideShieldCheck size="16"></svg></span>
-                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.abs ? 'Advanced Safety' : 'Standard Safety' }}</span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.abs ? 'ABS equipped' : 'Standard safety' }}</span>
                 </div>
                 <div class="feature-pill">
                   <span class="flex items-center justify-center w-[30px] h-[30px] rounded-[8px] bg-[#f0f4f3] text-[#14252c] shrink-0"><svg lucideRoute size="16"></svg></span>
-                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ isBike() ? 'Built for Every Ride' : 'All-Terrain Capability' }}</span>
+                  <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ vehicle.bodyType }} · {{ vehicle.color }}</span>
                 </div>
               </div>
             </div>
@@ -192,35 +192,18 @@
               </div>
             </div>
 
-            <!-- Key Features -->
-            <div class="mb-[34px]" style="display:none">
-              <div class="flex items-center justify-between mb-3.5">
-                <h2 class="m-0 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Key Features</h2>
-                <a class="text-[#5c9f1f] text-xs font-medium cursor-pointer no-underline hover:underline">View all</a>
-              </div>
-              <div class="key-features-grid">
-                @if (features().length > 0) {
-                  @for (feature of features(); track feature) {
-                    <div class="flex items-center gap-2.5 min-h-[50px] p-2 bg-white border border-[#f0f2f1] rounded-[8px]">
-                      <span class="flex items-center justify-center w-8 h-8 rounded-[8px] bg-[#f1f4f3] text-[#17252d] shrink-0"><svg lucideCheck size="14"></svg></span>
-                      <span class="text-[#17232c] text-[13px] font-medium font-['Poppins',sans-serif]">{{ feature }}</span>
-                    </div>
-                  }
-                } @else {
-                  <p class="col-span-full m-0 py-5 text-[#8a969e] text-[13px] font-['Poppins',sans-serif]">No data found</p>
-                }
-              </div>
-            </div>
-
             <!-- Make an Offer -->
-            <div class="relative bg-white border border-[#e5e9e7] rounded-[10px] p-6 overflow-hidden" id="offer">
+            <div class="relative bg-white border border-[#e5e9e7] rounded-[16px] p-6 overflow-hidden shadow-[0_2px_12px_rgba(6,47,53,0.05)] max-[620px]:p-5" id="offer">
               <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#062d32] via-[#15803d] to-[#d7fa4c]"></div>
-              <div class="flex items-center gap-2.5">
-                <span class="flex items-center justify-center w-[34px] h-[34px] rounded-[8px] bg-[#e9ffb5] text-[#062d32] shrink-0"><svg lucideTag size="16"></svg></span>
-                <div>
-                  <h2 class="m-0 mb-0 font-['Poppins',sans-serif] font-semibold text-[22px] leading-[1.25] text-[#0b1720]">Make an offer</h2>
-                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our vehicle experts will respond within 30 minutes.</p>
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div class="flex items-center gap-2.5">
+                  <span class="flex items-center justify-center w-[38px] h-[38px] rounded-[10px] bg-[#062D32] text-[#B9F24A] shrink-0"><svg lucideTag size="17"></svg></span>
+                  <div>
+                    <h2 class="m-0 font-['Poppins',sans-serif] font-semibold text-[20px] leading-[1.25] text-[#0b1720]">Make an offer</h2>
+                    <p class="m-0 mt-0.5 text-[#52616d] text-xs font-['Poppins',sans-serif]">Expert responds within 30 minutes.</p>
+                  </div>
                 </div>
+                <span class="inline-flex items-center h-8 px-3 rounded-full bg-[#F4F7F5] border border-[#EAEFE9] text-[11px] font-semibold text-[#062D32]">Asking: {{ formatPrice(vehicle.price) }}</span>
               </div>
               @if (offerSent()) {
                 <div class="flex flex-col items-center py-7 px-3.5 rounded-[8px] bg-[#f0faf1] text-center">
@@ -229,7 +212,7 @@
                   <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our team will reach out shortly to discuss the next step.</p>
                 </div>
               } @else {
-                <form (submit)="submitOffer($event)" class="flex flex-col">
+                <form (submit)="submitOffer($event)" class="flex flex-col mt-5">
                   <div class="grid grid-cols-2 gap-3">
                     <label class="block mb-3.5">
                       <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Full name</span>
@@ -241,14 +224,17 @@
                     </label>
                   </div>
                   <label class="block mb-3.5">
-                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Your offer price (₹)</span>
-                    <input required type="number" placeholder="e.g. 1434500" [value]="offerPrice()" (input)="offerPrice.set($any($event.target).value)" class="offer-field-input" />
+                    <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Your offer price (₹) <span class="text-[#e53e3e]">*</span></span>
+                    <input required type="number" min="1" placeholder="e.g. 1434500" [value]="offerPrice()" (input)="offerPrice.set($any($event.target).value)" class="offer-field-input" />
+                    @if (offerDiff()) {
+                      <span class="mt-1.5 inline-flex items-center h-7 px-2.5 rounded-full bg-[#F4F7F5] border border-[#EAEFE9] text-[11px] font-semibold text-[#062D32]">{{ offerDiff() }}</span>
+                    }
                   </label>
                   <label class="block mb-3.5">
                     <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Message <em class="text-[#8a969e] font-normal not-italic">(optional)</em></span>
                     <textarea placeholder="Anything we should know?" [value]="message()" (input)="message.set($any($event.target).value)" class="offer-field-input offer-field-textarea"></textarea>
                   </label>
-                  <button class="offer-submit-btn flex items-center justify-center gap-[7px] w-full py-[11px] rounded-[6px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
+                  <button class="offer-submit-btn flex items-center justify-center gap-[7px] w-full py-[12px] rounded-[10px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
                     <svg lucideSend size="14"></svg>
                     Submit offer
                   </button>
@@ -263,11 +249,13 @@
           <div class="right-col">
             <div class="td-sticky-card" id="test-drive">
               <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#062d32] via-[#15803d] to-[#d7fa4c]"></div>
-              <div class="flex items-center gap-2.5 mb-5">
-                <span class="flex items-center justify-center w-9 h-9 rounded-[8px] bg-[#e9ffb5] text-[#062d32] shrink-0"><svg lucideCalendarDays size="18"></svg></span>
-                <div>
-                  <h3 class="m-0 font-['Poppins',sans-serif] font-semibold text-base leading-[1.3] text-[#0b1720]">Book a test drive</h3>
-                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">We'll bring the vehicle to you.</p>
+              <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
+                <div class="flex items-center gap-2.5">
+                  <span class="flex items-center justify-center w-10 h-10 rounded-[10px] bg-[#062D32] text-[#B9F24A] shrink-0"><svg lucideCalendarDays size="18"></svg></span>
+                  <div>
+                    <h3 class="m-0 font-['Poppins',sans-serif] font-semibold text-[17px] leading-[1.3] text-[#0b1720]">Book a test drive</h3>
+                    <p class="m-0 mt-0.5 text-[#52616d] text-xs font-['Poppins',sans-serif]">At our office or the vehicle · We confirm on call</p>
+                  </div>
                 </div>
               </div>
               @if (testDriveSent()) {
@@ -289,7 +277,7 @@
                   <div class="td-field-row">
                     <label class="block mb-3.5">
                       <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Preferred date</span>
-                      <input type="date" [value]="tdDate()" (input)="tdDate.set($any($event.target).value)" class="td-field-input" />
+                      <input type="date" [min]="todayStr()" [value]="tdDate()" (input)="tdDate.set($any($event.target).value)" class="td-field-input" />
                     </label>
                     <label class="block mb-3.5">
                       <span class="block mb-[5px] text-[#0b1720] text-[11px] font-semibold font-['Poppins',sans-serif]">Preferred time</span>
@@ -301,7 +289,7 @@
                       </select>
                     </label>
                   </div>
-                  <button class="td-submit-btn flex items-center justify-center gap-[7px] w-full py-[11px] rounded-[6px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
+                  <button class="td-submit-btn flex items-center justify-center gap-[7px] w-full py-[12px] rounded-[10px] bg-[#062d32] text-white text-[13px] font-semibold font-['Poppins',sans-serif] border-0 cursor-pointer hover:bg-[#041e22] active:scale-[0.98] transition-[background-color,transform] duration-200" type="submit">
                     <svg lucideSend size="14"></svg>
                     Book test drive
                   </button>
@@ -311,21 +299,21 @@
             </div>
 
             <!-- Card 2: Sell Your Car -->
-            <a class="bg-white border border-[#E7ECEA] rounded-[10px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-[border-color,background-color] duration-150 hover:border-[#d4dbd9] mt-2.5 group" routerLink="/sell">
+            <a class="bg-white border border-[#E7ECEA] rounded-[16px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-all duration-200 hover:border-[#C8D8D2] hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 mt-3 group" routerLink="/sell">
               <span class="flex items-center justify-center w-10 h-10 rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideTag size="19"></svg></span>
               <div class="flex-1 min-w-0">
-                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Sell Your Car</h4>
-                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Want to sell your car? Get started with Ayra Cars today.</p>
+                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Sell Your {{ isBike() ? 'Bike' : 'Car' }}</h4>
+                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Want to sell your {{ isBike() ? 'bike' : 'car' }}? Get started with Ayra Cars today.</p>
               </div>
               <svg lucideArrowRight size="18" class="shrink-0 text-[#18252C] transition-transform duration-150 group-hover:translate-x-[2px]"></svg>
             </a>
 
             <!-- Card 3: Want to Exchange Your Car? -->
-            <div class="bg-white border border-[#E7ECEA] rounded-[10px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-[border-color,background-color] duration-150 hover:border-[#d4dbd9] mt-2.5 group">
+            <div class="bg-white border border-[#E7ECEA] rounded-[16px] shadow-[0_2px_10px_rgba(10,30,40,0.025)] font-['Inter',sans-serif] flex items-center gap-3 p-4 cursor-pointer no-underline text-inherit transition-all duration-200 hover:border-[#C8D8D2] hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)] hover:-translate-y-0.5 mt-3 group">
               <span class="flex items-center justify-center w-10 h-10 rounded-[9px] bg-[#E9FFB5] text-[#527C18] shrink-0"><svg lucideRepeat size="20"></svg></span>
               <div class="flex-1 min-w-0">
-                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Want to Exchange Your Car?</h4>
-                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Get the best value for your current car.</p>
+                <h4 class="m-0 text-sm font-bold text-[#101A20] leading-[1.2]">Want to Exchange Your {{ isBike() ? 'Bike' : 'Car' }}?</h4>
+                <p class="mt-[5px] mb-0 text-[11px] font-normal text-[#596771] leading-[1.4]">Get the best value for your current {{ isBike() ? 'bike' : 'car' }}.</p>
               </div>
               <svg lucideArrowRight size="18" class="shrink-0 text-[#18252C] transition-transform duration-150 group-hover:translate-x-[2px]"></svg>
             </div>
@@ -344,4 +332,5 @@
   [price]="contactPrice()"
   [phone]="contactPhone()"
   [whatsapp]="contactWhatsapp()" />
+<div class="h-[84px] lg:hidden" aria-hidden="true"></div>
 <app-footer />

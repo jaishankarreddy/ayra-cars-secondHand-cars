@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideArrowRight,
+  LucideBadgeCheck,
   LucideBike,
   LucideBookmark,
   LucideCalendarDays,
@@ -12,6 +13,7 @@ import {
   LucideChevronLeft,
   LucideChevronRight,
   LucideChevronUp,
+  LucideCog,
   LucideFuel,
   LucideGauge,
   LucideGrid2X2,
@@ -19,11 +21,14 @@ import {
   LucideList,
   LucideLoaderCircle,
   LucideMapPin,
+  LucideScale,
   LucideSearch,
   LucideShieldCheck,
+  LucideSlidersHorizontal,
   LucideX
 } from '@lucide/angular';
 import { WishlistService } from '../../../../services/wishlist.service';
+import { CompareService } from '../../../compare/services/compare.service';
 import { CatalogVehicle } from '../../../../services/catalog.service';
 import { InventoryFacets, InventoryService } from '../../services/inventory.service';
 import { FooterComponent } from '../../../home/components/footer/footer.component';
@@ -61,6 +66,7 @@ export interface ListingVehicle {
     RouterLink,
     FooterComponent,
     LucideArrowRight,
+    LucideBadgeCheck,
     LucideBike,
     LucideBookmark,
     LucideCalendarDays,
@@ -70,6 +76,7 @@ export interface ListingVehicle {
     LucideChevronLeft,
     LucideChevronRight,
     LucideChevronUp,
+    LucideCog,
     LucideFuel,
     LucideGauge,
     LucideGrid2X2,
@@ -77,8 +84,10 @@ export interface ListingVehicle {
     LucideList,
     LucideLoaderCircle,
     LucideMapPin,
+    LucideScale,
     LucideSearch,
     LucideShieldCheck,
+    LucideSlidersHorizontal,
     LucideX
   ],
   templateUrl: './inventory-page.component.html',
@@ -87,6 +96,7 @@ export interface ListingVehicle {
 export class InventoryPageComponent {
   private readonly inventory = inject(InventoryService);
   private readonly wishlistService = inject(WishlistService);
+  private readonly compareService = inject(CompareService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -201,7 +211,7 @@ export class InventoryPageComponent {
   });
 
   readonly locations = computed(() => {
-    const defaultLocs = ['Bengaluru', 'Mysore', 'Mangalore', 'Hubli', 'Belgaum'];
+    const defaultLocs = ['Bengaluru', 'Mysuru', 'Mangaluru', 'Hubballi', 'Belagavi'];
     const serverLocs = this.facets()?.districts ?? [];
     const set = new Set([...defaultLocs, ...serverLocs]);
     return [...set].sort();
@@ -382,7 +392,32 @@ export class InventoryPageComponent {
     if (priceMin) this.priceMin.set(+priceMin);
     if (priceMax) this.priceMax.set(+priceMax);
 
+    // District comes from home "Shop by District" cards (?district=) or the
+    // location dropdown (?location=) — both map to the API `district` param.
+    const district = qp.get('district') || qp.get('location');
+    if (district) this.selectedLocation.set(district);
+
+    // Backward compat: home quick-search used to send `budget=0-5|5-10|...`
+    if (!priceMin && !priceMax) {
+      const range = this.budgetParamToRange(qp.get('budget'));
+      if (range) {
+        if (range.min > 0) this.priceMin.set(range.min);
+        if (range.max < 5000000) this.priceMax.set(range.max);
+      }
+    }
+
     this.routeSynced = true;
+  }
+
+  private budgetParamToRange(budget: string | null): { min: number; max: number } | null {
+    switch (budget) {
+      case '0-5': return { min: 0, max: 500000 };
+      case '5-10': return { min: 500000, max: 1000000 };
+      case '10-15': return { min: 1000000, max: 1500000 };
+      case '15-25': return { min: 1500000, max: 2500000 };
+      case '25+': return { min: 2500000, max: 5000000 };
+      default: return null;
+    }
   }
 
   private loadFacets(type: 'car' | 'bike'): void {
@@ -407,6 +442,7 @@ export class InventoryPageComponent {
     let count = 0;
     if (this.selectedBrand()) count += 1;
     if (this.selectedModel()) count += 1;
+    if (this.selectedLocation()) count += 1;
     if (this.minYear() || this.maxYear()) count += 1;
     if (this.selectedFuels().length) count += this.selectedFuels().length;
     if (this.selectedTransmissions().length) count += this.selectedTransmissions().length;
@@ -418,6 +454,49 @@ export class InventoryPageComponent {
   });
 
   readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
+
+  /** Type-aware hero copy — /cars vs /bikes land differently. */
+  readonly heroTitle = computed(() =>
+    this.type() === 'Bike' ? 'Explore Used Bikes in Karnataka' : 'Explore Used Cars in Karnataka'
+  );
+  readonly heroSubtitle = computed(() =>
+    this.type() === 'Bike'
+      ? 'Mileage champions for city traffic — RTO-checked, inspected, ready for a scheduled test drive.'
+      : 'Family SUVs to city hatchbacks — RTO-checked, inspected, ready for a scheduled test drive.'
+  );
+
+  /** Applied-filter pills with one-tap remove — core listing UX. */
+  readonly activePills = computed<{ key: string; label: string }[]>(() => {
+    const pills: { key: string; label: string }[] = [];
+    if (this.debouncedSearch().trim()) pills.push({ key: 'q', label: `“${this.debouncedSearch().trim()}”` });
+    if (this.selectedLocation()) pills.push({ key: 'location', label: this.selectedLocation() });
+    if (this.selectedBrand()) pills.push({ key: 'brand', label: this.selectedBrand() });
+    if (this.selectedModel()) pills.push({ key: 'model', label: this.selectedModel() });
+    if (this.priceMin() > 0 || this.priceMax() < 5000000)
+      pills.push({ key: 'price', label: `${this.formatPriceIn(this.priceMin())} – ${this.priceMax() >= 5000000 ? '₹50L+' : this.formatPriceIn(this.priceMax())}` });
+    if (this.minYear() || this.maxYear())
+      pills.push({ key: 'year', label: `${this.minYear() ?? 'Any'} – ${this.maxYear() ?? 'Any'}` });
+    for (const f of this.selectedFuels()) pills.push({ key: `fuel:${f}`, label: f });
+    for (const t of this.selectedTransmissions()) pills.push({ key: `trans:${t}`, label: t });
+    for (const b of this.selectedBodyTypes()) pills.push({ key: `body:${b}`, label: b });
+    for (const o of this.selectedOwners()) pills.push({ key: `owner:${o}`, label: o === 1 ? '1st Owner' : o === 2 ? '2nd Owner' : '3rd Owner' });
+    return pills;
+  });
+
+  removePill(key: string): void {
+    if (key === 'q') { this.search.set(''); this.debouncedSearch.set(''); }
+    else if (key === 'location') this.selectedLocation.set('');
+    else if (key === 'brand') { this.selectedBrand.set(''); this.selectedModel.set(''); }
+    else if (key === 'model') this.selectedModel.set('');
+    else if (key === 'price') { this.priceMin.set(0); this.priceMax.set(5000000); }
+    else if (key === 'year') { this.minYear.set(null); this.maxYear.set(null); }
+    else if (key.startsWith('fuel:')) this.toggleFuel(key.slice(5));
+    else if (key.startsWith('trans:')) this.toggleTransmission(key.slice(6));
+    else if (key.startsWith('body:')) this.toggleBodyType(key.slice(5));
+    else if (key.startsWith('owner:')) this.toggleOwner(Number(key.slice(6)));
+    else return;
+    this.currentPage.set(1);
+  }
 
   // ---- Pagination generation ----------------------------------------------
   readonly pageNumbers = computed<(number | string)[]>(() => {
@@ -549,6 +628,23 @@ export class InventoryPageComponent {
     this.currentPage.set(1);
   }
 
+  setCcMinValue(event: Event): void {
+    this.ccMin.set(Number((event.target as HTMLSelectElement).value));
+    this.currentPage.set(1);
+  }
+
+  setCcMaxValue(event: Event): void {
+    this.ccMax.set(Number((event.target as HTMLSelectElement).value));
+    this.currentPage.set(1);
+  }
+
+  setAbsOptionValue(event: Event): void {
+    this.absOption.set((event.target as HTMLSelectElement).value as AbsOption);
+    this.currentPage.set(1);
+  }
+
+  readonly ccOptions = [100, 125, 150, 200, 250, 350, 500, 650];
+
   formatPrice(price: number): string {
     if (price >= 10000000) {
       return `₹ ${(price / 10000000).toFixed(2)} Cr`;
@@ -563,12 +659,31 @@ export class InventoryPageComponent {
     return `₹ ${price.toLocaleString('en-IN')}`;
   }
 
+  formatEmi(price: number): string {
+    if (!price || !Number.isFinite(price)) return '';
+    const principal = price * 0.85;
+    const r = 0.11 / 12;
+    const n = 60;
+    const pow = Math.pow(1 + r, n);
+    const emi = (principal * r * pow) / (pow - 1);
+    if (!Number.isFinite(emi)) return '';
+    return `₹${Math.round(emi).toLocaleString('en-IN')}/m`;
+  }
+
   toggleSave(id: string): void {
     this.wishlistService.toggle(id);
   }
 
   isSaved(id: string): boolean {
     return this.wishlistService.has(id);
+  }
+
+  toggleCompare(id: string): void {
+    this.compareService.toggle(id);
+  }
+
+  isCompared(id: string): boolean {
+    return this.compareService.ids().includes(id);
   }
 
   saveSearch(): void {
@@ -579,6 +694,7 @@ export class InventoryPageComponent {
   clearFilters(): void {
     this.selectedBrand.set('');
     this.selectedModel.set('');
+    this.selectedLocation.set('');
     this.minYear.set(null);
     this.maxYear.set(null);
     this.selectedFuels.set([]);

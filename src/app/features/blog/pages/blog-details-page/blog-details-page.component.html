@@ -1,6 +1,6 @@
 @if (post(); as p) {
   <!-- Breadcrumb -->
-  <div class="container-am pt-6">
+  <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 pt-6">
     <nav class="flex items-center gap-2 text-xs text-[var(--text-muted)]">
       <a routerLink="/" class="hover:text-[#14272c]">Home</a>
       <span>›</span>
@@ -11,7 +11,7 @@
   </div>
 
   <!-- Header -->
-  <article class="container-am pb-16 pt-6">
+  <article class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 pb-16 pt-6">
     <div class="grid gap-8 lg:grid-cols-[1fr_340px]">
       <div>
         <span class="inline-flex rounded-full bg-[#d7fa4c] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#14272c]">{{ p.category }}</span>
@@ -90,7 +90,7 @@
     }
   </article>
 } @else {
-  <div class="container-am py-20 text-center">
+  <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-20 text-center">
     <h1 class="font-heading text-2xl font-semibold text-[#14272c]">Article not found</h1>
     <p class="mt-2 text-sm text-[var(--text-muted)]">The post you’re looking for doesn’t exist.</p>
     <a routerLink="/blog" class="mt-6 inline-flex rounded-full bg-[#14272c] px-6 py-3 text-sm font-semibold text-white">Go to Blog</a>

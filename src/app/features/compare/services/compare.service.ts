@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { Car } from '../../cars/models/car.model';
 import { Bike } from '../../bikes/models/bike.model';
 import { CatalogService, CatalogVehicle } from '../../../services/catalog.service';
@@ -54,7 +55,7 @@ export class CompareService {
     this.loadFromServer();
   }
 
-  readonly max = 3;
+  readonly max = 4;
 
   readonly ids = signal<string[]>([]);
 
@@ -119,6 +120,36 @@ export class CompareService {
     this.http.delete<{ vehicleIds: string[] }>(`${API_BASE}/compare`, { params: { sessionId: this.sessionId } }).subscribe({
       error: () => undefined
     });
+  }
+
+  /**
+   * Real server search for the compare picker (cars + bikes via API).
+   * The picker used to filter only the locally loaded catalogue.
+   */
+  async searchServer(keyword: string, limit = 8): Promise<ComparableVehicle[]> {
+    const q = keyword.trim();
+    if (!q) return [];
+    const fetchType = async (type: 'car' | 'bike'): Promise<CatalogVehicle[]> => {
+      try {
+        const res = await firstValueFrom(
+          this.http.get<{ items: CatalogVehicle[] }>(
+            `${API_BASE}/vehicles?type=${type}&q=${encodeURIComponent(q)}&page=1&limit=${limit}`
+          )
+        );
+        return res?.items ?? [];
+      } catch {
+        return [];
+      }
+    };
+    const [cars, bikes] = await Promise.all([fetchType('car'), fetchType('bike')]);
+    const seen = new Set<string>();
+    const out: ComparableVehicle[] = [];
+    for (const v of [...cars, ...bikes]) {
+      if (!v || seen.has(v.id)) continue;
+      seen.add(v.id);
+      out.push(this.toComparable(v, v.vehicleType));
+    }
+    return out;
   }
 
   private loadFromServer(): void {

@@ -4,7 +4,7 @@ import {
   LucideShieldCheck,
   LucideBadgeCheck,
   LucideHandCoins,
-  LucideTruck,
+  LucideMapPin,
   LucideArrowRight
 } from '@lucide/angular';
 
@@ -17,7 +17,7 @@ import {
     LucideShieldCheck,
     LucideBadgeCheck,
     LucideHandCoins,
-    LucideTruck,
+    LucideMapPin,
     LucideArrowRight
   ],
   templateUrl: './auth-layout.component.html',
@@ -27,23 +27,23 @@ export class AuthLayoutComponent {
   readonly highlights = [
     {
       icon: 'shieldCheck',
-      title: 'Certified vehicles',
-      detail: 'Every listing passes a 200-point inspection.'
+      title: 'RTO-verified stock',
+      detail: 'RC, challan & insurance checked.'
     },
     {
       icon: 'handCoins',
-      title: 'Transparent pricing',
-      detail: 'No hidden charges, no haggling surprises.'
+      title: 'Fixed fair prices',
+      detail: 'No haggling, no hidden charges.'
     },
     {
-      icon: 'truck',
-      title: 'Doorstep delivery',
-      detail: 'Get your vehicle delivered across Karnataka.'
+      icon: 'mapPin',
+      title: 'Easy test drives',
+      detail: 'Visit our office or the vehicle.'
     },
     {
       icon: 'badgeCheck',
-      title: 'Paperwork handled',
-      detail: 'RC transfer and insurance done for you.'
+      title: 'All languages',
+      detail: 'Talk to us in your language.'
     }
   ] as const;
 }

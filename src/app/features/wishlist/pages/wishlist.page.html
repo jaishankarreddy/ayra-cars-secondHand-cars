@@ -1,77 +1,287 @@
-<main>
-  <!-- ===== Hero ===== -->
-  <section class="relative overflow-hidden bg-ink pb-16 pt-28 text-white sm:pt-36">
-    <div class="pointer-events-none absolute -top-32 left-1/2 h-72 w-[34rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[130px]"></div>
-    <div class="pointer-events-none absolute -bottom-24 left-[-4rem] h-64 w-80 rounded-full bg-accent/20 blur-[130px]"></div>
+<div class="min-h-screen bg-[#F7FAF9] font-['Inter',sans-serif]">
 
-    <div class="container-am relative">
-      <nav class="mb-6 flex items-center gap-2 text-xs font-medium text-white/50">
-        <a routerLink="/" class="transition-colors hover:text-white">Home</a>
-        <span>/</span>
-        <span class="text-white/90">Wishlist</span>
+  <!-- ===== Wishlist Intro ===== -->
+  <section class="wishlist-hero pt-4 pb-3">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-xs font-medium text-[#5F7078]">
+        <a routerLink="/" class="hover:text-[#062F35] transition-colors">Home</a>
+        <span class="text-[#5F7078]/60">›</span>
+        <span class="text-[#062F35] font-semibold">Wishlist</span>
       </nav>
 
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <div class="max-w-2xl">
-          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
-            <svg lucideHeart class="h-3.5 w-3.5 text-primary"></svg>
-            Saved vehicles
-          </span>
-          <h1 class="mt-4 font-heading text-4xl font-bold leading-tight sm:text-5xl">
-            Your <span class="gradient-text">wishlist</span>
+      <!-- Heading Row -->
+      <div class="mt-4 flex items-start justify-between gap-6 max-[768px]:flex-col max-[768px]:gap-4">
+        <div class="min-w-0">
+          <h1 class="font-['Poppins',sans-serif] text-[36px] font-bold leading-[1.1] tracking-[-0.02em] max-[768px]:text-[28px] max-[480px]:text-[24px]">
+            <span class="text-[#062F35]">My</span>
+            <span class="bg-gradient-to-r from-[#6B8E1F] via-[#8FBF2A] to-[#B7F23A] bg-clip-text text-transparent"> Wishlist</span>
           </h1>
-          <p class="mt-4 max-w-xl text-base text-white/65 sm:text-lg">
-            Every car and bike you've hearted lives here. Tap the heart on any card to remove it.
+          <p class="mt-3 max-w-[520px] text-[13px] leading-[1.6] text-[#5F7078] max-[480px]:text-xs">
+            Your favorite cars, all in one place. Pick up where you left off.
           </p>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-center backdrop-blur">
-          <p class="font-heading text-3xl font-bold text-primary">{{ totalCount() }}</p>
-          <p class="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/50">Saved</p>
+        <!-- Decorative Right Image -->
+        <div class="shrink-0 -translate-y-2 max-[768px]:translate-y-0 max-[768px]:self-start">
+          <img src="/wishlist_header_text.png" alt="Saved For Bigger Journeys" class="h-[128px] w-auto object-contain max-[1024px]:h-[105px] max-[768px]:h-[95px] max-[480px]:h-[85px] -translate-y-1" />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Listings ===== -->
-  <section class="max-w-[1240px] mx-auto py-14 px-5 pb-20 max-[700px]:py-10">
-    @if (totalCount() > 0) {
-      <div class="grid gap-[22px] grid-cols-4 max-[900px]:grid-cols-2 max-[700px]:grid-cols-1 max-[700px]:gap-[10px]">
-        @for (vehicle of wishlistedVehicles(); track vehicle.id) {
-          <article class="bg-white border border-[#e5e2da] rounded-2xl cursor-pointer overflow-hidden transition-[transform,box-shadow] duration-[0.25s] hover:shadow-[0_18px_38px_rgba(26,55,48,0.1)] hover:-translate-y-[5px]" [routerLink]="['/vehicles', vehicle.id]">
-            <div class="bg-center bg-cover h-[210px] relative max-[700px]:h-[135px]" [style.background-image]="'url(' + vehicle.image + ')'">
-              <span class="absolute top-3.5 left-3.5 bg-[#d7fa4c] rounded-[6px] text-[#14272c] text-[11px] font-bold px-2.5 py-[6px] uppercase">{{ vehicle.tag }}</span>
-              <button class="absolute top-3.5 right-3.5 flex items-center justify-center w-9 h-9 rounded-full bg-white/92 transition-[background,color] duration-200 hover:bg-white hover:text-[#ef4444]" [class.text-[#ef4444]]="wishlisted(vehicle.id)" (click)="$event.stopPropagation(); toggleWishlist(vehicle.id)" [attr.aria-label]="wishlisted(vehicle.id) ? 'Remove from wishlist' : 'Add to wishlist'"><svg lucideHeart size="17" [attr.fill]="wishlisted(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
-              <button class="absolute right-3.5 top-[58px] flex items-center justify-center w-9 h-9 rounded-full bg-white/92 transition-[background,color] duration-200 hover:bg-white hover:text-[#eb7138]" [class.text-[#eb7138]]="compared(vehicle.id)" (click)="$event.stopPropagation(); compareService.toggle(vehicle.id)" [attr.aria-label]="compared(vehicle.id) ? 'Remove from compare' : 'Add to compare'"><svg lucideScale size="16" [attr.fill]="compared(vehicle.id) ? 'currentColor' : 'none'"></svg></button>
-            </div>
-            <div class="px-5 pb-5 pt-[18px] max-[700px]:px-[11px] max-[700px]:pb-[13px] max-[700px]:pt-3">
-              <div class="text-[#eb7138] text-xs font-bold tracking-[0.06em] uppercase max-[700px]:text-[9px]">{{ vehicle.type }} <span class="text-[#c9c6bc] mx-[5px]">•</span> Ayra Cars inspected</div>
-              <h3 class="font-['Space_Grotesk',sans-serif] text-lg font-bold mt-[7px] mb-2 max-[700px]:text-[14px] max-[700px]:leading-[1.2]">{{ vehicle.name }}</h3>
-              <div class="text-[#8a948f] text-xs max-[700px]:text-[10px]">{{ vehicle.meta }}</div>
-              <div class="flex items-center justify-between border-t border-[#f0efe9] mt-4 pt-4">
-                <strong class="font-['Space_Grotesk',sans-serif] text-[22px] font-bold max-[700px]:text-[16px]">{{ vehicle.price }}</strong>
-                <a aria-label="View {{ vehicle.name }}" class="flex items-center justify-center bg-[#f4f3ef] rounded-full text-[#152329] w-10 h-10 transition-[background,color] duration-200 hover:bg-[#152a30] hover:text-white max-[700px]:w-[30px] max-[700px]:h-[30px]"><svg lucideArrowRight size="17"></svg></a>
+  <!-- ===== Saved Vehicles Container ===== -->
+  <section class="bg-[#F7FAF9] pb-6">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5">
+      <div class="bg-white border border-[#E2E9E7] rounded-[16px] p-6 max-[768px]:p-4 shadow-[0_2px_12px_rgba(6,47,53,0.04)]">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between gap-4 max-[768px]:flex-col max-[768px]:items-stretch">
+          <h2 class="font-['Poppins',sans-serif] text-[18px] font-bold leading-[1.2] text-[#062F35] max-[480px]:text-[16px]">
+            Saved Vehicles ({{ totalCount() }})
+          </h2>
+
+          <div class="flex items-center gap-3 max-[768px]:flex-wrap max-[768px]:gap-2">
+            <!-- Sort By -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium text-[#5F7078] whitespace-nowrap">Sort by</span>
+              <div class="relative">
+                <select
+                  [value]="sortBy()"
+                  (change)="onSortChange($event)"
+                  class="h-9 appearance-none rounded-[8px] border border-[#E2E9E7] bg-white pl-3 pr-8 text-xs font-semibold text-[#062F35] outline-none focus:border-[#062F35] transition-colors cursor-pointer"
+                >
+                  <option value="recent">Recently Added</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="year_desc">Year: Newest</option>
+                </select>
+                <svg lucideChevronDown size="14" class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5F7078]"></svg>
               </div>
             </div>
-          </article>
+
+            <!-- Grid / List Toggle -->
+            <div class="ml-1 flex items-center gap-1.5">
+              <button
+                (click)="setView('grid')"
+                [class.bg-[#062F35]]="viewMode() === 'grid'"
+                [class.text-white]="viewMode() === 'grid'"
+                [class.border-[#062F35]]="viewMode() === 'grid'"
+                [class.bg-white]="viewMode() !== 'grid'"
+                [class.text-[#5F7078]]="viewMode() !== 'grid'"
+                [class.border-[#E2E9E7]]="viewMode() !== 'grid'"
+                class="flex h-9 w-9 items-center justify-center rounded-[8px] border transition-colors hover:border-[#062F35]"
+                aria-label="Grid view"
+              >
+                <svg lucideGrid2X2 size="16"></svg>
+              </button>
+              <button
+                (click)="setView('list')"
+                [class.bg-[#062F35]]="viewMode() === 'list'"
+                [class.text-white]="viewMode() === 'list'"
+                [class.border-[#062F35]]="viewMode() === 'list'"
+                [class.bg-white]="viewMode() !== 'list'"
+                [class.text-[#5F7078]]="viewMode() !== 'list'"
+                [class.border-[#E2E9E7]]="viewMode() !== 'list'"
+                class="flex h-9 w-9 items-center justify-center rounded-[8px] border transition-colors hover:border-[#062F35]"
+                aria-label="List view"
+              >
+                <svg lucideList size="16"></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="mt-5 h-px w-full bg-[#E2E9E7]"></div>
+
+        <!-- Vehicle Grid / List -->
+        @if (totalCount() > 0) {
+          <!-- Grid View -->
+          @if (viewMode() === 'grid') {
+            <div class="mt-6 grid grid-cols-3 gap-5 max-[1024px]:grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:gap-4">
+              @for (vehicle of wishlistedVehicles(); track vehicle.id) {
+                <article class="group flex flex-col overflow-hidden rounded-[14px] border border-[#E2E9E7] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(6,47,53,0.08)] hover:border-[#DDE8E2]">
+                  <!-- Image -->
+                  <div class="relative w-full overflow-hidden bg-[#EEF2EE] aspect-[16/9]">
+                    <img [src]="vehicle.image" [alt]="vehicle.name" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy" />
+                    <!-- Wishlist Heart -->
+                    <button
+                      (click)="toggleWishlist(vehicle.id)"
+                      class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(6,47,53,0.12)] border border-[#E2E9E7] transition-transform hover:scale-105"
+                      aria-label="Remove from wishlist"
+                    >
+                      <svg lucideHeart size="16" class="text-[#FF4D4F]" fill="#FF4D4F" stroke="#FF4D4F"></svg>
+                    </button>
+                  </div>
+
+                  <!-- Info -->
+                  <div class="flex flex-1 flex-col p-4">
+                    <!-- Brand + Year -->
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-medium text-[#5F7078]">{{ vehicle.brand }}</span>
+                      <span class="text-xs font-medium text-[#5F7078]">{{ vehicle.year }}</span>
+                    </div>
+
+                    <!-- Vehicle Name -->
+                    <h3 class="mt-1.5 font-['Poppins',sans-serif] text-[15px] font-bold leading-[1.3] text-[#10212B] line-clamp-1">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+
+                    <!-- Specs -->
+                    <div class="mt-3 flex items-center gap-3 text-xs text-[#5F7078] max-[480px]:gap-2">
+                      <span class="inline-flex items-center gap-1">
+                        <svg lucideGauge size="13" class="text-[#062F35]"></svg>
+                        {{ vehicle.kilometers.toLocaleString('en-IN') }} km
+                      </span>
+                      <span class="text-[#E2E9E7]">|</span>
+                      <span class="inline-flex items-center gap-1">
+                        <svg lucideFuel size="13" class="text-[#062F35]"></svg>
+                        {{ vehicle.fuel }}
+                      </span>
+                      <span class="text-[#E2E9E7]">|</span>
+                      <span class="inline-flex items-center gap-1">
+                        <svg lucideSettings2 size="13" class="text-[#062F35]"></svg>
+                        {{ vehicle.transmission }}
+                      </span>
+                    </div>
+
+                    <!-- Price -->
+                    <p class="mt-3 font-['Poppins',sans-serif] text-[18px] font-bold leading-[1.2] text-[#062F35]">{{ vehicle.priceDisplay }}</p>
+
+                    <!-- Location -->
+                    <p class="mt-1.5 inline-flex items-center gap-1 text-xs text-[#5F7078]">
+                      <svg lucideMapPin size="12" class="text-[#5F7078]"></svg>
+                      {{ vehicle.district }}, Karnataka
+                    </p>
+
+                    <!-- Actions -->
+                    <div class="mt-4 flex gap-2">
+                      <a [routerLink]="['/vehicles', vehicle.id]" class="flex flex-1 items-center justify-center rounded-[8px] border border-[#062F35] bg-white px-3 py-2.5 text-xs font-semibold text-[#062F35] transition-colors hover:bg-[#062F35] hover:text-white">
+                        View Details
+                      </a>
+                      <a routerLink="/contact" class="flex flex-1 items-center justify-center rounded-[8px] bg-[#062F35] px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#0A3F47]">
+                        Contact Seller
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <!-- List View -->
+            <div class="mt-6 flex flex-col gap-3">
+              @for (vehicle of wishlistedVehicles(); track vehicle.id) {
+                <article class="group flex overflow-hidden rounded-[14px] border border-[#E2E9E7] bg-white transition-all hover:shadow-[0_6px_18px_rgba(6,47,53,0.07)] max-[768px]:flex-col">
+                  <div class="relative w-[280px] shrink-0 overflow-hidden bg-[#EEF2EE] max-[768px]:w-full max-[768px]:aspect-[16/9]">
+                    <img [src]="vehicle.image" [alt]="vehicle.name" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" />
+                    <button (click)="toggleWishlist(vehicle.id)" class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(6,47,53,0.12)] border border-[#E2E9E7]">
+                      <svg lucideHeart size="16" class="text-[#FF4D4F]" fill="#FF4D4F"></svg>
+                    </button>
+                  </div>
+                  <div class="flex flex-1 flex-col justify-between p-4">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-[#5F7078]">{{ vehicle.brand }}</span>
+                        <span class="text-xs font-medium text-[#5F7078]">{{ vehicle.year }}</span>
+                      </div>
+                      <h3 class="mt-1 font-['Poppins',sans-serif] text-[16px] font-bold text-[#10212B]">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+                      <div class="mt-2 flex items-center gap-3 text-xs text-[#5F7078]">
+                        <span class="inline-flex items-center gap-1"><svg lucideGauge size="13" class="text-[#062F35]"></svg>{{ vehicle.kilometers.toLocaleString('en-IN') }} km</span>
+                        <span class="text-[#E2E9E7]">|</span>
+                        <span class="inline-flex items-center gap-1"><svg lucideFuel size="13" class="text-[#062F35]"></svg>{{ vehicle.fuel }}</span>
+                        <span class="text-[#E2E9E7]">|</span>
+                        <span class="inline-flex items-center gap-1"><svg lucideSettings2 size="13" class="text-[#062F35]"></svg>{{ vehicle.transmission }}</span>
+                      </div>
+                      <p class="mt-2 inline-flex items-center gap-1 text-xs text-[#5F7078]"><svg lucideMapPin size="12"></svg>{{ vehicle.district }}, Karnataka</p>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between gap-3 max-[480px]:flex-col max-[480px]:items-stretch">
+                      <p class="font-['Poppins',sans-serif] text-[18px] font-bold text-[#062F35]">{{ vehicle.priceDisplay }}</p>
+                      <div class="flex gap-2 max-[480px]:w-full">
+                        <a [routerLink]="['/vehicles', vehicle.id]" class="flex flex-1 items-center justify-center rounded-[8px] border border-[#062F35] bg-white px-4 py-2.5 text-xs font-semibold text-[#062F35] hover:bg-[#062F35] hover:text-white transition-colors">View Details</a>
+                        <a routerLink="/contact" class="flex flex-1 items-center justify-center rounded-[8px] bg-[#062F35] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#0A3F47] transition-colors">Contact Seller</a>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        } @else {
+          <div class="mt-8 rounded-[12px] border border-dashed border-[#E2E9E7] bg-[#F7FAF9] py-10 text-center">
+            <p class="text-sm font-medium text-[#5F7078]">No saved vehicles yet — your wishlist is empty.</p>
+          </div>
         }
       </div>
-    } @else {
-      <div class="flex flex-col items-center justify-center rounded-3xl border border-dashed border-border bg-surface px-6 py-24 text-center">
-        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-primary-soft">
-          <svg lucideHeart class="h-10 w-10 text-primary"></svg>
-        </div>
-        <h3 class="mt-6 font-heading text-2xl font-bold text-text">Your wishlist is empty</h3>
-        <p class="mt-2 max-w-md text-sm text-muted">
-          Tap the heart on any car or bike you love and it will be saved here so you can find it again in a click.
-        </p>
-        <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
-          <a routerLink="/cars" class="inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover active:scale-[0.99]">Browse Cars</a>
-          <a routerLink="/bikes" class="inline-flex items-center gap-2 overflow-hidden rounded-xl border border-border bg-surface px-6 py-3 text-sm font-semibold text-text transition-all duration-300 hover:border-primary/40 hover:text-primary active:scale-[0.99]">Browse Bikes</a>
+    </div>
+  </section>
+
+  <!-- ===== Empty Wishlist State ===== -->
+  @if (totalCount() === 0) {
+    <section class="bg-[#F7FAF9] pb-6">
+      <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5">
+        <div class="rounded-[16px] border border-[#E2E9E7] bg-[#F3F8F6] px-6 py-14 text-center max-[768px]:py-10 max-[480px]:px-4">
+          <div class="mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-white border border-[#E2E9E7] shadow-[0_2px_8px_rgba(6,47,53,0.04)]">
+            <svg lucideHeart size="30" class="text-[#062F35]" fill="none" stroke="#062F35" stroke-width="1.6"></svg>
+          </div>
+          <h3 class="mt-6 font-['Poppins',sans-serif] text-[20px] font-bold text-[#062F35] max-[480px]:text-[18px]">Your wishlist is empty</h3>
+          <p class="mx-auto mt-2 max-w-[360px] text-[13px] leading-[1.6] text-[#5F7078]">Start exploring and save the cars you love.</p>
+          <a routerLink="/cars" class="mt-6 inline-flex items-center gap-1.5 rounded-[10px] bg-[#B7F23A] px-6 py-3 text-[13px] font-bold text-[#062F35] transition-colors hover:bg-[#C8F75A] shadow-[0_2px_8px_rgba(183,242,58,0.2)]">
+            Explore Vehicles <svg lucideArrowRight size="15"></svg>
+          </a>
         </div>
       </div>
-    }
+    </section>
+  }
+
+  <!-- ===== Wishlist Benefits ===== -->
+  <section class="bg-[#F7FAF9] pb-10">
+    <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5">
+      <div class="grid grid-cols-4 divide-x divide-[#E2E9E7] overflow-hidden rounded-[16px] border border-[#E2E9E7] bg-white max-[1024px]:grid-cols-2 max-[1024px]:divide-x-0 max-[768px]:grid-cols-1">
+        <!-- Save Your Favorites -->
+        <div class="flex flex-col items-start gap-3 p-6 max-[1024px]:border-b max-[1024px]:border-[#E2E9E7] max-[1024px]:border-r max-[768px]:border-r-0">
+          <span class="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#F7FAF9] border border-[#E2E9E7] text-[#062F35]">
+            <svg lucideBookmark size="18"></svg>
+          </span>
+          <div>
+            <h4 class="font-['Poppins',sans-serif] text-[13px] font-bold text-[#062F35]">Save Your Favorites</h4>
+            <p class="mt-1 text-xs leading-[1.5] text-[#5F7078]">Keep track of the cars you like</p>
+          </div>
+        </div>
+
+        <!-- Compare Easily -->
+        <div class="flex flex-col items-start gap-3 p-6 max-[1024px]:border-b max-[1024px]:border-[#E2E9E7] max-[768px]:border-r-0">
+          <span class="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#F7FAF9] border border-[#E2E9E7] text-[#062F35]">
+            <svg lucideScale size="18"></svg>
+          </span>
+          <div>
+            <h4 class="font-['Poppins',sans-serif] text-[13px] font-bold text-[#062F35]">Compare Easily</h4>
+            <p class="mt-1 text-xs leading-[1.5] text-[#5F7078]">Shortlist and compare features</p>
+          </div>
+        </div>
+
+        <!-- Get Notified -->
+        <div class="flex flex-col items-start gap-3 p-6 max-[1024px]:border-b max-[1024px]:border-[#E2E9E7] max-[1024px]:border-r max-[768px]:border-r-0 max-[1024px]:max-[768px]:border-b">
+          <span class="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#F7FAF9] border border-[#E2E9E7] text-[#062F35]">
+            <svg lucideBell size="18"></svg>
+          </span>
+          <div>
+            <h4 class="font-['Poppins',sans-serif] text-[13px] font-bold text-[#062F35]">Get Notified</h4>
+            <p class="mt-1 text-xs leading-[1.5] text-[#5F7078]">Be the first to know about price drops</p>
+          </div>
+        </div>
+
+        <!-- Make It Yours -->
+        <div class="flex flex-col items-start gap-3 p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#F7FAF9] border border-[#E2E9E7] text-[#062F35]">
+            <svg lucideBadgeCheck size="18"></svg>
+          </span>
+          <div>
+            <h4 class="font-['Poppins',sans-serif] text-[13px] font-bold text-[#062F35]">Make It Yours</h4>
+            <p class="mt-1 text-xs leading-[1.5] text-[#5F7078]">Find the perfect car, faster</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
-</main>
+
+</div>
 
 <app-footer />

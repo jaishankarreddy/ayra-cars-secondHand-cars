@@ -164,16 +164,35 @@ export const FAQS: FaqItem[] = [
   }
 ];
 
-export const FOOTER_QUICK_LINKS: FooterLink[] = [
+export const FOOTER_EXPLORE_LINKS: FooterLink[] = [
+  { label: 'Find a Vehicle', path: '/search' },
   { label: 'Cars', path: '/cars' },
   { label: 'Bikes', path: '/bikes' },
-  { label: 'Blog', path: '/blog' },
+   { label: 'Blog', path: '/blog' },
+  { label: 'Popular Brands', path: '/brands' },
+  { label: 'Compare Vehicles', path: '/compare' },
+  { label: 'Favourites', path: '/wishlist' }
+];
+
+export const FOOTER_BUY_SELL_LINKS: FooterLink[] = [
+  { label: 'Buy a Car', path: '/cars' },
+  { label: 'Buy a Bike', path: '/bikes' },
+  { label: 'Sell Your Vehicle', path: '/sell' },
+  { label: 'Vehicle Valuation', path: '/sell' },
+  { label: 'Buying Guide', path: '/about' },
+  { label: 'Selling Guide', path: '/about' }
+];
+
+export const FOOTER_COMPANY_LINKS: FooterLink[] = [
+  { label: 'Why Ayra Cars', path: '/about' },
   { label: 'About Us', path: '/about' },
-  { label: 'Contact', path: '/contact' },
-  { label: 'Wishlist', path: '/wishlist' }
+  { label: 'FAQs', path: '/about' },
+  { label: 'Contact Us', path: '/contact' },
+  { label: 'Terms & Conditions', path: '/terms' },
+  { label: 'Privacy Policy', path: '/privacy' }
 ];
 
 export const FOOTER_LEGAL_LINKS: FooterLink[] = [
   { label: 'Privacy Policy', path: '/privacy' },
-  { label: 'Terms of Service', path: '/terms' }
+  { label: 'Terms & Conditions', path: '/terms' }
 ];

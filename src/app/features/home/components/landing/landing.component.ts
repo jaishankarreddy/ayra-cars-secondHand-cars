@@ -1,13 +1,15 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   LucideArrowRight,
   LucideCarFront,
   LucideCheck,
   LucideChevronDown,
+  LucideMapPin,
   LucideSearch,
   LucideShieldCheck,
   LucideSparkles,
+  LucideStar,
   LucideTag,
   LucideUsers,
   LucideTruck,
@@ -40,9 +42,11 @@ const BUDGET_OPTIONS: BudgetOption[] = [
     LucideCarFront,
     LucideCheck,
     LucideChevronDown,
+    LucideMapPin,
     LucideSearch,
     LucideShieldCheck,
     LucideSparkles,
+    LucideStar,
     LucideTag,
     LucideUsers,
     LucideTruck,
@@ -54,6 +58,7 @@ const BUDGET_OPTIONS: BudgetOption[] = [
 export class LandingComponent {
   private readonly router = inject(Router);
   private readonly catalog = inject(CatalogService);
+  private readonly el = inject(ElementRef);
 
   readonly heroImage = HERO_IMAGE;
   readonly heroMobileImage = HERO_MOBILE_IMAGE;
@@ -75,6 +80,13 @@ export class LandingComponent {
 
   toggleDropdown(dropdown: 'type' | 'brand' | 'budget'): void {
     this.dropdownOpen.update((open) => open === dropdown ? null : dropdown);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.dropdownOpen.set(null);
+    }
   }
 
   closeDropdown(): void {
@@ -106,7 +118,23 @@ export class LandingComponent {
     const type = this.searchType();
     const queryParams: Record<string, string> = { type };
     if (this.searchBrand()) queryParams['brand'] = this.searchBrand();
-    if (this.searchBudget()) queryParams['budget'] = this.searchBudget();
+    const budget = this.searchBudget();
+    if (budget) {
+      const range = this.budgetToPriceRange(budget);
+      if (range.min > 0) queryParams['priceMin'] = String(range.min);
+      if (range.max < Number.POSITIVE_INFINITY) queryParams['priceMax'] = String(range.max);
+    }
     this.router.navigate([`/${type === 'bike' ? 'bikes' : 'cars'}`], { queryParams });
+  }
+
+  private budgetToPriceRange(budget: string): { min: number; max: number } {
+    switch (budget) {
+      case '0-5': return { min: 0, max: 500000 };
+      case '5-10': return { min: 500000, max: 1000000 };
+      case '10-15': return { min: 1000000, max: 1500000 };
+      case '15-25': return { min: 1500000, max: 2500000 };
+      case '25+': return { min: 2500000, max: Number.POSITIVE_INFINITY };
+      default: return { min: 0, max: Number.POSITIVE_INFINITY };
+    }
   }
 }

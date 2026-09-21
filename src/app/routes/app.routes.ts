@@ -57,17 +57,7 @@ export const routes: Routes = [
         },
         loadChildren: () => import('@features/vehicle-details/vehicle-details.routes').then(m => m.VEHICLE_DETAILS_ROUTES)
       },
-      {
-        path: 'search',
-        data: {
-          seo: {
-            title: 'Search Used Cars and Bikes in Bangalore | Ayra Cars',
-            description: 'Search verified second hand cars and bikes by brand, price, location and body type across Bangalore and Karnataka.',
-            keywords: 'search used cars Bangalore, search used bikes Karnataka, second hand vehicle search, Ayra Cars inventory'
-          }
-        },
-        loadChildren: () => import('@features/search/search.routes').then(m => m.SEARCH_ROUTES)
-      },
+      
       {
         path: 'compare',
         data: {
@@ -140,11 +130,11 @@ export const routes: Routes = [
       },
       {
         path: 'privacy',
-        loadChildren: () => import('@features/common/common.routes').then(m => m.COMMON_ROUTES)
+        loadComponent: () => import('@features/common/pages/privacy/privacy.component').then(m => m.PrivacyComponent)
       },
       {
         path: 'terms',
-        loadChildren: () => import('@features/common/common.routes').then(m => m.COMMON_ROUTES)
+        loadComponent: () => import('@features/common/pages/terms/terms.component').then(m => m.TermsComponent)
       }
     ]
   },

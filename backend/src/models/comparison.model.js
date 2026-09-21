@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MAX_COMPARE = 3;
+const MAX_COMPARE = 4;
 
 const ComparisonSchema = new mongoose.Schema(
   {

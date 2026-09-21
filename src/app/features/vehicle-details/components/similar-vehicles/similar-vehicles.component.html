@@ -1,7 +1,11 @@
 @if (similarVehicles().length > 0) {
   <section class="similar-section">
     <div class="similar-header">
-      <h2 class="similar-title">Similar {{ (vehicle().vehicleType || 'car') === 'bike' ? 'Bikes' : 'Cars' }} You May Like</h2>
+      <div>
+        <span class="section-eyebrow">Keep exploring</span>
+        <h2 class="section-title mt-2">Similar {{ (vehicle().vehicleType || 'car') === 'bike' ? 'Bikes' : 'Cars' }} You May Like</h2>
+        <p class="section-subtitle mt-2">Same budget, same body type — verified across Karnataka.</p>
+      </div>
       <a [routerLink]="viewAllLink()" class="view-all-link">
         View all
         <svg lucideArrowRight size="14"></svg>
@@ -20,6 +24,7 @@
           <a [routerLink]="['/vehicles', v.id]" class="similar-card">
             <div class="card-image">
               <img [src]="v.image" [alt]="v.name" loading="lazy" />
+              <span class="card-type-pill">{{ v.vehicleType === 'bike' ? 'Bike' : 'Car' }}</span>
               <button
                 class="heart-btn"
                 [class.wishlisted]="isWishlisted(v.id)"
@@ -31,8 +36,12 @@
             </div>
             <div class="card-info">
               <h3 class="card-name">{{ v.name }}</h3>
-              <p class="card-meta">{{ v.year }} | {{ formatKm(v.kilometers) }} | {{ v.fuel }}</p>
-              <span class="card-price">{{ formatPrice(v.price) }}</span>
+              <p class="card-meta">{{ v.year }} · {{ formatKm(v.kilometers) }} · {{ v.fuel }}</p>
+              <p class="card-location">{{ v.location }}</p>
+              <div class="card-footer">
+                <span class="card-price">{{ formatPrice(v.price) }}</span>
+                <span class="card-go"><svg lucideArrowRight size="14"></svg></span>
+              </div>
             </div>
           </a>
         }

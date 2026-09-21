@@ -10,7 +10,13 @@ import {
   LucideBike,
   LucideHeadset,
   LucidePercent,
-  LucideShieldCheck
+  LucideShieldCheck,
+  LucideMapPin,
+  LucideBadgeCheck,
+  LucideTrendingUp,
+  LucideWrench,
+  LucideCalendarCheck,
+  LucideSparkles
 } from '@lucide/angular';
 import { FooterComponent } from '../../../home/components/footer/footer.component';
 import { CatalogService, CatalogVehicle } from '../../../../services/catalog.service';
@@ -23,6 +29,7 @@ interface BrandData {
   type: 'Cars' | 'Bikes';
   count: number;
   logo: string;
+  priceFrom: string;
 }
 
 const LOGO_MAP: Record<string, string> = {
@@ -70,7 +77,9 @@ export interface MostSearchedBrand {
   key: string;
   logo: string;
   countLabel: string;
+  count: number;
   image: string;
+  priceFrom: string;
   type: 'Cars';
 }
 
@@ -78,6 +87,8 @@ export interface MiniBrand {
   name: string;
   key: string;
   logo: string;
+  count: number;
+  priceFrom: string;
   type: 'Cars' | 'Bikes';
 }
 
@@ -96,7 +107,13 @@ export interface MiniBrand {
     LucideBike,
     LucideHeadset,
     LucidePercent,
-    LucideShieldCheck
+    LucideShieldCheck,
+    LucideMapPin,
+    LucideBadgeCheck,
+    LucideTrendingUp,
+    LucideWrench,
+    LucideCalendarCheck,
+    LucideSparkles
   ],
   templateUrl: './brands-page.component.html',
   styleUrl: './brands-page.component.scss'
@@ -110,58 +127,72 @@ export class BrandsPageComponent implements OnInit {
 
   @ViewChild('mostSearchedTrack') mostSearchedTrack?: ElementRef<HTMLDivElement>;
 
-  readonly mostSearchedBrands: MostSearchedBrand[] = [
-    {
-      name: 'Toyota',
-      key: 'toyota',
-      logo: '/vehicle_logos/toyota-logo.png',
-      countLabel: '80+ Vehicles',
-      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800',
-      type: 'Cars'
-    },
-    {
-      name: 'Hyundai',
-      key: 'hyundai',
-      logo: '/vehicle_logos/hyundai-logo.png',
-      countLabel: '65+ Vehicles',
-      image: 'https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=800',
-      type: 'Cars'
-    },
-    {
-      name: 'Maruti Suzuki',
-      key: 'maruti suzuki',
-      logo: '/vehicle_logos/suzuki-logo.png',
-      countLabel: '120+ Vehicles',
-      image: 'https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg?auto=compress&cs=tinysrgb&w=800',
-      type: 'Cars'
-    },
-    {
-      name: 'Kia',
-      key: 'kia',
-      logo: '/vehicle_logos/kia-logo.png',
-      countLabel: '45+ Vehicles',
-      image: 'https://images.pexels.com/photos/3311573/pexels-photo-3311573.jpeg?auto=compress&cs=tinysrgb&w=800',
-      type: 'Cars'
-    }
-  ];
+  // Fallback images when DB has no representative image yet (keeps UI intact)
+  private readonly fallbackImages: Record<string, string> = {
+    'toyota': 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'hyundai': 'https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'maruti suzuki': 'https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'kia': 'https://images.pexels.com/photos/3311573/pexels-photo-3311573.jpeg?auto=compress&cs=tinysrgb&w=800',
+  };
 
-  readonly carPanelBrands: MiniBrand[] = [
-    { name: 'Toyota', key: 'toyota', logo: '/vehicle_logos/toyota-logo.png', type: 'Cars' },
-    { name: 'Hyundai', key: 'hyundai', logo: '/vehicle_logos/hyundai-logo.png', type: 'Cars' },
-    { name: 'Maruti Suzuki', key: 'maruti suzuki', logo: '/vehicle_logos/suzuki-logo.png', type: 'Cars' },
-    { name: 'Honda', key: 'honda', logo: '/vehicle_logos/honda-logo.png', type: 'Cars' },
-    { name: 'Tata', key: 'tata', logo: '/vehicle_logos/tata-logo.png', type: 'Cars' },
-    { name: 'Kia', key: 'kia', logo: '/vehicle_logos/kia-logo.png', type: 'Cars' }
-  ];
+  readonly totalVehicles = computed(() => this.catalog.vehicles().length);
+  readonly totalBrands = computed(() => this.brandCounts().size);
+  readonly totalCars = computed(() => this.catalog.vehicles().filter(v => v.vehicleType === 'car').length);
+  readonly totalBikes = computed(() => this.catalog.vehicles().filter(v => v.vehicleType !== 'car').length);
 
-  readonly bikePanelBrands: MiniBrand[] = [
-    { name: 'Royal Enfield', key: 'royal enfield', logo: '/vehicle_logos/Royal-Enfield-Logo.png', type: 'Bikes' },
-    { name: 'Yamaha', key: 'yamaha', logo: '/vehicle_logos/Yamaha_Motor_Company-Logo.wine.svg', type: 'Bikes' },
-    { name: 'Bajaj', key: 'bajaj', logo: '', type: 'Bikes' },
-    { name: 'TVS', key: 'tvs', logo: '/vehicle_logos/TVS_Motor_Company-Logo.wine.svg', type: 'Bikes' },
-    { name: 'Hero', key: 'hero', logo: '/vehicle_logos/Hero_Motors-Logo.wine.svg', type: 'Bikes' },
-    { name: 'Honda', key: 'honda', logo: '/vehicle_logos/honda-logo.png', type: 'Bikes' }
-  ];
+  readonly mostSearchedBrands = computed<MostSearchedBrand[]>(() => {
+    const vehicles = this.catalog.vehicles();
+    const counts = this.brandCounts();
+    const carEntries = [...counts.entries()]
+      .filter(([, v]) => v.cars > 0)
+      .sort((a, b) => b[1].cars - a[1].cars)
+      .slice(0, 4);
+
+    return carEntries.map(([key, val]) => {
+      const displayName = key.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const logo = LOGO_MAP[key] ?? '';
+      const count = val.cars;
+      const countLabel = `${count} ${count === 1 ? 'Vehicle' : 'Vehicles'} in Karnataka`;
+      const rep = vehicles.find(v => v.brand.toLowerCase() === key && v.vehicleType === 'car');
+      const image = rep?.image || this.fallbackImages[key] || 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800';
+      const minPrice = vehicles
+        .filter(v => v.brand.toLowerCase() === key && v.vehicleType === 'car')
+        .reduce((min, v) => Math.min(min, v.price), Number.POSITIVE_INFINITY);
+      return { name: displayName, key, logo, countLabel, count, image, priceFrom: this.formatPrice(minPrice), type: 'Cars' as const };
+    });
+  });
+
+  readonly carPanelBrands = computed<MiniBrand[]>(() => {
+    const counts = this.brandCounts();
+    const vehicles = this.catalog.vehicles();
+    return [...counts.entries()]
+      .filter(([, v]) => v.cars > 0)
+      .sort((a, b) => b[1].cars - a[1].cars)
+      .slice(0, 6)
+      .map(([key, val]) => {
+        const displayName = key.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        const minPrice = vehicles
+          .filter(v => v.brand.toLowerCase() === key && v.vehicleType === 'car')
+          .reduce((min, v) => Math.min(min, v.price), Number.POSITIVE_INFINITY);
+        return { name: displayName, key, logo: LOGO_MAP[key] ?? '', count: val.cars, priceFrom: this.formatPrice(minPrice), type: 'Cars' as const };
+      });
+  });
+
+  readonly bikePanelBrands = computed<MiniBrand[]>(() => {
+    const counts = this.brandCounts();
+    const vehicles = this.catalog.vehicles();
+    return [...counts.entries()]
+      .filter(([, v]) => v.bikes > 0)
+      .sort((a, b) => b[1].bikes - a[1].bikes)
+      .slice(0, 6)
+      .map(([key, val]) => {
+        const displayName = key.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        const minPrice = vehicles
+          .filter(v => v.brand.toLowerCase() === key && v.vehicleType !== 'car')
+          .reduce((min, v) => Math.min(min, v.price), Number.POSITIVE_INFINITY);
+        return { name: displayName, key, logo: LOGO_MAP[key] ?? '', count: val.bikes, priceFrom: this.formatPrice(minPrice), type: 'Bikes' as const };
+      });
+  });
 
   readonly brandCounts = computed(() => {
     const vehicles = this.catalog.vehicles();
@@ -180,7 +211,8 @@ export class BrandsPageComponent implements OnInit {
 
   readonly filtered = computed(() => {
     const counts = this.brandCounts();
-    const q = this.query().toLowerCase();
+    const vehicles = this.catalog.vehicles();
+    const q = this.query().toLowerCase().trim();
     const result: BrandData[] = [];
 
     counts.forEach((val, key) => {
@@ -195,22 +227,30 @@ export class BrandsPageComponent implements OnInit {
       const logo = LOGO_MAP[key] ?? '';
 
       if (isCar && (this.type() === 'All' || this.type() === 'Cars')) {
+        const minPrice = vehicles
+          .filter(v => v.brand.toLowerCase() === key && v.vehicleType === 'car')
+          .reduce((min, v) => Math.min(min, v.price), Number.POSITIVE_INFINITY);
         result.push({
           name: displayName,
           key,
           type: 'Cars',
           count: val.cars,
           logo,
+          priceFrom: this.formatPrice(minPrice),
         });
       }
 
       if (isBike && (this.type() === 'All' || this.type() === 'Bikes')) {
+        const minPrice = vehicles
+          .filter(v => v.brand.toLowerCase() === key && v.vehicleType !== 'car')
+          .reduce((min, v) => Math.min(min, v.price), Number.POSITIVE_INFINITY);
         result.push({
           name: displayName,
           key,
           type: 'Bikes',
           count: val.bikes,
           logo,
+          priceFrom: this.formatPrice(minPrice),
         });
       }
     });
@@ -275,5 +315,21 @@ export class BrandsPageComponent implements OnInit {
     const cardWidth = el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetWidth + 16 : 300;
     const amount = direction === 'next' ? cardWidth : -cardWidth;
     el.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+
+  hasActiveFilters(): boolean {
+    return this.query().trim().length > 0 || this.type() !== 'All';
+  }
+
+  clearAll(): void {
+    this.query.set('');
+    this.type.set('All');
+  }
+
+  formatPrice(price: number): string {
+    if (!price || !Number.isFinite(price)) return 'Price on request';
+    if (price >= 10000000) return `₹${(price / 10000000).toFixed(2)} Cr`;
+    if (price >= 100000) return `₹${(price / 100000).toFixed(2)} Lakh`;
+    return `₹${Math.round(price).toLocaleString('en-IN')}`;
   }
 }

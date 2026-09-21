@@ -3,33 +3,46 @@
 /* Parent-child hover/focus relationships that can't be inline */
 .search-bar:focus-within {
   border-color: #062D32;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(6, 45, 50, 0.06);
 }
 
 .pill.active {
   background: #062D32;
   border-color: #062D32;
   color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(6, 45, 50, 0.22);
 }
 
 .pill:hover:not(.active) {
   border-color: #062D32;
   color: #062D32;
+  transform: translateY(-1px);
 }
 
 .brand-card:hover {
   background: #FBFDFC;
   border-color: #C8D8D2;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(6, 45, 50, 0.07);
+  box-shadow: 0 8px 20px rgba(6, 45, 50, 0.08);
 }
 
-.brand-card:hover .brand-arrow {
-  transform: translateX(3px);
-  color: #062D32;
+.brand-card:hover .brand-arrow-circle {
+  background: #062D32;
+  border-color: #062D32;
+  color: #FFFFFF;
+  transform: translateX(2px);
 }
 
 .brand-card:hover .brand-logo-wrap {
   background: #EDF5EE;
+}
+
+/* Hero legibility on small screens */
+@media (max-width: 768px) {
+  .hero {
+    background-position: 68% center;
+  }
 }
 
 /* CTA gradient overlay pseudo-element */

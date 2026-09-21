@@ -11,7 +11,6 @@
       <nav class="header-nav">
         <a routerLink="/cars" [class.active]="navActive().cars">Find a Vehicle</a>
         <a routerLink="/brands" [class.active]="navActive().brands">Brands</a>
-        <a routerLink="/blog" [class.active]="navActive().blog">Blog</a>
         <a routerLink="/about" [class.active]="navActive().about">Why Ayra Cars</a>
         <a routerLink="/contact" [class.active]="navActive().contact">Help</a>
         <a routerLink="/sell" [class.active]="navActive().sell">Sell Your Vehicle</a>
@@ -49,10 +48,30 @@
           <span class="badge badge-orange" [hidden]="compareCount() === 0">{{ compareCount() }}</span>
         </a>
         @if (isLoggedIn()) {
-          <a class="user-avatar" routerLink="/wishlist" [title]="userName()">{{ userInitials() }}</a>
-          <button class="action-icon logout-btn" (click)="logout()" aria-label="Logout">
-            <svg lucideLogOut size="16"></svg>
-          </button>
+          <div class="relative">
+            <button class="user-avatar hover:scale-[1.05] transition-transform" (click)="toggleProfileMenu()" [title]="userName()" aria-label="Profile menu">
+              {{ userInitials() }}
+            </button>
+            @if (profileMenuOpen()) {
+              <div class="fixed inset-0 z-[90]" (click)="closeProfileMenu()" aria-hidden="true"></div>
+              <div class="absolute right-0 top-[44px] z-[95] w-56 overflow-hidden rounded-xl border border-[#E2E9E7] bg-white shadow-[0_8px_28px_rgba(6,47,53,0.12)]">
+                <div class="border-b border-[#E2E9E7] bg-[#F7FAF9] px-4 py-3">
+                  <p class="truncate text-sm font-semibold text-[#0B1720]">{{ userName() }}</p>
+                  <p class="text-xs text-[#5F7078]">My Account</p>
+                </div>
+                <div class="p-2">
+                  <a routerLink="/wishlist" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
+                    <svg lucideUser size="16" class="text-[#062F35]"></svg>
+                    My Profile
+                  </a>
+                  <button (click)="logout()" class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#FF4D4F] transition-colors hover:bg-[#FFF1F1]">
+                    <svg lucideLogOut size="16"></svg>
+                    Logout
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
         } @else {
           <a class="login-btn" routerLink="/auth/login">
             <svg lucideCircleUser size="15"></svg>
@@ -96,7 +115,6 @@
     <nav class="drawer-nav">
       <a routerLink="/cars" [class.active]="navActive().cars" (click)="closeMenu()">Find a Vehicle</a>
       <a routerLink="/brands" [class.active]="navActive().brands" (click)="closeMenu()">Brands</a>
-      <a routerLink="/blog" [class.active]="navActive().blog" (click)="closeMenu()">Blog</a>
       <a routerLink="/about" [class.active]="navActive().about" (click)="closeMenu()">Why Ayra Cars</a>
       <a routerLink="/contact" [class.active]="navActive().contact" (click)="closeMenu()">Help</a>
       <a routerLink="/sell" [class.active]="navActive().sell" (click)="closeMenu()">Sell Your Vehicle</a>

@@ -9,7 +9,8 @@ import {
   LucideHandCoins,
   LucideMail,
   LucidePlus,
-  LucideArrowUpRight
+  LucideArrowUpRight,
+  LucideBadgeIndianRupee
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { CarsFilterService } from '../../../cars/services/cars-filter.service';
@@ -33,7 +34,8 @@ import { ToastService } from '../../../../services/toast.service';
     LucideHandCoins,
     LucideMail,
     LucidePlus,
-    LucideArrowUpRight
+    LucideArrowUpRight,
+    LucideBadgeIndianRupee
   ],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'

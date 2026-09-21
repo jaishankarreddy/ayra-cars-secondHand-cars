@@ -20,6 +20,7 @@ import {
   LucideRoute,
   LucideSend,
   LucideSettings,
+  LucideShare2,
   LucideShieldCheck,
   LucideTag,
   LucideTimer,
@@ -32,6 +33,7 @@ import { ImageGalleryComponent } from '../../components/image-gallery/image-gall
 import { SimilarVehiclesComponent } from '../../components/similar-vehicles/similar-vehicles.component';
 import { VehicleDetailsService } from '../../services/vehicle-details.service';
 import { WishlistService } from '../../../../services/wishlist.service';
+import { CompareService } from '../../../compare/services/compare.service';
 import { ToastService } from '../../../../services/toast.service';
 
 @Component({
@@ -60,6 +62,7 @@ import { ToastService } from '../../../../services/toast.service';
     LucideRoute,
     LucideSend,
     LucideSettings,
+    LucideShare2,
     LucideShieldCheck,
     LucideTag,
     LucideTimer,
@@ -72,6 +75,7 @@ import { ToastService } from '../../../../services/toast.service';
 export class VehicleDetailsPageComponent {
   private readonly service = inject(VehicleDetailsService);
   private readonly wishlist = inject(WishlistService);
+  private readonly compare = inject(CompareService);
   private readonly http = inject(HttpClient);
   private readonly toast = inject(ToastService);
 
@@ -106,6 +110,46 @@ export class VehicleDetailsPageComponent {
   readonly formatPrice = (price: number) =>
     `₹${Math.round(price).toLocaleString('en-IN')}`;
   readonly formatDistance = (km: number) => `${km.toLocaleString('en-IN')} km`;
+
+  /** Real EMI estimate (85% loan, 11% p.a., 60 months) — never hardcoded. */
+  readonly emiText = computed(() => {
+    const price = this.vehicle()?.price ?? 0;
+    if (!price) return '';
+    const principal = price * 0.85;
+    const r = 0.11 / 12;
+    const n = 60;
+    const pow = Math.pow(1 + r, n);
+    const emi = (principal * r * pow) / (pow - 1);
+    if (!Number.isFinite(emi)) return '';
+    return `EMI from ₹${Math.round(emi).toLocaleString('en-IN')}/month onwards`;
+  });
+
+  readonly ownerLabel = computed(() => {
+    const owners = this.vehicle()?.owners ?? 1;
+    if (owners === 1) return '1st Owner';
+    if (owners === 2) return '2nd Owner';
+    if (owners === 3) return '3rd Owner';
+    return `${owners} Owners`;
+  });
+
+  /** Today's date (YYYY-MM-DD) as min for the test-drive date picker. */
+  readonly todayStr = computed(() => {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day}`;
+  });
+
+  /** Live offer-vs-asking feedback under the offer input. */
+  readonly offerDiff = computed(() => {
+    const asking = this.vehicle()?.price ?? 0;
+    const offer = Number(this.offerPrice());
+    if (!asking || !Number.isFinite(offer) || offer <= 0) return '';
+    const pct = Math.round(((offer - asking) / asking) * 100);
+    if (pct > 0) return `${pct}% above asking`;
+    if (pct < 0) return `${Math.abs(pct)}% below asking`;
+    return 'Matches the asking price';
+  });
 
   readonly phoneLink = computed(() => this.vehicle()?.seller.phone ?? '+91 98765 43210');
   readonly whatsappLink = computed(() => this.vehicle()?.seller.whatsapp ?? '919844555308');
@@ -155,7 +199,7 @@ export class VehicleDetailsPageComponent {
 
   readonly features = computed(() => {
     const v = this.vehicle();
-    if (!v) return [];
+    if (!v || !Array.isArray(v.features)) return [];
     return v.features.flatMap((g) => g.items);
   });
 
@@ -174,6 +218,17 @@ export class VehicleDetailsPageComponent {
     if (!v) return;
     this.wishlist.toggle(v.id);
     this.saved.set(this.wishlist.has(v.id));
+  }
+
+  isCompared(): boolean {
+    const v = this.vehicle();
+    return !!v && this.compare.ids().includes(v.id);
+  }
+
+  toggleCompare(): void {
+    const v = this.vehicle();
+    if (!v) return;
+    this.compare.toggle(v.id);
   }
 
   share(): void {

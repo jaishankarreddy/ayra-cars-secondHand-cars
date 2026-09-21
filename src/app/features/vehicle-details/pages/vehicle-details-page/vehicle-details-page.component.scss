@@ -20,6 +20,41 @@ main {
   font-family: 'Poppins', sans-serif;
 }
 
+/* Premium info card */
+.vip-info-card {
+  background: #FFFFFF;
+  border: 1px solid #E6ECEA;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(6, 47, 53, 0.05);
+  height: fit-content;
+}
+
+/* Icon chips in the spec grid */
+.vip-details-grid > div > div:first-child {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #F4F7F5;
+  border: 1px solid #EAEFE9;
+  color: #062D32;
+}
+.vip-details-grid > div > div:first-child svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Get-in-touch card */
+.vip-touch-card {
+  background: #F7FAF9;
+  border: 1px solid #E6ECEA;
+  border-radius: 12px;
+}
+.vip-touch-icon {
+  background: #062D32 !important;
+  color: #FFFFFF !important;
+}
+
 .vip-details-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -57,10 +92,18 @@ main {
 .vip-btn-dark:hover { background: #041e22; }
 
 .vip-btn-lime {
-  background: #B9F24A;
-  color: #071A1D;
+  background: #FFFFFF;
+  color: #062D32;
+  border: 1.5px solid #062D32;
 }
-.vip-btn-lime:hover { background: #a8e03a; }
+.vip-btn-lime:hover { background: #F4F7F5; }
+
+.vip-btn-outline {
+  background: #FFFFFF;
+  color: #062D32;
+  border: 1.5px solid #062D32;
+}
+.vip-btn-outline:hover { background: #F4F7F5; }
 
 .vip-action-row {
   display: grid;
@@ -86,6 +129,11 @@ main {
   transition: background-color 0.15s;
 }
 .vip-btn-secondary:hover { background: #EEF3F2; }
+.vip-btn-secondary.active-compare {
+  background: #062D32;
+  color: #FFFFFF;
+}
+.vip-btn-secondary.active-compare svg { color: #B9F24A; }
 
 .sc-card-touch { padding: 16px; }
 .vehicle-info-panel .sc-card-touch { margin-top: 16px; padding: 14px; }
@@ -119,7 +167,8 @@ main {
 
 .td-sticky-card {
   position: relative; background: #ffffff; border: 1px solid #e5e9e7;
-  border-radius: 10px; padding: 24px; overflow: hidden;
+  border-radius: 16px; padding: 24px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(6, 47, 53, 0.05);
 }
 
 .content-section { padding: 36px 0 80px; }
@@ -128,7 +177,7 @@ main {
   align-items: start; max-width: 1480px; margin: 0 auto;
 }
 .left-col { min-width: 0; max-width: 853px; }
-.right-col { position: sticky; top: 24px; }
+.right-col { position: sticky; top: 112px; }
 
 .feature-pills { display: flex; flex-wrap: wrap; gap: 14px; }
 .feature-pill {
@@ -143,14 +192,14 @@ main {
 
 .td-field-input,
 .offer-field-input {
-  display: block; width: 100%; padding: 9px 12px;
-  border: 1px solid #dde4e2; border-radius: 6px; outline: 0;
+  display: block; width: 100%; padding: 11px 14px;
+  border: 1px solid #dde4e2; border-radius: 10px; outline: 0;
   background: #f8faf9; color: #0b1720; font-size: 13px;
   font-family: 'Poppins', sans-serif;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
 .td-field-input:focus,
-.offer-field-input:focus { border-color: #15803d; background: #ffffff; }
+.offer-field-input:focus { border-color: #062D32; background: #ffffff; box-shadow: 0 0 0 3px rgba(6, 45, 50, 0.06); }
 .td-field-input::placeholder,
 .offer-field-input::placeholder { color: #a0aab0; }
 .offer-field-textarea { min-height: 72px; resize: vertical; }
@@ -180,11 +229,12 @@ main {
 }
 
 @media (max-width: 800px) {
-  main { padding: 0 18px; }
+  main { padding: 0 20px; }
 }
 
 @media (max-width: 620px) {
-  main { padding: 0 18px; }
+  main { padding: 0 20px; }
+  .vip-info-card { padding: 18px; }
   .hero-section { gap: 18px; margin-bottom: 24px; }
   .vip-details-grid { grid-template-columns: repeat(2, 1fr); }
   .vip-contact-row { grid-template-columns: 1fr; }

@@ -1,37 +1,205 @@
-<section class="flex items-center justify-center min-h-[calc(100vh-80px)] p-[60px_20px] max-[600px]:min-h-[calc(100vh-60px)] max-[600px]:p-[40px_16px]">
-  <div class="max-w-[560px] w-full text-center">
-    <div class="inline-flex items-center justify-center w-20 h-20 rounded-[20px] bg-gradient-to-br from-[#d7fa4c] to-[#a9e878] text-[#14272c] mx-auto mb-7">
-      <svg lucideCar class="h-12 w-12"></svg>
-    </div>
-    <h1 class="font-['Space_Grotesk',sans-serif] text-[clamp(2rem,5vw,3rem)] font-bold tracking-[-0.03em] text-[#14272c] m-0 mb-4">Sell Your Vehicle</h1>
-    <p class="text-base leading-[1.7] text-[#64748b] m-0 mb-8">
-      This feature is under construction. We are building something great to help you
-      sell your car or bike quickly and at the best price.
-    </p>
+<div class="bg-[#F8FAF9] font-['Inter',sans-serif]">
 
-    <div class="flex flex-col gap-3.5 mb-9">
-      <div class="inline-flex items-center justify-center gap-2.5 text-sm font-medium text-[#334155]">
-        <svg lucideClock class="h-5 w-5 text-[#16a34a] shrink-0"></svg>
-        <span>Instant fair offer in minutes</span>
-      </div>
-      <div class="inline-flex items-center justify-center gap-2.5 text-sm font-medium text-[#334155]">
-        <svg lucidePhoneCall class="h-5 w-5 text-[#16a34a] shrink-0"></svg>
-        <span>Free doorstep inspection</span>
-      </div>
-      <div class="inline-flex items-center justify-center gap-2.5 text-sm font-medium text-[#334155]">
-        <svg lucideMessageCircle class="h-5 w-5 text-[#16a34a] shrink-0"></svg>
-        <span>WhatsApp support throughout</span>
+  <!-- Hero -->
+  <section class="relative w-full bg-[url('/sell_your_vehicle_banner_home.png')] bg-center bg-cover flex items-center overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#F8FAF9] via-[#F8FAF9]/88 to-[#F8FAF9]/15 max-[768px]:via-[#F8FAF9]/94" aria-hidden="true"></div>
+    <div class="relative w-full max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-12 max-[768px]:py-8">
+      <div class="max-w-[560px] w-full">
+        <nav class="flex items-center gap-1.5 text-[12px] font-medium text-[#66757A]" aria-label="Breadcrumb">
+          <a routerLink="/" class="hover:text-[#062D32] transition-colors">Home</a>
+          <span class="text-[#B6C2C6]">/</span>
+          <span class="text-[#062D32] font-semibold">Sell</span>
+        </nav>
+        <div class="mt-4 flex items-center gap-[7px]">
+          <span class="font-['Poppins',sans-serif] text-[11px] font-bold tracking-[0.14em] text-[#5C9F1F] uppercase leading-none">SELL YOUR VEHICLE</span>
+          <span class="inline-block w-[25px] h-[2px] bg-[#B9F24A]"></span>
+        </div>
+        <h1 class="mt-4 font-['Poppins',sans-serif] text-[40px] font-semibold leading-[1.05] tracking-[-0.02em] text-[#0B1720] max-[768px]:text-[28px]">Sell your car or bike <span class="relative inline-block">in days<svg class="absolute -bottom-1 left-0 w-full" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 Q 60 0 118 5" stroke="#B9F24A" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>, not months.</h1>
+        <p class="mt-4 max-w-[480px] font-['Poppins',sans-serif] text-[13px] font-normal leading-[1.65] text-[#34454F]">Free inspection, fair price and genuine buyers across Karnataka — tell us about your vehicle, we call back within 24 hours.</p>
+        <div class="mt-5 flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]"><svg lucideShieldCheck size="13"></svg> Free inspection</span>
+          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]"><svg lucideBadgeCheck size="13"></svg> Same-day payment</span>
+          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-[#062D32] text-white text-[11px] font-semibold"><svg lucideMapPin size="13"></svg> Karnataka</span>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="flex items-center justify-center gap-3.5 flex-wrap mb-7">
-      <a routerLink="/contact" class="inline-flex items-center gap-2 bg-[#14272c] text-white px-7 py-3.5 rounded-[10px] text-sm font-bold no-underline hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(20,39,44,0.25)] transition-[transform,box-shadow] duration-200">Contact Us Instead <svg lucideArrowRight size="16"></svg></a>
-      <a routerLink="/cars" class="inline-flex items-center gap-2 bg-transparent text-[#14272c] px-7 py-3.5 rounded-[10px] text-sm font-bold border-2 border-[#e2e8f0] no-underline hover:border-[#14272c] transition-[border-color,color] duration-200">Browse Vehicles</a>
+  <!-- Main -->
+  <section class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-10">
+    <div class="grid grid-cols-[1.25fr_1fr] gap-6 items-start max-[1024px]:grid-cols-1">
+
+      <!-- Form card -->
+      <div class="bg-white border border-[#E6ECEA] rounded-[16px] p-7 shadow-[0_2px_12px_rgba(6,47,53,0.05)] max-[768px]:p-5">
+        @if (submitted()) {
+          <div class="text-center py-10">
+            <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#062D32] text-[#B9F24A]"><svg lucideCircleCheck size="28"></svg></span>
+            <h2 class="mt-5 font-['Poppins',sans-serif] text-[22px] font-semibold text-[#0B1720]">Request received!</h2>
+            <p class="mx-auto mt-2 max-w-[420px] text-[13px] leading-[1.65] text-[#52616D]">Thanks {{ name().trim() }} — our expert will call <strong class="text-[#0B1720]">+91 {{ phone().trim() }}</strong> within 24 hours about your {{ brand().trim() }} {{ model().trim() }}.</p>
+            @if (referenceId()) {
+              <p class="mt-2 text-[12px] text-[#8A969D]">Reference: <strong class="text-[#062D32]">{{ referenceId() }}</strong></p>
+            }
+            <div class="mt-6 flex items-center justify-center gap-3 flex-wrap">
+              <a routerLink="/cars" class="inline-flex items-center justify-center h-11 px-6 rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Browse vehicles</a>
+              <button type="button" (click)="startOver()" class="inline-flex items-center justify-center h-11 px-6 rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors">Sell another vehicle</button>
+            </div>
+          </div>
+        } @else {
+          <!-- Steps -->
+          <div class="flex items-center gap-2">
+            @for (s of [1, 2, 3]; track s) {
+              <div class="flex items-center gap-2 flex-1 last:flex-none">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full text-[13px] font-bold shrink-0 transition-colors" [class]="step() >= s ? 'bg-[#062D32] text-white' : 'bg-[#F4F7F5] border border-[#EAEFE9] text-[#8A969D]'">
+                  @if (step() > s) { <svg lucideCheck size="15"></svg> } @else { {{ s }} }
+                </span>
+                <span class="text-[12px] font-semibold whitespace-nowrap max-[480px]:hidden" [class]="step() >= s ? 'text-[#062D32]' : 'text-[#8A969D]'">
+                  @if (s === 1) { Vehicle } @else if (s === 2) { Owner } @else { Done }
+                </span>
+                @if (s < 3) { <span class="h-px flex-1" [class]="step() > s ? 'bg-[#062D32]' : 'bg-[#EAEFE9]'"></span> }
+              </div>
+            }
+          </div>
+
+          <!-- STEP 1 -->
+          @if (step() === 1) {
+            <h2 class="mt-6 font-['Poppins',sans-serif] text-[20px] font-semibold text-[#0B1720]">Tell us about your vehicle</h2>
+            <p class="mt-1 text-[13px] text-[#66757A]">Brand and model are enough to continue — the rest helps us price fairly.</p>
+            <div class="mt-5 flex items-center gap-1 rounded-full bg-[#F4F7F5] border border-[#EAEFE9] p-1 w-fit">
+              <button type="button" (click)="setType('car')" [class]="vehicleType() === 'car' ? 'h-9 px-5 rounded-full text-[13px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-9 px-5 rounded-full text-[13px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Cars</button>
+              <button type="button" (click)="setType('bike')" [class]="vehicleType() === 'bike' ? 'h-9 px-5 rounded-full text-[13px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-9 px-5 rounded-full text-[13px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Bikes</button>
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-4 max-[768px]:grid-cols-1 max-[768px]:gap-0">
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Brand <span class="text-[#e53e3e]">*</span></span>
+                <input type="text" [value]="brand()" (input)="brand.set($any($event.target).value)" placeholder="e.g. Maruti Suzuki, Honda" class="sell-field" />
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Model <span class="text-[#e53e3e]">*</span></span>
+                <input type="text" [value]="model()" (input)="model.set($any($event.target).value)" placeholder="e.g. Swift, Activa 6G" class="sell-field" />
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Year</span>
+                <select [value]="year()" (change)="year.set($any($event.target).value)" class="sell-field">
+                  <option value="">Select year</option>
+                  @for (y of years; track y) { <option [value]="y">{{ y }}</option> }
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Kilometres driven</span>
+                <input type="number" min="0" [value]="kilometers()" (input)="kilometers.set($any($event.target).value)" placeholder="e.g. 45000" class="sell-field" />
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Fuel</span>
+                <select [value]="fuel()" (change)="fuel.set($any($event.target).value)" class="sell-field">
+                  <option value="">Select fuel</option>
+                  @for (f of fuels; track f) { <option [value]="f">{{ f }}</option> }
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Transmission</span>
+                <select [value]="transmission()" (change)="transmission.set($any($event.target).value)" class="sell-field">
+                  <option value="">Select gearbox</option>
+                  @for (t of transmissions; track t) { <option [value]="t">{{ t }}</option> }
+                </select>
+              </label>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button type="button" (click)="next()" class="inline-flex items-center gap-2 h-11 px-6 rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Continue <svg lucideArrowRight size="15"></svg></button>
+            </div>
+          }
+
+          <!-- STEP 2 -->
+          @if (step() === 2) {
+            <h2 class="mt-6 font-['Poppins',sans-serif] text-[20px] font-semibold text-[#0B1720]">Where do we reach you?</h2>
+            <p class="mt-1 text-[13px] text-[#66757A]">Our expert calls within 24 hours to schedule your free inspection.</p>
+            <div class="mt-4 grid grid-cols-2 gap-4 max-[768px]:grid-cols-1 max-[768px]:gap-0">
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Full Name <span class="text-[#e53e3e]">*</span></span>
+                <input type="text" [value]="name()" (input)="name.set($any($event.target).value)" placeholder="Enter your full name" class="sell-field" />
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Mobile Number <span class="text-[#e53e3e]">*</span></span>
+                <span class="flex h-[44px]">
+                  <span class="flex shrink-0 items-center rounded-l-[10px] border border-r-0 border-[#DDE6E3] bg-[#F4F7F5] px-2.5 text-[13px] font-medium text-[#0B1720]">+91</span>
+                  <input type="tel" [value]="phone()" (input)="phone.set($any($event.target).value)" placeholder="10-digit mobile" class="sell-field phone-field" />
+                </span>
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">District</span>
+                <select [value]="district()" (change)="district.set($any($event.target).value)" class="sell-field">
+                  <option value="">Select district</option>
+                  @for (d of districts; track d) { <option [value]="d">{{ d }}</option> }
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Expected Price (₹)</span>
+                <input type="number" min="0" [value]="expectedPrice()" (input)="expectedPrice.set($any($event.target).value)" placeholder="e.g. 550000" class="sell-field" />
+              </label>
+            </div>
+            <label class="mt-4 block">
+              <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Anything else? <span class="font-normal text-[#8A969D]">(optional)</span></span>
+              <textarea [value]="notes()" (input)="notes.set($any($event.target).value)" placeholder="Service history, dents, loan status…" rows="3" class="sell-field sell-textarea"></textarea>
+            </label>
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" (click)="back()" class="inline-flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors"><svg lucideArrowLeft size="15"></svg> Back</button>
+              <button type="button" (click)="next()" class="inline-flex items-center gap-2 h-11 px-6 rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Review <svg lucideArrowRight size="15"></svg></button>
+            </div>
+          }
+
+          <!-- STEP 3 -->
+          @if (step() === 3) {
+            <h2 class="mt-6 font-['Poppins',sans-serif] text-[20px] font-semibold text-[#0B1720]">Review &amp; submit</h2>
+            <p class="mt-1 text-[13px] text-[#66757A]">Check once — you can go back to edit.</p>
+            <div class="mt-4 overflow-hidden rounded-[12px] border border-[#EAEFE9]">
+              @for (row of reviewRows(); track row.label) {
+                <div class="grid grid-cols-[140px_1fr] max-[480px]:grid-cols-1 max-[480px]:gap-0.5 border-b border-[#EEF3F1] px-4 py-2.5 last:border-b-0">
+                  <span class="text-[12px] font-medium text-[#8A969D]">{{ row.label }}</span>
+                  <span class="text-[13px] font-semibold text-[#0B1720]">{{ row.value }}</span>
+                </div>
+              }
+            </div>
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" (click)="back()" class="inline-flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors"><svg lucideArrowLeft size="15"></svg> Back</button>
+              <button type="button" (click)="submit()" [disabled]="submitting()" class="inline-flex items-center gap-2 h-11 px-6 rounded-[10px] bg-[#B9F24A] text-[#062D32] text-[13px] font-bold hover:bg-[#C8F54A] transition-colors disabled:opacity-60">
+                @if (submitting()) { Submitting… } @else { <svg lucideCheck size="15"></svg> Submit request }
+              </button>
+            </div>
+            <p class="mt-3 text-[11px] leading-[1.5] text-[#8A969D]">By submitting, you agree to be contacted by Ayra Cars. No spam, ever.</p>
+          }
+        }
+      </div>
+
+      <!-- Side -->
+      <div class="flex flex-col gap-4">
+        <div class="bg-[#062D32] rounded-[16px] p-6 overflow-hidden relative">
+          <span class="text-[11px] font-bold tracking-[0.14em] uppercase text-[#B9F24A]">How selling works</span>
+          <div class="mt-4 flex flex-col gap-4">
+            <div class="flex items-start gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-white/[0.08] border border-white/10 text-white text-[12px] font-bold">1</span>
+              <span class="text-[13px] leading-[1.55] text-white/80"><strong class="text-white">Tell us about it</strong> — 2 minutes, brand to kilometres.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-white/[0.08] border border-white/10 text-white text-[12px] font-bold">2</span>
+              <span class="text-[13px] leading-[1.55] text-white/80"><strong class="text-white">Free inspection</strong> — we evaluate and make a fair offer.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-[#B9F24A] text-[#062D32] text-[12px] font-bold">3</span>
+              <span class="text-[13px] leading-[1.55] text-white/80"><strong class="text-white">Same-day payment</strong> — paperwork and RC transfer handled.</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white border border-[#E6ECEA] rounded-[16px] p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#F4F7F5] border border-[#EAEFE9] text-[#062D32]"><svg lucidePhone size="18"></svg></span>
+          <p class="mt-3 font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">Prefer to just talk?</p>
+          <p class="mt-1 text-[13px] leading-[1.6] text-[#66757A]">Call or WhatsApp us in your language — we take your details on the call.</p>
+          <div class="mt-4 flex gap-2.5">
+            <a href="tel:+919876543210" class="inline-flex h-10 flex-1 items-center justify-center rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Call us</a>
+            <a routerLink="/contact" class="inline-flex h-10 flex-1 items-center justify-center rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors">Contact</a>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <p class="text-[13px] text-[#94a3b8]">
-      Want to be notified when we launch?
-      <a routerLink="/contact" class="text-[#16a34a] font-semibold no-underline hover:underline">Get in touch</a> and we will let you know.
-    </p>
-  </div>
-</section>
+  <app-footer />
+</div>

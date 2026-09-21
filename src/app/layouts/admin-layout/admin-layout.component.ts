@@ -22,15 +22,16 @@ import {
   LucideChevronsLeft,
   LucideChevronsRight,
   LucideSearch,
-  LucideCheckCheck
+  LucideCheckCheck,
+  LucideBadgeIndianRupee
 } from '@lucide/angular';
 import { AdminAuthService } from '../../features/admin/services/admin-auth.service';
 
 interface NavItem {
   path: string;
   label: string;
-  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'settings';
-  badgeKey?: 'vehicles' | 'offers' | 'contacts' | 'testDrives';
+  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'sell' | 'settings';
+  badgeKey?: 'vehicles' | 'offers' | 'contacts' | 'testDrives' | 'sellRequests';
 }
 
 const PAGE_TITLES: Record<string, string> = {
@@ -41,6 +42,7 @@ const PAGE_TITLES: Record<string, string> = {
   offers: 'Offers',
   contacts: 'Contact Enquiries',
   'test-drives': 'Test Drives',
+  'sell-requests': 'Sell Requests',
   settings: 'Settings',
   login: 'Sign in'
 };
@@ -52,6 +54,7 @@ interface DashboardSummary {
   pendingOffers: number;
   newContacts: number;
   pendingTestDrives: number;
+  newSellRequests: number;
 }
 
 @Component({
@@ -79,7 +82,8 @@ interface DashboardSummary {
     LucideChevronsLeft,
     LucideChevronsRight,
     LucideSearch,
-    LucideCheckCheck
+    LucideCheckCheck,
+    LucideBadgeIndianRupee
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
@@ -108,6 +112,7 @@ export class AdminLayoutComponent implements OnInit {
   readonly offersBadge = computed(() => this.summary()?.pendingOffers ?? 0);
   readonly contactsBadge = computed(() => this.summary()?.newContacts ?? 0);
   readonly testDrivesBadge = computed(() => this.summary()?.pendingTestDrives ?? 0);
+  readonly sellRequestsBadge = computed(() => this.summary()?.newSellRequests ?? 0);
 
   readonly adminName = computed(() => this.auth.admin()?.name ?? 'Admin User');
   readonly adminInitials = computed(() =>
@@ -126,7 +131,8 @@ export class AdminLayoutComponent implements OnInit {
     { path: '/admin/bikes', label: 'Bikes', icon: 'bike' },
     { path: '/admin/offers', label: 'Offers', icon: 'offers', badgeKey: 'offers' },
     { path: '/admin/contacts', label: 'Contacts', icon: 'mail', badgeKey: 'contacts' },
-    { path: '/admin/test-drives', label: 'Test Drives', icon: 'calendar', badgeKey: 'testDrives' }
+    { path: '/admin/test-drives', label: 'Test Drives', icon: 'calendar', badgeKey: 'testDrives' },
+    { path: '/admin/sell-requests', label: 'Sell Requests', icon: 'sell', badgeKey: 'sellRequests' }
   ];
 
   readonly notifications = signal<{ id: number; title: string; detail: string }[]>([]);
@@ -156,6 +162,7 @@ export class AdminLayoutComponent implements OnInit {
       case 'offers': return this.offersBadge();
       case 'contacts': return this.contactsBadge();
       case 'testDrives': return this.testDrivesBadge();
+      case 'sellRequests': return this.sellRequestsBadge();
       default: return 0;
     }
   }

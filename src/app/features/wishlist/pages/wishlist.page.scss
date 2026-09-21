@@ -1,1 +1,14 @@
 :host { display: block; }
+
+.wishlist-hero {
+  position: relative;
+  overflow: hidden;
+  background: url('/wishlist_hero_bg.png') center / cover no-repeat;
+  background-color: #ffffff;
+}
+
+/* Ensure content stays above background */
+.wishlist-hero > * {
+  position: relative;
+  z-index: 1;
+}

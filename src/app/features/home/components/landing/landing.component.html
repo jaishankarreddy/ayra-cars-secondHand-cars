@@ -1,4 +1,4 @@
-<main class="min-h-screen overflow-x-hidden font-['Poppins',sans-serif]">
+<main class="min-h-screen overflow-x-clip font-['Poppins',sans-serif]">
   @if (searchOpen()) {
     <div class="flex items-center bg-white border-b border-[#e5e2da] gap-3 py-3.5 px-[5vw]">
       <svg lucideSearch size="18" class="text-[#7a8783]"></svg>
@@ -10,45 +10,50 @@
   <!-- ===== Hero ===== -->
   <section class="hero" id="top">
     <div class="hero-image" [style.background-image]="'url(' + heroImage + ')'" [style.--hero-mobile-image]="'url(' + heroMobileImage + ')'" ></div>
-    <div class="text-[#10262d] max-w-[560px] pb-[30px] relative z-[1] max-[700px]:pb-5">
-      <div class="inline-flex items-center bg-white/64 border border-[#10262d]/12 rounded-[30px] text-[#10262d] text-xs font-semibold gap-[7px] px-[15px] py-2"><svg lucideShieldCheck size="14"></svg> Verified vehicles, better journeys</div>
-      <h1 class="font-['Poppins',sans-serif] text-[clamp(2.2rem,4vw,3.5rem)] font-semibold tracking-[-0.04em] leading-[0.94] mt-6 mb-[22px]">Find the one<br /><span class="text-[#8ca910]">that feels right.</span></h1>
-      <p class="text-[#344c51] text-base leading-[1.6] mb-7 max-[700px]:text-[14px]">Premium pre-owned cars and bikes, inspected end to end<br class="max-[700px]:hidden" /> and ready for their next chapter.</p>
-      <div class="flex gap-[14px] max-[700px]:flex-col max-[700px]:gap-[10px]">
-        <a class="flex items-center bg-[#d7fa4c] rounded-[10px] text-[#14272c] text-sm font-semibold gap-2 px-[22px] py-[15px] transition-[transform,box-shadow] duration-200 ease-out hover:shadow-[0_10px_25px_rgba(215,250,76,0.3)] hover:-translate-y-[3px] max-[700px]:justify-center" routerLink="/cars">Browse vehicles <svg lucideArrowRight size="17"></svg></a>
-        <a class="flex items-center bg-white/70 border border-[#10262d]/14 rounded-[10px] text-[#10262d] text-sm font-semibold gap-2 px-[22px] py-[15px] transition-[background] duration-200 ease-out hover:bg-white/[0.55] max-[700px]:justify-center" routerLink="/sell">Sell with us <svg lucideTag size="16"></svg></a>
+    <div class="w-full max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 flex flex-col flex-1 relative z-[1]">
+      <div class="text-[#10262d] max-w-[600px] pb-[30px] relative z-[1] max-[700px]:pb-5">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center bg-white/70 backdrop-blur border border-[#10262d]/12 rounded-[30px] text-[#10262d] text-xs font-semibold gap-[7px] px-[15px] py-2"><svg lucideShieldCheck size="14"></svg> KA RTO-verified · 200-pt inspected</span>
+          <span class="inline-flex items-center gap-1.5 bg-[#10262d] rounded-[30px] text-white text-xs font-semibold px-[13px] py-2"><svg lucideMapPin size="13"></svg> Bangalore, Karnataka</span>
+        </div>
+        <h1 class="font-['Poppins',sans-serif] text-[clamp(2.2rem,4vw,3.5rem)] font-semibold tracking-[-0.04em] leading-[0.94] mt-6 mb-[18px]">Find the one<br /><span class="text-[#5C9F1F]">Karnataka trusts.</span></h1>
+        <p class="text-[#344c51] text-[15px] leading-[1.7] mb-5 max-w-[520px] max-[700px]:text-[14px]">Premium pre-owned cars &amp; bikes, verified for Karnataka. Visit us for a test drive, RC transfer handled, support in your language.</p>
+        <div class="flex items-center gap-3 mb-6 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#10262d]"><svg lucideStar size="13" class="text-[#E9A800]"></svg> 4.8/5 · 1000+ happy owners</span>
+          <span class="h-4 w-px bg-[#10262d]/15"></span>
+          <span class="text-[12px] font-medium text-[#344c51]">Cars for highways · Bikes for city traffic</span>
+        </div>
+        <div class="flex gap-[14px] max-[700px]:flex-col max-[700px]:gap-[10px]">
+          <a class="flex items-center bg-[#062D32] rounded-[10px] text-white text-sm font-semibold gap-2 px-[24px] py-[15px] transition-[transform,box-shadow] duration-200 ease-out hover:shadow-[0_10px_25px_rgba(6,45,50,0.35)] hover:-translate-y-[3px] hover:bg-[#0A3B40] max-[700px]:justify-center" routerLink="/cars">Browse verified vehicles <svg lucideArrowRight size="17"></svg></a>
+          <a class="flex items-center bg-white/75 backdrop-blur border border-[#10262d]/14 rounded-[10px] text-[#10262d] text-sm font-semibold gap-2 px-[22px] py-[15px] transition-[background] duration-200 ease-out hover:bg-white max-[700px]:justify-center" routerLink="/sell">Sell with us <svg lucideTag size="16"></svg></a>
+        </div>
       </div>
-    </div>
-    <div class="grid items-center self-stretch text-white gap-[18px] grid-cols-4 mt-auto ml-auto py-4 relative w-full z-[1] max-[700px]:gap-[10px] max-[700px]:grid-cols-2 max-[700px]:ml-0 max-[700px]:p-3.5" aria-label="Ayra Cars benefits">
-      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideShieldCheck size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Verified Vehicles</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Inspected for your peace of mind</small></div></div>
-      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideCarFront size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Wide Range</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Cars and bikes from top brands</small></div></div>
-      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideTag size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Great Value</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Quality vehicles at the right price</small></div></div>
-      <div class="flex items-center gap-3 min-w-0 max-[700px]:gap-2"><span class="flex items-center justify-center bg-white rounded-full text-[#10252b] flex-none h-[43px] w-[43px] max-[700px]:h-[34px] max-[700px]:w-[34px]"><svg lucideUsers size="19"></svg></span><div><strong class="block text-[13px] font-semibold mb-1 max-[700px]:text-[11px]">Hassle-Free Experience</strong><small class="block text-white/76 text-[11px] leading-[1.35] max-[700px]:text-[9px]">Simple, transparent and reliable</small></div></div>
     </div>
   </section>
 
-  <!-- ===== Quick search ===== -->
-  <section class="quick-search" aria-label="Find your vehicle" hidden>
-    <div class="search-intro"><span class="text-[#c9c6bc] font-['Poppins',sans-serif] text-[26px] font-semibold">01</span><div><strong class="block text-[14px]">Start your search</strong><small class="block text-[#8a948f] text-[12px]">Make the first move</small></div></div>
-    <form class="quick-search-form" (submit)="submitSearch($event)">
-      <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'type'">
-        <svg lucideCarFront size="18" class="flex-none"></svg>
-        <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'type'" aria-haspopup="listbox" (click)="toggleDropdown('type')">
-          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ searchType() === 'car' ? 'Cars' : 'Bikes' }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
-        </button>
-        @if (dropdownOpen() === 'type') {
-          <div class="dropdown-menu" role="listbox">
-            <button type="button" [class.option-selected]="searchType() === 'car'" (click)="selectType('car')">Cars <span class="text-[#8a948f] text-[10px] font-medium">Car</span></button>
-            <button type="button" [class.option-selected]="searchType() === 'bike'" (click)="selectType('bike')">Bikes <span class="text-[#8a948f] text-[10px] font-medium">Bike</span></button>
-          </div>
-        }
+  <!-- ===== Quick search — premium lead card ===== -->
+  <section class="quick-search mx-[max(72px,calc((100%-1460px)/2+72px))] max-[1024px]:mx-10 max-[768px]:mx-5" aria-label="Find your vehicle">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+      <div class="flex items-center gap-2.5">
+        <span class="flex items-center justify-center w-8 h-8 rounded-[9px] bg-[#062D32] text-white shrink-0"><svg lucideSearch size="15"></svg></span>
+        <div>
+          <h3 class="m-0 font-['Poppins',sans-serif] text-[15px] font-semibold tracking-[-0.01em] leading-none text-[#0B1720]">Find your vehicle</h3>
+          <p class="m-0 mt-1 font-['Inter',sans-serif] text-[12px] leading-none text-[#66757A]">Verified stock across Karnataka</p>
+        </div>
       </div>
-      <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'brand'">
-        <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'brand'" aria-haspopup="listbox" (click)="toggleDropdown('brand')">
-          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ searchBrand() || 'Select brand' }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
+      <div class="flex items-center gap-1 rounded-full bg-[#F4F7F5] border border-[#EAEFE9] p-1">
+        <button type="button" (click)="selectType('car')" [class]="searchType() === 'car' ? 'h-8 px-4 rounded-full text-[12px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-8 px-4 rounded-full text-[12px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Cars</button>
+        <button type="button" (click)="selectType('bike')" [class]="searchType() === 'bike' ? 'h-8 px-4 rounded-full text-[12px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-8 px-4 rounded-full text-[12px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Bikes</button>
+      </div>
+    </div>
+    <form class="quick-search-form mt-3.5" (submit)="submitSearch($event)">
+      <div class="select-field qs-flex" [class.dropdown-open]="dropdownOpen() === 'brand'" (click)="toggleDropdown('brand')">
+        <svg lucideSearch size="17" class="flex-none text-[#71808A]"></svg>
+        <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'brand'" aria-haspopup="listbox">
+          <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ searchBrand() || 'Select brand — Toyota, Honda…' }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
         </button>
         @if (dropdownOpen() === 'brand') {
-          <div class="dropdown-menu" role="listbox">
+          <div class="dropdown-menu" role="listbox" (click)="$event.stopPropagation()">
             <button type="button" [class.option-selected]="!searchBrand()" (click)="selectBrand('')">All brands <span class="text-[#8a948f] text-[10px] font-medium">Any</span></button>
             @for (brand of brands(); track brand) {
               <button type="button" [class.option-selected]="searchBrand() === brand" (click)="selectBrand(brand)">{{ brand }}</button>
@@ -56,12 +61,12 @@
           </div>
         }
       </div>
-      <div class="select-field" [class.dropdown-open]="dropdownOpen() === 'budget'">
-        <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'budget'" aria-haspopup="listbox" (click)="toggleDropdown('budget')">
+      <div class="select-field qs-flex" [class.dropdown-open]="dropdownOpen() === 'budget'" (click)="toggleDropdown('budget')">
+        <button class="select-trigger" type="button" [attr.aria-expanded]="dropdownOpen() === 'budget'" aria-haspopup="listbox">
           <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ budgetLabel() }}</span><svg lucideChevronDown size="16" class="text-[#7f8b85] flex-none transition-[transform,color] duration-200 ease-out"></svg>
         </button>
         @if (dropdownOpen() === 'budget') {
-          <div class="dropdown-menu" role="listbox">
+          <div class="dropdown-menu" role="listbox" (click)="$event.stopPropagation()">
             <button type="button" [class.option-selected]="!searchBudget()" (click)="selectBudget('')">Any budget <span class="text-[#8a948f] text-[10px] font-medium">All prices</span></button>
             @for (option of budgetOptions; track option.value) {
               <button type="button" [class.option-selected]="searchBudget() === option.value" (click)="selectBudget(option.value)">{{ option.label }}</button>
@@ -69,8 +74,15 @@
           </div>
         }
       </div>
-      <button class="search-button" type="submit"><svg lucideSearch size="18"></svg> Find vehicles</button>
+      <button class="search-button" type="submit"><svg lucideSearch size="18"></svg> Find vehicles <svg lucideArrowRight size="16"></svg></button>
     </form>
+    <div class="mt-3 pt-3 border-t border-[#EEF3F1] flex items-center gap-2 flex-wrap">
+      <span class="font-['Inter',sans-serif] text-[11px] font-medium text-[#8A969D]">Popular:</span>
+      <button type="button" (click)="selectBudget('0-5')" class="h-7 px-3 rounded-full bg-[#F7FAF9] border border-[#E2E9E7] font-['Inter',sans-serif] text-[11px] font-semibold text-[#062D32] hover:border-[#062D32] hover:bg-white transition-all">Under ₹5 Lakh</button>
+      <button type="button" (click)="selectBrand('Honda')" class="h-7 px-3 rounded-full bg-[#F7FAF9] border border-[#E2E9E7] font-['Inter',sans-serif] text-[11px] font-semibold text-[#062D32] hover:border-[#062D32] hover:bg-white transition-all">Honda</button>
+      <button type="button" (click)="selectBrand('Royal Enfield')" class="h-7 px-3 rounded-full bg-[#F7FAF9] border border-[#E2E9E7] font-['Inter',sans-serif] text-[11px] font-semibold text-[#062D32] hover:border-[#062D32] hover:bg-white transition-all">Royal Enfield</button>
+      <button type="button" (click)="selectBudget('5-10')" class="h-7 px-3 rounded-full bg-[#F7FAF9] border border-[#E2E9E7] font-['Inter',sans-serif] text-[11px] font-semibold text-[#062D32] hover:border-[#062D32] hover:bg-white transition-all">₹5–10 Lakh</button>
+    </div>
   </section>
 
   <!-- ===== Trust ===== (hidden per request)

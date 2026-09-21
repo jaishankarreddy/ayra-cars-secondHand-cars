@@ -10,6 +10,7 @@ import {
   LucideMenu,
   LucideScale,
   LucideSearch,
+  LucideUser,
   LucideX
 } from '@lucide/angular';
 import { WishlistService } from '../../services/wishlist.service';
@@ -29,6 +30,7 @@ import { ToastService } from '../../services/toast.service';
     LucideMenu,
     LucideScale,
     LucideSearch,
+    LucideUser,
     LucideX
   ],
   templateUrl: './site-navbar.component.html',
@@ -42,6 +44,7 @@ export class SiteNavbarComponent {
   private readonly router = inject(Router);
 
   readonly menuOpen = signal(false);
+  readonly profileMenuOpen = signal(false);
   readonly searchQuery = signal('');
   readonly mobileSearchQuery = signal('');
   readonly searchFocused = signal(false);
@@ -53,7 +56,10 @@ export class SiteNavbarComponent {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(inject(DestroyRef))
       )
-      .subscribe((event) => this.currentUrl.set(event.urlAfterRedirects));
+      .subscribe((event) => {
+        this.currentUrl.set(event.urlAfterRedirects);
+        this.profileMenuOpen.set(false);
+      });
   }
 
   readonly navActive = computed(() => {
@@ -61,7 +67,6 @@ export class SiteNavbarComponent {
     return {
       cars: url.startsWith('/cars') || url.startsWith('/bikes'),
       brands: url.startsWith('/brands'),
-      blog: url.startsWith('/blog'),
       about: url.startsWith('/about'),
       contact: url.startsWith('/contact'),
       sell: url.startsWith('/sell'),
@@ -85,7 +90,16 @@ export class SiteNavbarComponent {
   logout(): void {
     this.auth.logout();
     this.menuOpen.set(false);
+    this.profileMenuOpen.set(false);
     this.toast.info('Logged out', 'You have been signed out. See you soon!');
+  }
+
+  toggleProfileMenu(): void {
+    this.profileMenuOpen.update(v => !v);
+  }
+
+  closeProfileMenu(): void {
+    this.profileMenuOpen.set(false);
   }
 
   onSearchInput(event: Event): void {

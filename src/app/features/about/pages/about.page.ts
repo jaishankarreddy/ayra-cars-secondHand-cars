@@ -2,13 +2,20 @@
 import { RouterLink } from '@angular/router';
 import {
   LucideArrowRight,
+  LucideBike,
   LucideCarFront,
   LucideCheck,
   LucideChevronDown,
   LucideLeaf,
   LucideShieldCheck,
   LucideUsers,
-  LucideStar
+  LucideStar,
+  LucideMapPin,
+  LucideBadgeCheck,
+  LucideWrench,
+  LucideCalendarCheck,
+  LucideLanguages,
+  LucideSearchCheck
 } from '@lucide/angular';
 import { FooterComponent } from '../../home/components/footer/footer.component';
 
@@ -19,13 +26,20 @@ import { FooterComponent } from '../../home/components/footer/footer.component';
     RouterLink,
     FooterComponent,
     LucideArrowRight,
+    LucideBike,
     LucideCarFront,
     LucideCheck,
     LucideChevronDown,
     LucideLeaf,
     LucideShieldCheck,
     LucideUsers,
-    LucideStar
+    LucideStar,
+    LucideMapPin,
+    LucideBadgeCheck,
+    LucideWrench,
+    LucideCalendarCheck,
+    LucideLanguages,
+    LucideSearchCheck
   ],
   templateUrl: './about.page.html',
   styleUrl: './about.page.scss'
@@ -33,18 +47,28 @@ import { FooterComponent } from '../../home/components/footer/footer.component';
 export class AboutPageComponent {
   readonly faqs = [
     {
-      question: 'Are the cars verified?',
-      answer: 'Yes. Every vehicle on Ayra Cars goes through a rigorous 200-point inspection covering engine health, body condition, electronics, tyres and more. You receive a detailed report before making any decision.',
+      question: 'Are cars and bikes verified?',
+      answer: 'Yes. Every car and bike goes through a 200-point inspection — engine, body, tyres, electronics, service history — plus KA RTO check for RC, challan and insurance. You get the full report before you decide.',
       open: false
     },
     {
-      question: 'Do you help with RC transfer?',
-      answer: 'Absolutely. We handle the complete RC transfer process including documentation, RTO submissions and follow-ups, so you don\'t have to worry about the paperwork.',
+      question: 'Do you help with KA RC transfer?',
+      answer: 'Absolutely. We handle the complete Karnataka RC transfer — documentation, RTO submission, challan clearance and follow-ups — so ownership moves to you without running around.',
       open: false
     },
     {
-      question: 'Can I sell my car through Ayra Cars?',
-      answer: 'Yes! You can list your car on Ayra Cars in just a few steps. We help with inspection, pricing, listing and connecting you with genuine buyers across Karnataka.',
+      question: 'How do I schedule a test drive?',
+      answer: 'Just contact us or visit our office — we will schedule your test drive at the vehicle\'s location at a time that suits you, in your language.',
+      open: false
+    },
+    {
+      question: 'Can I sell my car or bike through Ayra Cars?',
+      answer: 'Yes. List in minutes — we help with inspection, fair pricing, photos, listing and genuine buyers across Karnataka, with RC transfer support included.',
+      open: false
+    },
+    {
+      question: 'Do you support loans and all languages?',
+      answer: 'We guide you on used-vehicle loans and EMI options, and our team supports you in your language — Kannada, Hindi, English and more.',
       open: false
     }
   ];
