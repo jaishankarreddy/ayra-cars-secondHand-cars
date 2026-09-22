@@ -129,6 +129,10 @@ export const routes: Routes = [
         loadChildren: () => import('@features/blog/blog.routes').then(m => m.BLOG_ROUTES)
       },
       {
+        path: 'profile',
+        loadChildren: () => import('@features/profile/profile.routes').then(m => m.PROFILE_ROUTES)
+      },
+      {
         path: 'privacy',
         loadComponent: () => import('@features/common/pages/privacy/privacy.component').then(m => m.PrivacyComponent)
       },

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, AfterViewInit, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   LucideEye,
@@ -6,8 +6,10 @@ import {
   LucideLock,
   LucideShieldCheck,
   LucideLoaderCircle,
-  LucideArrowRight
+  LucideArrowRight,
+  LucideSmartphone
 } from '@lucide/angular';
+import { environment } from '../../../../environments/environment';
 import { RippleDirective } from '../../cars/directives/ripple.directive';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
@@ -23,12 +25,13 @@ import { ToastService } from '../../../services/toast.service';
     LucideLock,
     LucideShieldCheck,
     LucideLoaderCircle,
-    LucideArrowRight
+    LucideArrowRight,
+    LucideSmartphone
   ],
   templateUrl: './register.page.html',
   styleUrl: './register.page.scss'
 })
-export class RegisterPageComponent {
+export class RegisterPageComponent implements AfterViewInit {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
@@ -38,7 +41,40 @@ export class RegisterPageComponent {
   readonly confirmPassword = signal('');
   readonly showPassword = signal(false);
   readonly loading = signal(false);
+  readonly googleLoading = signal(false);
   readonly error = signal('');
+
+  ngAfterViewInit(): void { this.initGoogle(); }
+
+  private initGoogle(): void {
+    const clientId = environment.googleClientId;
+    if (!clientId || typeof (window as any).google === 'undefined') return;
+    try {
+      (window as any).google.accounts.id.initialize({
+        client_id: clientId,
+        callback: (res: any) => this.handleGoogle(res.credential),
+        auto_select: false
+      });
+      const el = document.getElementById('google-btn-register');
+      if (el) (window as any).google.accounts.id.renderButton(el, { theme: 'outline', size: 'large', width: 360, text: 'signup_with', shape: 'pill' });
+    } catch {}
+  }
+
+  handleGoogle(idToken: string): void {
+    if (!idToken) return;
+    this.googleLoading.set(true);
+    this.error.set('');
+    this.auth.googleLogin(idToken).subscribe({
+      next: () => { this.googleLoading.set(false); this.toast.success('Account created', 'Welcome to Ayra Cars!'); this.router.navigate(['/']); },
+      error: (err: unknown) => { this.googleLoading.set(false); const m=(err as {error?:{message?:string}})?.error?.message||'Google sign-in failed.'; this.error.set(m); }
+    });
+  }
+
+  triggerGoogleOneTap(): void {
+    const w = window as any;
+    if (w.google?.accounts?.id) w.google.accounts.id.prompt();
+    else this.error.set('Google sign-in is not ready. Please add Client ID in environment.ts');
+  }
 
   onSubmit(event: Event): void {
     event.preventDefault();

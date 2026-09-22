@@ -1,4 +1,4 @@
-﻿import { Component, inject, signal } from '@angular/core';
+﻿import { Component, AfterViewInit, inject, signal } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import {
   LucideEye,
@@ -12,6 +12,7 @@ import {
 import { RippleDirective } from '../../cars/directives/ripple.directive';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login-page',
@@ -30,7 +31,7 @@ import { ToastService } from '../../../services/toast.service';
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements AfterViewInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly auth = inject(AuthService);
@@ -40,7 +41,52 @@ export class LoginPageComponent {
   readonly password = signal('');
   readonly showPassword = signal(false);
   readonly loading = signal(false);
+  readonly googleLoading = signal(false);
   readonly error = signal('');
+
+  ngAfterViewInit(): void {
+    this.initGoogle();
+  }
+
+  private initGoogle(): void {
+    const clientId = environment.googleClientId;
+    if (!clientId || typeof (window as any).google === 'undefined') return;
+    try {
+      (window as any).google.accounts.id.initialize({
+        client_id: clientId,
+        callback: (res: any) => this.handleGoogle(res.credential),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+      const el = document.getElementById('google-btn-login');
+      if (el) (window as any).google.accounts.id.renderButton(el, { theme: 'outline', size: 'large', width: 360, text: 'continue_with', shape: 'pill' });
+    } catch {}
+  }
+
+  handleGoogle(idToken: string): void {
+    if (!idToken) return;
+    this.googleLoading.set(true);
+    this.error.set('');
+    this.auth.googleLogin(idToken).subscribe({
+      next: () => {
+        this.googleLoading.set(false);
+        this.toast.success('Welcome back', 'Signed in with Google.');
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        this.router.navigateByUrl(returnUrl || '/');
+      },
+      error: (err: unknown) => {
+        this.googleLoading.set(false);
+        const message = (err as { error?: { message?: string } })?.error?.message || 'Google sign-in failed. Please try again.';
+        this.error.set(message);
+      }
+    });
+  }
+
+  triggerGoogleOneTap(): void {
+    const w = window as any;
+    if (w.google?.accounts?.id) w.google.accounts.id.prompt();
+    else this.error.set('Google sign-in is not ready. Please refresh or add Client ID in environment.ts');
+  }
 
   onSubmit(event: Event): void {
     event.preventDefault();

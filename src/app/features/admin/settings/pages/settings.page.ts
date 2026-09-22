@@ -1,4 +1,6 @@
-﻿import { Component, signal, WritableSignal } from '@angular/core';
+﻿import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { API_BASE } from '@config/api';
 import {
   LucideUser,
   LucideBell,
@@ -6,9 +8,11 @@ import {
   LucideStore,
   LucideSave,
   LucideCheckCircle2,
-  LucideMapPin
+  LucideMapPin,
+  LucideLoaderCircle
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
+import { ToastService } from '../../../../services/toast.service';
 
 export type SettingsTab = 'profile' | 'notifications' | 'security' | 'marketplace';
 
@@ -25,6 +29,13 @@ interface TabOption {
   icon: 'user' | 'bell' | 'lock' | 'store';
 }
 
+interface SettingsResponse {
+  profile: { name: string; email: string; phone: string };
+  notifications: Record<string, boolean>;
+  marketplace: Record<string, boolean>;
+  region: { location: string; currency: string };
+}
+
 @Component({
   selector: 'app-settings-page',
   standalone: true,
@@ -36,14 +47,20 @@ interface TabOption {
     LucideStore,
     LucideSave,
     LucideCheckCircle2,
-    LucideMapPin
+    LucideMapPin,
+    LucideLoaderCircle
   ],
   templateUrl: './settings.page.html',
   styleUrl: './settings.page.scss'
 })
-export class AdminSettingsPageComponent {
+export class AdminSettingsPageComponent implements OnInit {
+  private readonly http = inject(HttpClient);
+  private readonly toast = inject(ToastService);
+
   readonly tab = signal<SettingsTab>('profile');
   readonly saved = signal(false);
+  readonly loading = signal(true);
+  readonly saving = signal(false);
 
   readonly tabs: TabOption[] = [
     { value: 'profile', label: 'Profile', icon: 'user' },
@@ -52,9 +69,9 @@ export class AdminSettingsPageComponent {
     { value: 'marketplace', label: 'Marketplace', icon: 'store' }
   ];
 
-  readonly name = signal('Admin User');
-  readonly email = signal('admin@ayracars.in');
-  readonly phone = signal('+91 98765 43210');
+  readonly name = signal('');
+  readonly email = signal('');
+  readonly phone = signal('');
   readonly oldPassword = signal('');
   readonly newPassword = signal('');
   readonly confirmPassword = signal('');
@@ -76,9 +93,43 @@ export class AdminSettingsPageComponent {
   readonly location = signal('Karnataka, India');
   readonly currency = signal('₹ INR');
 
+  ngOnInit(): void {
+    this.http.get<SettingsResponse>(`${API_BASE}/admin/settings`).subscribe({
+      next: (res) => {
+        this.name.set(res.profile?.name || '');
+        this.email.set(res.profile?.email || '');
+        this.phone.set(res.profile?.phone || '');
+        if (res.notifications) {
+          this.notifyToggles.update((items) =>
+            items.map((it) => ({ ...it, on: res.notifications[it.key] ?? it.on }))
+          );
+        }
+        if (res.marketplace) {
+          this.marketToggles.update((items) =>
+            items.map((it) => {
+              const key = it.key === 'showPrices' ? 'showDriveAwayPrices' : it.key;
+              const altKey = it.key;
+              const val = res.marketplace[key] ?? res.marketplace[altKey];
+              return { ...it, on: val ?? it.on };
+            })
+          );
+        }
+        if (res.region) {
+          this.location.set(res.region.location || 'Karnataka, India');
+          this.currency.set(res.region.currency || '₹ INR');
+        }
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      }
+    });
+  }
+
   setTab(value: SettingsTab): void {
     this.tab.set(value);
     this.saved.set(false);
+    this.securityError.set('');
   }
 
   toggle(key: string, list: WritableSignal<ToggleItem[]>): void {
@@ -96,7 +147,36 @@ export class AdminSettingsPageComponent {
   }
 
   save(): void {
-    this.saved.set(true);
+    if (this.saving()) return;
+    this.saving.set(true);
+    this.saved.set(false);
+
+    const tab = this.tab();
+    let body: Record<string, unknown> = {};
+
+    if (tab === 'profile') {
+      body = { profile: { name: this.name(), email: this.email(), phone: this.phone() } };
+    } else if (tab === 'notifications') {
+      const n: Record<string, boolean> = {};
+      for (const t of this.notifyToggles()) n[t.key] = t.on;
+      body = { notifications: n };
+    } else if (tab === 'marketplace') {
+      const m: Record<string, boolean> = {};
+      for (const t of this.marketToggles()) m[t.key] = t.on;
+      body = { marketplace: m, region: { location: this.location(), currency: this.currency() } };
+    }
+
+    this.http.patch(`${API_BASE}/admin/settings`, body).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.saved.set(true);
+        this.toast.success('Settings saved', 'Your preferences are now live.');
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.toast.error('Save failed', err?.error?.message || 'Could not save settings.');
+      }
+    });
   }
 
   changePassword(event: Event): void {
@@ -110,9 +190,24 @@ export class AdminSettingsPageComponent {
       return;
     }
     this.securityError.set('');
-    this.oldPassword.set('');
-    this.newPassword.set('');
-    this.confirmPassword.set('');
-    this.saved.set(true);
+    this.saving.set(true);
+    this.http.patch(`${API_BASE}/admin/password`, {
+      currentPassword: this.oldPassword(),
+      newPassword: this.newPassword()
+    }).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.oldPassword.set('');
+        this.newPassword.set('');
+        this.confirmPassword.set('');
+        this.saved.set(true);
+        this.toast.success('Password updated', 'Your admin password was changed.');
+      },
+      error: (err) => {
+        this.saving.set(false);
+        const msg = err?.error?.message || 'Could not update password.';
+        this.securityError.set(msg);
+      }
+    });
   }
 }

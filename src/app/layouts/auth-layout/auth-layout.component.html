@@ -1,88 +1,73 @@
-<div class="flex h-screen overflow-hidden bg-bg supports-[height:100dvh]:h-[100dvh]">
+<div class="flex h-screen overflow-hidden bg-[#F7FAF9] supports-[height:100dvh]:h-[100dvh]">
   <!-- ===== Brand panel (desktop) ===== -->
-  <aside class="auth-brand relative hidden w-[46%] overflow-y-auto bg-[#062D32] text-white lg:flex lg:flex-col lg:justify-between">
-    <!-- decor -->
-    <div class="pointer-events-none absolute -left-32 top-24 h-96 w-96 rounded-full bg-[#B9F24A]/10 blur-[130px]"></div>
-    <div class="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-[#B9F24A]/[0.07] blur-[130px]"></div>
-    <div class="pointer-events-none absolute -right-10 top-1/2 h-[420px] w-[420px] -translate-y-1/2 rounded-full border-[1.5px] border-[#B9F24A]/[0.08] max-[1400px]:hidden"></div>
+  <aside class="auth-brand relative hidden w-[48%] overflow-hidden bg-[#062D32] text-white lg:flex lg:flex-col">
+    <!-- subtle pattern + gradient -->
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#062D32] via-[#0A3B40] to-[#062D32]"></div>
+    <div class="pointer-events-none absolute -left-20 top-10 h-[520px] w-[520px] rounded-full bg-[#B9F24A]/[0.08] blur-[90px]"></div>
+    <div class="pointer-events-none absolute -bottom-20 -right-16 h-[420px] w-[420px] rounded-full bg-white/[0.04] blur-[80px]"></div>
+    <div class="pointer-events-none absolute right-[-40px] top-1/2 h-[380px] w-[380px] -translate-y-1/2 rounded-full border border-[#B9F24A]/[0.07] max-[1400px]:hidden"></div>
+    <!-- faint car silhouette overlay -->
+    <div class="pointer-events-none absolute inset-0 opacity-[0.06]" style="background: radial-gradient(ellipse at 70% 80%, white 0%, transparent 55%)"></div>
 
-    <div class="relative z-10 p-8 xl:p-10">
-      <div class="flex items-center justify-between gap-3">
-        <a routerLink="/" class="inline-flex items-center gap-3" aria-label="Ayra Cars home">
-          <img src="/logo.png" alt="Ayra Cars" class="h-10 w-auto rounded-lg bg-white p-1.5">
-        </a>
-        <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/[0.08] border border-white/10 text-[11px] font-semibold text-white">Bengaluru · Karnataka</span>
-      </div>
+    <!-- top -->
+    <div class="relative z-10 flex items-center justify-between p-8 xl:p-10">
+      <a routerLink="/" class="inline-flex items-center gap-3" aria-label="Ayra Cars home">
+        <img src="/logo.png" alt="Ayra Cars" class="h-9 w-auto rounded-xl bg-white p-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.12)]">
+      </a>
+      <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/[0.09] border border-white/10 text-[11px] font-semibold tracking-[0.04em] text-white backdrop-blur">Bengaluru · Karnataka</span>
+    </div>
 
-      <p class="mt-10 font-['Poppins',sans-serif] text-[11px] font-bold tracking-[0.18em] uppercase text-[#B9F24A]">Ayra Cars — Buy &amp; Sell</p>
-      <h1 class="mt-3 max-w-md font-['Poppins',sans-serif] text-3xl font-semibold leading-[1.1] tracking-[-0.02em] xl:text-[2.6rem]">
+    <!-- middle -->
+    <div class="relative z-10 flex-1 px-8 xl:px-10 flex flex-col justify-center -mt-6">
+      <p class="font-['Poppins',sans-serif] text-[11px] font-bold tracking-[0.18em] uppercase text-[#B9F24A]">Ayra Cars — Buy &amp; Sell</p>
+      <h1 class="mt-3 max-w-[420px] font-['Poppins',sans-serif] text-[32px] font-semibold leading-[1.05] tracking-[-0.02em] xl:text-[38px]">
         Pre-owned cars &amp; bikes, <span class="relative inline-block">the honest way<svg class="absolute -bottom-1 left-0 w-full" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 Q 60 0 118 5" stroke="#B9F24A" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>.
       </h1>
-      <p class="mt-4 max-w-md text-[14px] leading-[1.65] text-white/70">
-        Join 1000+ happy owners across Karnataka — verified stock, fixed prices and support in your language.
+      <p class="mt-4 max-w-[400px] text-[13px] leading-[1.7] text-white/65">
+        Join 1000+ happy owners across Karnataka — verified stock, fixed prices and support in your language. No haggling, no surprises.
       </p>
 
-      <div class="mt-7 flex items-center gap-6">
-        <div>
-          <p class="m-0 font-['Poppins',sans-serif] text-[22px] font-semibold leading-none text-white">1000+</p>
-          <p class="mt-1 text-[11px] font-medium text-white/60">Happy owners</p>
+      <!-- stats -->
+      <div class="mt-7 flex items-center gap-5 rounded-[10px] border border-white/10 bg-white/[0.05] backdrop-blur px-5 py-4 max-w-[420px]">
+        <div class="flex-1 text-center">
+          <p class="m-0 font-['Poppins',sans-serif] text-[20px] font-semibold leading-none text-white">1000+</p>
+          <p class="mt-1 text-[11px] font-medium text-white/55">Happy owners</p>
         </div>
-        <div class="h-9 w-px bg-white/10"></div>
-        <div>
-          <p class="m-0 font-['Poppins',sans-serif] text-[22px] font-semibold leading-none text-white">4.8<span class="text-[14px] text-white/60">/5</span></p>
-          <p class="mt-1 text-[11px] font-medium text-white/60">Buyer rating</p>
+        <div class="h-10 w-px bg-white/10"></div>
+        <div class="flex-1 text-center">
+          <p class="m-0 font-['Poppins',sans-serif] text-[20px] font-semibold leading-none text-white">4.8<span class="text-[12px] text-white/55">/5</span></p>
+          <p class="mt-1 text-[11px] font-medium text-white/55">Buyer rating</p>
         </div>
-        <div class="h-9 w-px bg-white/10"></div>
-        <div>
-          <p class="m-0 font-['Poppins',sans-serif] text-[22px] font-semibold leading-none text-white">20+</p>
-          <p class="mt-1 text-[11px] font-medium text-white/60">Brands live</p>
+        <div class="h-10 w-px bg-white/10"></div>
+        <div class="flex-1 text-center">
+          <p class="m-0 font-['Poppins',sans-serif] text-[20px] font-semibold leading-none text-white">20+</p>
+          <p class="mt-1 text-[11px] font-medium text-white/55">Brands live</p>
         </div>
       </div>
     </div>
 
-    <div class="relative z-10 p-8 pt-0 xl:px-10 xl:pb-10">
-      <ul class="grid grid-cols-2 gap-3">
-        @for (item of highlights; track item.title) {
-          <li class="rounded-[12px] border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-sm">
-            <span class="flex h-9 w-9 items-center justify-center rounded-[9px] bg-[#B9F24A] text-[#062D32]">
-              @switch (item.icon) {
-                @case ('shieldCheck') { <svg lucideShieldCheck class="h-[18px] w-[18px]"></svg> }
-                @case ('handCoins') { <svg lucideHandCoins class="h-[18px] w-[18px]"></svg> }
-                @case ('mapPin') { <svg lucideMapPin class="h-[18px] w-[18px]"></svg> }
-                @case ('badgeCheck') { <svg lucideBadgeCheck class="h-[18px] w-[18px]"></svg> }
-              }
-            </span>
-            <p class="mt-2.5 text-[13px] font-semibold leading-tight text-white">{{ item.title }}</p>
-            <p class="mt-1 text-[11px] leading-[1.5] text-white/60">{{ item.detail }}</p>
-          </li>
-        }
-      </ul>
-      <div class="mt-4 rounded-[12px] border border-white/10 bg-white/[0.04] p-4">
-        <p class="m-0 text-[12px] italic leading-[1.6] text-white/75">“RC transfer done in 2 days. The whole thing was hassle-free.”</p>
-        <p class="mt-2 text-[11px] font-semibold text-white">Sneha K. <span class="font-normal text-white/50">· Whitefield, Brezza 2022</span></p>
-      </div>
+    <!-- bottom — kept intentionally empty for minimal look (trust shown on main site, not repeated here) -->
+    <div class="relative z-10 p-8 xl:px-10 xl:pb-10">
+      <p class="text-[11px] tracking-[0.08em] font-semibold text-white/30 uppercase">© Ayra Cars · Bengaluru</p>
     </div>
   </aside>
 
   <!-- ===== Form panel ===== -->
-  <main class="relative flex flex-1 items-center justify-center overflow-hidden px-5 py-6 sm:px-8">
-    <!-- floating stat on small screens -->
-    <div class="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2 lg:hidden">
-      <a routerLink="/" class="inline-flex items-center gap-2.5" aria-label="Ayra Cars home">
+  <main class="relative flex flex-1 items-center justify-center overflow-y-auto overflow-x-hidden bg-[#F7FAF9] px-4 py-8 sm:px-6 lg:px-10">
+    <!-- mobile logo -->
+    <div class="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 lg:hidden">
+      <a routerLink="/" class="pointer-events-auto inline-flex items-center gap-2.5" aria-label="Ayra Cars home">
         <img src="/logo.png" alt="Ayra Cars" class="h-8 w-auto">
       </a>
     </div>
 
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-[440px]">
       <router-outlet />
     </div>
 
-    <a
-      routerLink="/"
-      class="absolute bottom-6 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 text-xs font-semibold text-muted transition-colors hover:text-primary"
-    >
-      Back to home
-      <svg lucideArrowRight class="h-3.5 w-3.5"></svg>
-    </a>
+    <div class="pointer-events-none absolute bottom-5 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5">
+      <a routerLink="/" class="pointer-events-auto inline-flex items-center gap-1.5 text-xs font-semibold text-[#5F7078] transition-colors hover:text-[#062D32]">← Back to home</a>
+      <p class="text-[11px] text-[#8A969D]">Trusted by 1000+ buyers across Karnataka</p>
+    </div>
   </main>
 </div>

@@ -31,7 +31,7 @@
     <div class="grid gap-6 lg:grid-cols-[1.7fr_1fr]">
       <!-- Large featured -->
       <a [routerLink]="['/blog', featured()[0].slug]" class="am-card group relative overflow-hidden rounded-[12px] border border-[var(--border)] bg-[var(--surface)]">
-        <img [src]="featured()[0].cover" [alt]="featured()[0].title" class="h-[360px] w-full object-cover transition duration-700 group-hover:scale-[1.03] lg:h-[520px]" />
+        <img [src]="featured()[0].cover" [alt]="featured()[0].title" loading="eager" decoding="async" fetchpriority="high" width="800" height="520" sizes="(max-width: 1024px) 100vw, 800px" class="h-[360px] w-full object-cover transition duration-700 group-hover:scale-[1.03] lg:h-[520px]" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
         <div class="absolute bottom-0 p-6 lg:p-8">
           <span class="rounded-full bg-[#d7fa4c] px-3 py-1 text-xs font-bold text-[#14272c]">{{ featured()[0].category }}</span>
@@ -43,7 +43,7 @@
       <div class="grid gap-6">
         @for (p of featured().slice(1); track p.id) {
           <a [routerLink]="['/blog', p.slug]" class="am-card group flex flex-col overflow-hidden rounded-[12px] border border-[var(--border)] bg-white">
-            <img [src]="p.cover" [alt]="p.title" class="h-44 w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+            <img [src]="p.cover" [alt]="p.title" loading="lazy" decoding="async" width="400" height="176" sizes="(max-width: 768px) 100vw, 400px" class="h-44 w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
             <div class="p-5">
               <span class="text-xs font-bold uppercase tracking-wide text-[#5e6b6a]">{{ p.category }}</span>
               <h3 class="mt-1 line-clamp-2 font-heading text-[16px] font-semibold leading-tight text-[#14272c]">{{ p.title }}</h3>

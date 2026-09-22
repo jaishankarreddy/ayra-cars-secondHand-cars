@@ -537,9 +537,9 @@
               {{ total() }} {{ type() === 'Bike' ? 'bikes' : 'cars' }}{{ selectedLocation() ? ' in ' + selectedLocation() : ' in Karnataka' }}
             </h2>
             <p class="text-xs text-gray-500 mt-1 flex items-center gap-1.5 flex-wrap">
-              <span class="inline-flex items-center gap-1"><svg lucideBadgeCheck size="13" class="text-[#15803d]"></svg> KA RTO-verified</span>
-              <span class="text-gray-300">·</span><span>7-day return</span>
+              <span>Fixed price</span>
               <span class="text-gray-300">·</span><span>Scheduled test drive</span>
+              <span class="text-gray-300">·</span><span>All languages</span>
             </p>
           </div>
 
@@ -633,10 +633,39 @@
 
         <!-- Vehicle Grid (4 Cars in a row) -->
         @if (loadingResults()) {
-          <div class="loading-state py-24 flex flex-col items-center justify-center text-gray-400">
-            <svg lucideLoaderCircle size="32" class="animate-spin text-[#0a3622] mb-3"></svg>
-            <p class="text-sm font-medium text-gray-600">Loading verified vehicles...</p>
-          </div>
+          @if (view() === 'grid') {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                <div class="bg-white rounded-2xl border border-gray-200/80 overflow-hidden">
+                  <div class="h-40 bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                  <div class="p-3 space-y-2.5">
+                    <div class="h-4 w-3/5 rounded bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    <div class="h-3 w-1/2 rounded bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    <div class="flex gap-2 pt-1">
+                      <div class="h-6 flex-1 rounded-full bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                      <div class="h-6 flex-1 rounded-full bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                      <div class="h-6 flex-1 rounded-full bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    </div>
+                    <div class="h-8 rounded-lg bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="space-y-4">
+              @for (i of [1,2,3,4,5]; track i) {
+                <div class="flex h-[180px] overflow-hidden rounded-2xl border border-gray-200/80 bg-white max-[768px]:h-auto max-[768px]:flex-col">
+                  <div class="w-[280px] h-full shrink-0 bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite] max-[768px]:w-full max-[768px]:h-48"></div>
+                  <div class="flex flex-1 flex-col p-4 gap-3">
+                    <div class="h-5 w-2/5 rounded bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    <div class="h-3 w-3/5 rounded bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    <div class="h-3 w-1/2 rounded bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                    <div class="mt-auto h-8 w-32 rounded-lg bg-gradient-to-r from-[#e9e8e2] via-[#f3f2ed] to-[#e9e8e2] bg-[length:200%_100%] animate-[am-shimmer_1.6s_linear_infinite]"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         } @else if (results().length > 0) {
           @if (view() === 'grid') {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -648,6 +677,10 @@
                       [src]="vehicle.image"
                       [alt]="vehicle.brand + ' ' + vehicle.model"
                       loading="lazy"
+                      decoding="async"
+                      width="400"
+                      height="260"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 340px"
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       (error)="$any($event.target).src = '/home_landing.png'"
                     />
@@ -753,6 +786,10 @@
                       [src]="vehicle.image"
                       [alt]="vehicle.brand + ' ' + vehicle.model"
                       loading="lazy"
+                      decoding="async"
+                      width="280"
+                      height="180"
+                      sizes="(max-width: 768px) 100vw, 280px"
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       (error)="$any($event.target).src = '/home_landing.png'"
                     />
@@ -899,7 +936,7 @@
   <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 pb-8">
     <div class="bg-white border border-gray-200/80 rounded-[14px] px-6 py-4 flex items-center gap-5 flex-wrap shadow-xs">
       <span class="inline-flex items-center gap-1.5 text-[12px] font-semibold text-gray-900"><svg lucideShieldCheck size="15" class="text-[#15803d]"></svg> KA RTO-verified</span>
-      <span class="inline-flex items-center gap-1.5 text-[12px] font-medium text-gray-600"><svg lucideBadgeCheck size="15" class="text-[#15803d]"></svg> 7-day return</span>
+      <span class="inline-flex items-center gap-1.5 text-[12px] font-medium text-gray-600"><svg lucideBadgeCheck size="15" class="text-[#15803d]"></svg> Fixed price</span>
       <span class="inline-flex items-center gap-1.5 text-[12px] font-medium text-gray-600"><svg lucideMapPin size="15" class="text-gray-400"></svg> Scheduled test drives</span>
       <span class="ml-auto inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#0a3622]"><a routerLink="/contact" class="inline-flex items-center gap-1 hover:underline">Talk to us in your language <svg lucideArrowRight size="13"></svg></a></span>
     </div>

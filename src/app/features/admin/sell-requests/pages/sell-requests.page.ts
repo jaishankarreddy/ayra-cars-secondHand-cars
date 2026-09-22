@@ -7,7 +7,9 @@ import {
   LucideX,
   LucidePhone,
   LucideCar,
-  LucideBike
+  LucideBike,
+  LucideChevronLeft,
+  LucideChevronRight
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { AdminSellRequest, SellRequestStatus } from '../../data/admin.data';
@@ -24,7 +26,9 @@ export type SellRequestFilter = 'all' | SellRequestStatus;
     LucideX,
     LucidePhone,
     LucideCar,
-    LucideBike
+    LucideBike,
+    LucideChevronLeft,
+    LucideChevronRight
   ],
   templateUrl: './sell-requests.page.html',
   styleUrl: './sell-requests.page.scss'
@@ -35,6 +39,8 @@ export class AdminSellRequestsPageComponent implements OnInit {
   readonly requests = signal<AdminSellRequest[]>([]);
   readonly search = signal('');
   readonly statusFilter = signal<SellRequestFilter>('all');
+  readonly page = signal(1);
+  readonly pageSize = 10;
 
   ngOnInit(): void {
     this.load();
@@ -73,6 +79,17 @@ export class AdminSellRequestsPageComponent implements OnInit {
     { value: 'Contacted', label: 'Contacted' },
     { value: 'Closed', label: 'Closed' }
   ];
+  readonly totalCount = computed(() => this.filteredRequests().length);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize)));
+  readonly paginatedRequests = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.filteredRequests().slice(start, start + this.pageSize);
+  });
+  setSearch(v: string): void { this.search.set(v); this.page.set(1); }
+  setFilter(v: SellRequestFilter): void { this.statusFilter.set(v); this.page.set(1); }
+  goToPage(n: number): void { if (n >= 1 && n <= this.totalPages()) this.page.set(n); }
+  nextPage(): void { if (this.page() < this.totalPages()) this.page.update((p) => p + 1); }
+  prevPage(): void { if (this.page() > 1) this.page.update((p) => p - 1); }
 
   setStatus(id: string, status: SellRequestStatus): void {
     this.requests.update((list) =>

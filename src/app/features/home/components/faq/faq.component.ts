@@ -34,8 +34,8 @@ const FAQ_DATA: Faq[] = [
     answer: 'Absolutely! Click on "Sell your vehicle" in the navigation bar to get started. Our team will help you list your vehicle with the right pricing and photography.'
   },
   {
-    question: 'Is there a warranty on purchased vehicles?',
-    answer: 'Yes, select certified vehicles come with a limited warranty. Details are mentioned on the vehicle listing page. Contact us for more information on specific warranties.'
+    question: 'How do I get support after purchase?',
+    answer: 'Our team stays with you after delivery — for RC transfer, service history and any questions. Contact us in your language and we will resolve it promptly.'
   },
   {
     question: 'How do I contact support?',

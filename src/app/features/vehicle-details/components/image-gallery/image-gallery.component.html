@@ -1,10 +1,15 @@
-<div class="gallery-container">
+﻿<div class="gallery-container">
   <!-- Main hero image -->
   <div class="gallery-main" (click)="openFullscreen()">
     <img
       [src]="activeImage()"
-      [alt]="alt() + ' — main image'"
+      [alt]="alt() + ' â€” main image'"
       class="main-img"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+      width="800"
+      height="600"
     />
 
     <!-- Verified badge -->
@@ -59,8 +64,11 @@
       >
         <img
           [src]="image"
-          [alt]="alt() + ' — image ' + ($index + 1)"
+          [alt]="alt() + ' â€” image ' + ($index + 1)"
           loading="lazy"
+          decoding="async"
+          width="160"
+          height="120"
         />
       </button>
     }
@@ -96,10 +104,13 @@
     <div class="fs-content" (click)="$event.stopPropagation()">
       <img
         [src]="activeImage()"
-        [alt]="alt() + ' — fullscreen'"
+        [alt]="alt() + ' â€” fullscreen'"
         class="fs-img"
         [class.fs-zoomed]="zoomed()"
         (click)="zoomed.set(!zoomed())"
+        decoding="async" loading="lazy"
+        width="1200"
+        height="900"
       />
       <p class="fs-hint">
         Click the image to {{ zoomed() ? 'zoom out' : 'zoom in' }}

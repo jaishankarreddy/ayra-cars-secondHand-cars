@@ -1,25 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import {
-  LucideShieldCheck,
-  LucideBadgeCheck,
-  LucideHandCoins,
-  LucideMapPin,
-  LucideArrowRight
-} from '@lucide/angular';
 
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [
-    RouterLink,
-    RouterOutlet,
-    LucideShieldCheck,
-    LucideBadgeCheck,
-    LucideHandCoins,
-    LucideMapPin,
-    LucideArrowRight
-  ],
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './auth-layout.component.html',
   styleUrl: './auth-layout.component.scss'
 })

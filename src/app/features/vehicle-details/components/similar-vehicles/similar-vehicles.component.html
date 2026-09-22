@@ -23,7 +23,7 @@
         @for (v of similarVehicles(); track v.id) {
           <a [routerLink]="['/vehicles', v.id]" class="similar-card">
             <div class="card-image">
-              <img [src]="v.image" [alt]="v.name" loading="lazy" />
+              <img [src]="v.image" [alt]="v.name" loading="lazy" decoding="async" width="280" height="180" />
               <span class="card-type-pill">{{ v.vehicleType === 'bike' ? 'Bike' : 'Car' }}</span>
               <button
                 class="heart-btn"

@@ -63,6 +63,11 @@
           <img
             [src]="category.image"
             [alt]="category.title"
+            loading="lazy"
+            decoding="async"
+            width="300"
+            height="150"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 240px"
             class="h-full
                    w-full
                    object-cover

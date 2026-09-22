@@ -6,7 +6,7 @@
     <!-- LEFT: Logo + Nav -->
     <div class="header-left">
       <a class="header-logo" routerLink="/">
-        <img src="/logo.png" alt="Ayra Cars" class="logo-img" />
+        <img src="/logo.png" alt="Ayra Cars" class="logo-img" decoding="async" loading="eager" fetchpriority="high" width="140" height="36" />
       </a>
       <nav class="header-nav">
         <a routerLink="/cars" [class.active]="navActive().cars">Find a Vehicle</a>
@@ -26,7 +26,7 @@
         <svg lucideSearch size="15" class="search-icon"></svg>
         <input
           type="text"
-          placeholder="Search vehicle, brand..."
+          placeholder="Search Swift, Activa, City..."
           class="search-input"
           [value]="searchQuery()"
           (input)="onSearchInput($event)"
@@ -60,7 +60,7 @@
                   <p class="text-xs text-[#5F7078]">My Account</p>
                 </div>
                 <div class="p-2">
-                  <a routerLink="/wishlist" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
+                  <a routerLink="/profile" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
                     <svg lucideUser size="16" class="text-[#062F35]"></svg>
                     My Profile
                   </a>
@@ -92,7 +92,7 @@
   <div class="mobile-drawer">
     <div class="drawer-header">
       <a class="header-logo" routerLink="/" (click)="closeMenu()">
-        <img src="/logo.png" alt="Ayra Cars" class="logo-img" />
+        <img src="/logo.png" alt="Ayra Cars" class="logo-img" decoding="async" loading="eager" fetchpriority="high" width="140" height="36" />
       </a>
       <button class="drawer-close" (click)="closeMenu()" aria-label="Close menu">
         <svg lucideX size="20"></svg>
@@ -132,7 +132,7 @@
 
     <div class="drawer-footer">
       @if (isLoggedIn()) {
-        <a class="drawer-user" routerLink="/wishlist" (click)="closeMenu()">{{ userName() }}</a>
+        <a class="drawer-user" routerLink="/profile" (click)="closeMenu()">{{ userName() }}</a>
         <button class="drawer-logout" (click)="logout()">Logout</button>
       } @else {
         <a class="drawer-login" routerLink="/auth/login" (click)="closeMenu()">

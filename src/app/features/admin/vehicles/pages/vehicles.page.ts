@@ -10,7 +10,10 @@ import {
   LucideEye,
   LucidePencil,
   LucideTrash2,
-  LucideLoaderCircle
+  LucideLoaderCircle,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideArrowUpDown
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { CarsFilterService } from '../../../cars/services/cars-filter.service';
@@ -38,7 +41,10 @@ export type AdminTypeFilter = 'all' | 'car' | 'bike';
     LucideEye,
     LucidePencil,
     LucideTrash2,
-    LucideLoaderCircle
+    LucideLoaderCircle,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideArrowUpDown
   ],
   templateUrl: './vehicles.page.html',
   styleUrl: './vehicles.page.scss'
@@ -53,6 +59,9 @@ export class AdminVehiclesPageComponent {
 
   readonly search = signal('');
   readonly typeFilter = signal<AdminTypeFilter>('all');
+  readonly sortBy = signal<'newest' | 'price_asc' | 'price_desc'>('newest');
+  readonly page = signal(1);
+  readonly pageSize = 10;
   readonly formOpen = signal(false);
   readonly formModel = signal<AdminVehicle | null>(null);
   readonly deletingId = signal<string | null>(null);
@@ -60,11 +69,12 @@ export class AdminVehiclesPageComponent {
   readonly vehicles = computed(() => {
     const kw = this.search().trim().toLowerCase();
     const type = this.typeFilter();
+    const sort = this.sortBy();
     const list = [
       ...this.carsService.cars().map(toAdminVehicle),
       ...this.bikesService.bikes().map(toAdminVehicle)
     ];
-    return list.filter((v) => {
+    let filtered = list.filter((v) => {
       if (type !== 'all' && v.type !== type) return false;
       if (
         kw &&
@@ -76,18 +86,64 @@ export class AdminVehiclesPageComponent {
       }
       return true;
     });
+    if (sort === 'price_asc') filtered = [...filtered].sort((a, b) => a.price - b.price);
+    else if (sort === 'price_desc') filtered = [...filtered].sort((a, b) => b.price - a.price);
+    return filtered;
   });
 
   readonly totalCount = computed(() => this.vehicles().length);
   readonly availableCount = computed(
     () => this.vehicles().filter((v) => v.status === 'Available').length
   );
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize)));
+  readonly paginatedVehicles = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.vehicles().slice(start, start + this.pageSize);
+  });
+  readonly pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const cur = this.page();
+    const pages: number[] = [];
+    const start = Math.max(1, cur - 2);
+    const end = Math.min(total, cur + 2);
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (pages[0] > 1) pages.unshift(1);
+    if (pages[pages.length - 1] < total) pages.push(total);
+    return [...new Set(pages)].sort((a, b) => a - b);
+  });
 
   readonly typeOptions: { value: AdminTypeFilter; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'car', label: 'Cars' },
     { value: 'bike', label: 'Bikes' }
   ];
+  readonly sortOptions: { value: 'newest' | 'price_asc' | 'price_desc'; label: string }[] = [
+    { value: 'newest', label: 'Newest' },
+    { value: 'price_asc', label: 'Price: Low to High' },
+    { value: 'price_desc', label: 'Price: High to Low' }
+  ];
+
+  setSearch(value: string): void {
+    this.search.set(value);
+    this.page.set(1);
+  }
+  setType(value: AdminTypeFilter): void {
+    this.typeFilter.set(value);
+    this.page.set(1);
+  }
+  setSort(value: 'newest' | 'price_asc' | 'price_desc'): void {
+    this.sortBy.set(value);
+    this.page.set(1);
+  }
+  goToPage(n: number): void {
+    if (n >= 1 && n <= this.totalPages()) this.page.set(n);
+  }
+  nextPage(): void {
+    if (this.page() < this.totalPages()) this.page.update((p) => p + 1);
+  }
+  prevPage(): void {
+    if (this.page() > 1) this.page.update((p) => p - 1);
+  }
 
   constructor() {
     this.catalog.load();

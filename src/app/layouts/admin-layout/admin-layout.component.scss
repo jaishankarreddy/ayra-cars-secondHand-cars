@@ -38,13 +38,13 @@
 }
 
 .admin-nav-active {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: var(--shadow-primary);
+  background: #B7F23A;
+  color: #062D32;
+  box-shadow: 0 8px 20px rgba(183, 242, 58, 0.28);
 
   &:hover {
-    background: var(--primary);
-    color: #fff;
+    background: #B7F23A;
+    color: #062D32;
   }
 }
 

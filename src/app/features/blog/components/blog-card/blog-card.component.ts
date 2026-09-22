@@ -10,7 +10,7 @@ import { BlogPost } from '../../data/blog.data';
   template: `
     <a [routerLink]="['/blog', post.slug]" class="am-card group flex flex-col overflow-hidden rounded-[12px] border border-[var(--border)] bg-[var(--surface)]">
       <div class="relative aspect-[16/9] overflow-hidden bg-[var(--surface-2)]">
-        <img [src]="post.cover" [alt]="post.title" loading="lazy" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" />
+        <img [src]="post.cover" [alt]="post.title" loading="lazy" decoding="async" width="400" height="225" sizes="(max-width: 768px) 100vw, 400px" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" />
         <span class="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#14272c] shadow-sm">{{ post.category }}</span>
         @if (post.featured) {
           <span class="absolute right-3 top-3 rounded-full bg-[#d7fa4c] px-3 py-1 text-[11px] font-bold text-[#14272c]">Featured</span>
@@ -20,7 +20,7 @@ import { BlogPost } from '../../data/blog.data';
         <h3 class="line-clamp-2 font-heading text-[17px] font-semibold leading-tight text-[var(--text)] group-hover:text-[#14272c]">{{ post.title }}</h3>
         <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--text-muted)]">{{ post.excerpt }}</p>
         <div class="mt-4 flex items-center gap-3 border-t border-[var(--border)] pt-4">
-          <img [src]="post.authorAvatar" [alt]="post.author" class="h-8 w-8 rounded-full object-cover" />
+          <img [src]="post.authorAvatar" [alt]="post.author" loading="lazy" decoding="async" width="32" height="32" class="h-8 w-8 rounded-full object-cover" />
           <div class="min-w-0 flex-1">
             <p class="truncate text-xs font-semibold text-[var(--text)]">{{ post.author }}</p>
             <p class="text-[11px] text-[var(--text-muted)]">{{ post.date | date:'mediumDate' }} · {{ post.readMinutes }} min read</p>

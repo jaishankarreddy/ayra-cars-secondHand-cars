@@ -1,31 +1,37 @@
-<div class="rounded-[16px] border border-[#E2E9E7] bg-white p-6 shadow-[0_8px_28px_rgba(6,47,53,0.08)] sm:p-7">
+<div class="rounded-[10px] border border-[#E2E9E7] bg-white p-5 shadow-[0_8px_28px_rgba(6,47,53,0.08)] sm:p-6">
   <!-- Header -->
   <div class="text-center sm:text-left">
     <span class="inline-flex items-center gap-1.5 rounded-full border border-[#E2E9E7] bg-[#F7FAF9] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#062F35]">
       <svg lucideShieldCheck class="h-3.5 w-3.5 text-[#15803d]"></svg>
       Secure sign-in
     </span>
-    <h1 class="mt-3 font-['Poppins',sans-serif] text-[26px] font-bold leading-tight text-[#062F35] sm:text-[28px]">
+    <h1 class="mt-2.5 font-['Poppins',sans-serif] text-[24px] font-bold leading-tight text-[#062F35] sm:text-[26px]">
       Welcome <span class="bg-gradient-to-r from-[#6B8E1F] via-[#8FBF2A] to-[#B7F23A] bg-clip-text text-transparent">back</span>
     </h1>
-    <p class="mt-1 text-[13px] leading-[1.6] text-[#5F7078]">Sign in with your mobile number to continue</p>
+    <p class="mt-1 text-[13px] leading-[1.5] text-[#5F7078]">Sign in with your mobile number to continue</p>
   </div>
 
-  <form class="mt-6 space-y-4" (submit)="onSubmit($event)">
+  <form class="mt-5 space-y-3.5" (submit)="onSubmit($event)">
     <div class="field-group">
       <label for="login-phone" class="field-label">Mobile Number</label>
-      <div class="phone-input-wrap">
-        <span class="phone-prefix">+91</span>
+      <div class="flex items-center h-11 rounded-[10px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062F35] focus-within:shadow-[0_0_0_4px_rgba(6,47,53,0.06)] transition-all overflow-hidden">
+        <span class="inline-flex items-center gap-1.5 h-full px-3 bg-white border-r border-[#E2E9E7] text-[13px] font-semibold text-[#062F35] shrink-0">
+          <svg width="18" height="12" viewBox="0 0 20 14" class="rounded-[2px] border border-black/10 shrink-0 overflow-hidden" aria-hidden="true"><rect width="20" height="4.66" fill="#FF9933"/><rect y="4.66" width="20" height="4.68" fill="white"/><rect y="9.34" width="20" height="4.66" fill="#138808"/><circle cx="10" cy="7" r="1.55" fill="none" stroke="#000080" stroke-width="0.3"/><g stroke="#000080" stroke-width="0.18"><line x1="10" y1="5.45" x2="10" y2="8.55"/><line x1="8.45" y1="7" x2="11.55" y2="7"/><line x1="8.9" y1="5.9" x2="11.1" y2="8.1"/><line x1="11.1" y1="5.9" x2="8.9" y2="8.1"/></g></svg>
+          +91
+        </span>
         <input
           id="login-phone"
           type="tel"
-          class="field-input phone-input"
-          placeholder="98445 55308"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          class="flex-1 h-full bg-transparent px-3 text-[14px] font-medium text-[#0B1720] placeholder:text-[#8A969D] focus:outline-none"
+          placeholder="98445  55308"
           autocomplete="tel"
           maxlength="10"
           [value]="phone()"
           (input)="phone.set($any($event.target).value)"
         />
+        <span class="pr-2.5 text-[#B0BEC5]"><svg lucideSmartphone class="h-4 w-4"></svg></span>
       </div>
     </div>
 
@@ -34,12 +40,12 @@
         <label for="login-password" class="field-label">Password</label>
         <a routerLink="/auth/register" class="text-xs font-semibold text-[#5F7078] hover:text-[#062F35] transition-colors">Forgot?</a>
       </div>
-      <div class="relative">
-        <svg lucideLock class="field-icon"></svg>
+      <div class="flex items-center h-11 rounded-[10px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062F35] focus-within:shadow-[0_0_0_4px_rgba(6,47,53,0.06)] transition-all overflow-hidden">
+        <span class="flex items-center justify-center h-full w-10 bg-white border-r border-[#E2E9E7] text-[#8A969D] shrink-0"><svg lucideLock class="h-4 w-4"></svg></span>
         <input
           id="login-password"
           [type]="showPassword() ? 'text' : 'password'"
-          class="field-input has-icon pr-12"
+          class="flex-1 h-full bg-transparent px-3 text-[14px] font-medium text-[#0B1720] placeholder:text-[#8A969D] focus:outline-none"
           placeholder="••••••••"
           autocomplete="current-password"
           [value]="password()"
@@ -49,7 +55,7 @@
           type="button"
           (click)="showPassword.set(!showPassword())"
           aria-label="Toggle password visibility"
-          class="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[#5F7078] transition-colors hover:bg-[#F7FAF9] hover:text-[#062F35]"
+          class="mr-1 flex h-7 w-7 items-center justify-center rounded-full text-[#8A969D] transition-colors hover:bg-[#E2E9E7] hover:text-[#062F35]"
         >
           @if (showPassword()) {
             <svg lucideEyeOff class="h-4 w-4"></svg>
@@ -61,7 +67,7 @@
     </div>
 
     @if (error()) {
-      <p class="rounded-[10px] border border-[#FF4D4F]/20 bg-[#FFF1F1] px-4 py-3 text-sm font-medium text-[#C0392B]">
+      <p class="rounded-[10px] border border-[#FF4D4F]/20 bg-[#FFF1F1] px-3.5 py-2.5 text-sm font-medium text-[#C0392B]">
         {{ error() }}
       </p>
     }
@@ -70,7 +76,7 @@
       type="submit"
       appRipple
       [disabled]="loading()"
-      class="flex w-full items-center justify-center gap-2 overflow-hidden rounded-[10px] bg-[#062F35] px-6 py-3.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(6,47,53,0.15)] transition-all duration-200 hover:bg-[#0A3F47] hover:shadow-[0_6px_18px_rgba(6,47,53,0.2)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+      class="flex w-full items-center justify-center gap-2 overflow-hidden rounded-[10px] bg-[#062F35] px-6 py-3 text-sm font-bold text-white shadow-[0_4px_14px_rgba(6,47,53,0.15)] transition-all duration-200 hover:bg-[#0A3F47] hover:shadow-[0_6px_18px_rgba(6,47,53,0.2)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
     >
       @if (loading()) {
         <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg>
@@ -81,13 +87,19 @@
       }
     </button>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 py-0.5">
       <div class="h-px flex-1 bg-[#E2E9E7]"></div>
-      <span class="text-xs font-medium text-[#5F7078]">or</span>
+      <span class="text-xs font-medium text-[#8A969D]">or</span>
       <div class="h-px flex-1 bg-[#E2E9E7]"></div>
     </div>
 
-    <p class="text-center text-sm text-[#5F7078]">
+    <button type="button" (click)="triggerGoogleOneTap()" [disabled]="googleLoading()" class="flex w-full items-center justify-center gap-2 rounded-[10px] border border-[#E2E9E7] bg-white px-6 py-2.5 text-sm font-semibold text-[#0B1720] transition-colors hover:bg-[#F7FAF9] disabled:opacity-60">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.16 7.09-10.28 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+      Continue with Google
+    </button>
+    @if (googleLoading()) { <p class="text-center text-xs text-[#5F7078]">Signing in with Google…</p> }
+
+    <p class="text-center text-sm text-[#5F7078] pt-1">
       Don't have an account?
       <a routerLink="/auth/register" class="font-semibold text-[#062F35] underline-offset-4 hover:text-[#6B8E1F] hover:underline transition-colors">
         Create one

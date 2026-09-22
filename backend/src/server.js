@@ -21,6 +21,7 @@ const Testimonial = require('./models/testimonial.model');
 const Faq = require('./models/faq.model');
 const HomepageStat = require('./models/homepage-stat.model');
 const Comparison = require('./models/comparison.model');
+const { AdminSetting, NOTIFICATION_TOGGLES, MARKETPLACE_TOGGLES } = require('./models/admin-setting.model');
 
 const app = express();
 const configuredOrigins = (process.env.CLIENT_ORIGIN || '')
@@ -145,6 +146,12 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'ayracars
 
 // --- User authentication ------------------------------------------------------
 const JWT_SECRET = process.env.JWT_SECRET || 'ayracars-dev-secret-change-me';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+let googleClient = null;
+try {
+  const { OAuth2Client } = require('google-auth-library');
+  if (GOOGLE_CLIENT_ID) googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+} catch (e) { console.warn('google-auth-library not available', e.message); }
 
 function signUserToken(user) {
   return jwt.sign(
@@ -248,6 +255,89 @@ app.get('/api/auth/me', authRequired, async (req, res, next) => {
     res.json({ user: user.toSafeJSON() });
   } catch (err) {
     next(err);
+  }
+});
+
+// PATCH /api/auth/me — update current user profile (name, email, phone, avatar)
+app.patch('/api/auth/me', authRequired, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    const { name, email, phone, avatar } = req.body || {};
+    if (name !== undefined) {
+      const n = String(name).trim();
+      if (!n) return res.status(400).json({ message: 'Name cannot be empty.' });
+      user.name = n;
+    }
+    if (email !== undefined) {
+      const e = String(email).trim().toLowerCase();
+      if (e && !/^\S+@\S+\.\S+$/.test(e)) return res.status(400).json({ message: 'Please provide a valid email address.' });
+      if (e && e !== user.email) {
+        const exists = await User.findOne({ email: e });
+        if (exists) return res.status(409).json({ message: 'An account with this email already exists.' });
+        user.email = e;
+        user.emailVerified = false;
+      }
+    }
+    if (phone !== undefined) {
+      const p = String(phone).trim().replace(/\s+/g, '');
+      if (p && !/^\d{10,15}$/.test(p)) return res.status(400).json({ message: 'Please enter a valid mobile number.' });
+      if (p && p !== user.phone) {
+        const exists = await User.findOne({ phone: p });
+        if (exists) return res.status(409).json({ message: 'An account with this mobile number already exists.' });
+        user.phone = p;
+      } else if (!p) {
+        user.phone = '';
+      }
+    }
+    if (avatar !== undefined) user.avatar = String(avatar).trim();
+    await user.save();
+    res.json({ user: user.toSafeJSON() });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/google — verify Google ID token and sign in / sign up
+app.post('/api/auth/google', async (req, res, next) => {
+  try {
+    const { idToken } = req.body || {};
+    if (!idToken) return res.status(400).json({ message: 'Google ID token is required.' });
+    if (!GOOGLE_CLIENT_ID || !googleClient) {
+      return res.status(500).json({ message: 'Google sign-in is not configured. Set GOOGLE_CLIENT_ID.' });
+    }
+    const ticket = await googleClient.verifyIdToken({ idToken, audience: GOOGLE_CLIENT_ID });
+    const payload = ticket.getPayload();
+    const googleId = payload.sub;
+    const email = (payload.email || '').toLowerCase().trim();
+    const name = payload.name || 'User';
+    const picture = payload.picture || '';
+    const emailVerified = !!payload.email_verified;
+    if (!email) return res.status(400).json({ message: 'Google account has no email.' });
+
+    let user = await User.findOne({ $or: [{ googleId }, { email }] });
+    if (!user) {
+      user = await User.create({
+        googleId,
+        email,
+        name,
+        avatar: picture,
+        emailVerified,
+        phone: '',
+        passwordHash: ''
+      });
+    } else {
+      let changed = false;
+      if (!user.googleId) { user.googleId = googleId; changed = true; }
+      if (picture && !user.avatar) { user.avatar = picture; changed = true; }
+      if (emailVerified && !user.emailVerified) { user.emailVerified = true; changed = true; }
+      if (changed) await user.save();
+    }
+    const token = signUserToken(user);
+    res.json({ token, user: user.toSafeJSON() });
+  } catch (err) {
+    console.error('Google auth failed:', err.message);
+    res.status(401).json({ message: 'Google authentication failed. Please try again.' });
   }
 });
 
@@ -930,6 +1020,86 @@ app.patch('/api/admin/sell-requests/:id', adminRequired, async (req, res, next) 
   } catch (err) {
     next(err);
   }
+});
+
+// Admin: get settings (profile + toggles + region) — ensures defaults exist
+app.get('/api/admin/settings', adminRequired, async (req, res, next) => {
+  try {
+    let setting = await AdminSetting.findOne({ adminId: req.adminId }).lean();
+    if (!setting) {
+      const admin = await Admin.findById(req.adminId).lean();
+      setting = await AdminSetting.create({
+        adminId: req.adminId,
+        profile: { name: admin?.name || '', email: admin?.email || '', phone: '' }
+      });
+      setting = setting.toObject();
+    }
+    const admin = await Admin.findById(req.adminId).lean();
+    res.json({
+      profile: setting.profile || { name: admin?.name || '', email: admin?.email || '', phone: '' },
+      notifications: setting.notifications instanceof Map ? Object.fromEntries(setting.notifications) : (setting.notifications || {}),
+      marketplace: setting.marketplace instanceof Map ? Object.fromEntries(setting.marketplace) : (setting.marketplace || {}),
+      region: setting.region || { location: 'Karnataka, India', currency: '₹ INR' },
+      admin: admin ? { name: admin.name, email: admin.email } : null
+    });
+  } catch (err) { next(err); }
+});
+
+// Admin: patch settings (notifications / marketplace / region / profile)
+app.patch('/api/admin/settings', adminRequired, async (req, res, next) => {
+  try {
+    const { profile, notifications, marketplace, region } = req.body || {};
+    let setting = await AdminSetting.findOne({ adminId: req.adminId });
+    if (!setting) {
+      setting = await AdminSetting.create({ adminId: req.adminId });
+    }
+    if (profile) {
+      if (profile.name !== undefined) setting.profile.name = String(profile.name).trim();
+      if (profile.email !== undefined) setting.profile.email = String(profile.email).trim().toLowerCase();
+      if (profile.phone !== undefined) setting.profile.phone = String(profile.phone).trim();
+      // also sync core Admin name/email
+      const admin = await Admin.findById(req.adminId);
+      if (admin) {
+        if (profile.name) admin.name = String(profile.name).trim();
+        if (profile.email) admin.email = String(profile.email).trim().toLowerCase();
+        await admin.save();
+      }
+    }
+    if (notifications && typeof notifications === 'object') {
+      for (const [k, v] of Object.entries(notifications)) setting.notifications.set(k, !!v);
+    }
+    if (marketplace && typeof marketplace === 'object') {
+      for (const [k, v] of Object.entries(marketplace)) setting.marketplace.set(k, !!v);
+    }
+    if (region) {
+      if (region.location !== undefined) setting.region.location = String(region.location);
+      if (region.currency !== undefined) setting.region.currency = String(region.currency);
+    }
+    await setting.save();
+    const updated = await AdminSetting.findOne({ adminId: req.adminId }).lean();
+    res.json({
+      profile: updated.profile,
+      notifications: Object.fromEntries(updated.notifications),
+      marketplace: Object.fromEntries(updated.marketplace),
+      region: updated.region
+    });
+  } catch (err) { next(err); }
+});
+
+// Admin: change password (requires current password)
+app.patch('/api/admin/password', adminRequired, async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+    if (!currentPassword || !newPassword) return res.status(400).json({ message: 'Current and new password are required.' });
+    if (String(newPassword).length < 6) return res.status(400).json({ message: 'New password must be at least 6 characters.' });
+    const admin = await Admin.findById(req.adminId);
+    if (!admin) return res.status(404).json({ message: 'Admin not found.' });
+    const ok = await admin.comparePassword(String(currentPassword));
+    if (!ok) return res.status(401).json({ message: 'Current password is incorrect.' });
+    admin.passwordHash = String(newPassword);
+    await admin.save();
+    res.json({ message: 'Password updated successfully.' });
+  } catch (err) { next(err); }
 });
 
 // Admin: create a vehicle (multipart/form-data; up to 10 `images` files)

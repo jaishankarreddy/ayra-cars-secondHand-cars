@@ -3,8 +3,9 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection
 } from '@angular/core';
-import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
+import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withPreloading, PreloadAllModules, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { IMAGE_CONFIG } from '@angular/common';
 
 import { routes } from './routes/app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
@@ -18,9 +19,11 @@ export const appConfig: ApplicationConfig = {
       routes,
       withComponentInputBinding(),
       withViewTransitions(),
-      withInMemoryScrolling({ anchorScrolling: 'enabled' })
+      withInMemoryScrolling({ anchorScrolling: 'enabled' }),
+      withPreloading(PreloadAllModules)
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
-    { provide: TitleStrategy, useClass: SeoTitleStrategy }
+    { provide: TitleStrategy, useClass: SeoTitleStrategy },
+    { provide: IMAGE_CONFIG, useValue: { disableImageSizeWarning: true, disableImageLazyLoadWarning: true } }
   ]
 };

@@ -257,13 +257,28 @@
   to { transform: scale(1); opacity: 0; }
 }
 
-/* ---- Toast entry ---- */
+/* ---- Toast — prominent, authentic Ayra style ---- */
 .am-toast {
-  animation: am-toast-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: am-toast-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @keyframes am-toast-in {
-  from { opacity: 0; transform: translateY(-14px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(-16px) translateX(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+}
+.am-toast-progress {
+  width: 100%;
+  animation: am-toast-progress 4.5s linear forwards;
+  transform-origin: left;
+}
+@keyframes am-toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+@media (max-width: 640px) {
+  @keyframes am-toast-in {
+    from { opacity: 0; transform: translateY(-18px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
 }
 
 /* ---- Smooth card hover (plain CSS, browser-safe) ---- */
@@ -290,7 +305,28 @@
 .reveal.is-revealed { opacity: 1; transform: translateY(0); }
 
 /* Reduced-motion: only disable the scroll-reveal choreography,
-   keep short interactive transitions so hovers still feel smooth. */
+    keep short interactive transitions so hovers still feel smooth. */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Skeleton shimmer utility — reuse am-shimmer */
+.skeleton {
+  background: linear-gradient(90deg, #e9e8e2 25%, #f3f2ed 37%, #e9e8e2 63%);
+  background-size: 200% 100%;
+  animation: am-shimmer 1.6s linear infinite;
+  border-radius: 8px;
+}
+.skeleton-dark {
+  background: linear-gradient(90deg, #1a2e33 25%, #1e3a42 37%, #1a2e33 63%);
+  background-size: 200% 100%;
+  animation: am-shimmer 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton, .skeleton-dark { animation: none; }
+}
+/* Content-visibility for below-fold sections (faster paint) */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }

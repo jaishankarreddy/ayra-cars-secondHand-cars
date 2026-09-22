@@ -41,5 +41,10 @@ export const ADMIN_ROUTES: Routes = [
     path: 'sell-requests',
     loadComponent: () =>
       import('./sell-requests/pages/sell-requests.page').then((m) => m.AdminSellRequestsPageComponent)
+  },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./settings/pages/settings.page').then((m) => m.AdminSettingsPageComponent)
   }
 ];

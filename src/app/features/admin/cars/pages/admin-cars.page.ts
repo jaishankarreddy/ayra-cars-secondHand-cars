@@ -9,7 +9,9 @@ import {
   LucideCog,
   LucideFuel,
   LucideGauge,
-  LucideLoaderCircle
+  LucideLoaderCircle,
+  LucideChevronLeft,
+  LucideChevronRight
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { CarsFilterService } from '../../../cars/services/cars-filter.service';
@@ -34,7 +36,9 @@ import { ToastService } from '../../../../services/toast.service';
     LucideCog,
     LucideFuel,
     LucideGauge,
-    LucideLoaderCircle
+    LucideLoaderCircle,
+    LucideChevronLeft,
+    LucideChevronRight
   ],
   templateUrl: './admin-cars.page.html',
   styleUrl: './admin-cars.page.scss'
@@ -50,6 +54,8 @@ export class AdminCarsPageComponent {
   }
 
   readonly search = signal('');
+  readonly page = signal(1);
+  readonly pageSize = 10;
   readonly formOpen = signal(false);
   readonly formModel = signal<AdminVehicle | null>(null);
   readonly deletingId = signal<string | null>(null);
@@ -66,6 +72,15 @@ export class AdminCarsPageComponent {
   });
 
   readonly totalCount = computed(() => this.cars().length);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize)));
+  readonly paginatedCars = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.cars().slice(start, start + this.pageSize);
+  });
+  setSearch(v: string): void { this.search.set(v); this.page.set(1); }
+  goToPage(n: number): void { if (n >= 1 && n <= this.totalPages()) this.page.set(n); }
+  nextPage(): void { if (this.page() < this.totalPages()) this.page.update((p) => p + 1); }
+  prevPage(): void { if (this.page() > 1) this.page.update((p) => p - 1); }
 
   openAdd(): void {
     this.formModel.set(null);

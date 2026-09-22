@@ -10,7 +10,8 @@ import {
   LucideMail,
   LucidePlus,
   LucideArrowUpRight,
-  LucideBadgeIndianRupee
+  LucideBadgeIndianRupee,
+  LucideCalendarDays
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { CarsFilterService } from '../../../cars/services/cars-filter.service';
@@ -35,7 +36,8 @@ import { ToastService } from '../../../../services/toast.service';
     LucideMail,
     LucidePlus,
     LucideArrowUpRight,
-    LucideBadgeIndianRupee
+    LucideBadgeIndianRupee,
+    LucideCalendarDays
   ],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
@@ -79,9 +81,12 @@ export class AdminDashboardPageComponent implements OnInit {
 
   readonly offers = signal<AdminOffer[]>([]);
   readonly contacts = signal<AdminContact[]>([]);
+  readonly dashboardSummary = signal<{ pendingTestDrives: number; newSellRequests: number } | null>(null);
 
   readonly pendingOffers = computed(() => this.offers().filter((o) => o.status === 'Pending').length);
   readonly newContacts = computed(() => this.contacts().filter((c) => c.status === 'New').length);
+  readonly pendingTestDrives = computed(() => this.dashboardSummary()?.pendingTestDrives ?? 0);
+  readonly newSellRequests = computed(() => this.dashboardSummary()?.newSellRequests ?? 0);
   readonly recentOffers = computed(() => this.offers().slice(0, 5));
   readonly latestContacts = computed(() => this.contacts().slice(0, 4));
 
@@ -93,6 +98,10 @@ export class AdminDashboardPageComponent implements OnInit {
     this.http.get<AdminContact[]>(`${API_BASE}/admin/contacts`).subscribe({
       next: (list) => this.contacts.set(list.map((c) => ({ ...c, date: this.formatDate(c.date) }))),
       error: () => this.contacts.set([])
+    });
+    this.http.get<{ pendingTestDrives: number; newSellRequests: number }>(`${API_BASE}/admin/dashboard`).subscribe({
+      next: (s) => this.dashboardSummary.set({ pendingTestDrives: s.pendingTestDrives, newSellRequests: s.newSellRequests }),
+      error: () => this.dashboardSummary.set({ pendingTestDrives: 0, newSellRequests: 0 })
     });
   }
 

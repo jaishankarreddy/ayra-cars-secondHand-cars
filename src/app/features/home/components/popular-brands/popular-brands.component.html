@@ -17,7 +17,7 @@
             <a class="brand-card group flex h-[88px] min-w-[190px] max-[700px]:min-w-[178px] items-center rounded-2xl border border-[#e6e7e1] bg-[rgba(255,255,255,0.96)] p-[13px_14px] shadow-[0_9px_20px_rgba(35,55,45,0.06)] transition-all duration-[0.25s] hover:-translate-y-[5px] hover:shadow-[0_14px_28px_rgba(35,55,45,0.13)]" [routerLink]="[brand.type === 'Bikes' ? '/bikes' : '/cars']" [queryParams]="{ brand: brand.name }">
               <span class="brand-logo-tile flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-xl border border-[#ecece7] bg-[#f6f6f2]">
                 @if (brand.logo && !failedLogos().has(brand.name)) {
-                  <img [src]="brand.logo" [alt]="brand.name" loading="lazy" class="h-[48px] w-[48px] object-contain" (error)="onLogoError(brand.name)" />
+                  <img [src]="brand.logo" [alt]="brand.name" loading="lazy" decoding="async" width="48" height="48" class="h-[48px] w-[48px] object-contain" (error)="onLogoError(brand.name)" />
                 } @else {
                   <span class="brand-mark brand-mark-fallback flex min-w-[2.5rem] items-center justify-center font-heading text-[22px] font-semibold tracking-[-0.04em]" [style.color]="brand.color" [attr.aria-label]="brand.name + ' logo'">
                     @if (isRings(brand.mark)) { <span class="rings text-[11px] tracking-[-5px] scale-x-[1.15]">&#x25C9;&#x25C9;&#x25C9;&#x25C9;</span> } @else { {{ brand.mark }} }

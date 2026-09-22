@@ -14,6 +14,7 @@ export interface AuthUser {
   phone?: string;
   role: string;
   avatar?: string;
+  emailVerified?: boolean;
 }
 
 export interface AuthResponse {
@@ -37,6 +38,30 @@ export class AuthService {
   login(phone: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${API_BASE}/auth/login`, { phone, password }).pipe(
       tap((res) => this.persist(res))
+    );
+  }
+
+  googleLogin(idToken: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${API_BASE}/auth/google`, { idToken }).pipe(
+      tap((res) => this.persist(res))
+    );
+  }
+
+  fetchProfile(): Observable<{ user: AuthUser }> {
+    return this.http.get<{ user: AuthUser }>(`${API_BASE}/auth/me`).pipe(
+      tap(({ user }) => {
+        if (typeof window !== 'undefined') window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+        this.user.set(user);
+      })
+    );
+  }
+
+  updateProfile(patch: Partial<Pick<AuthUser, 'name' | 'email' | 'phone' | 'avatar'>>): Observable<{ user: AuthUser }> {
+    return this.http.patch<{ user: AuthUser }>(`${API_BASE}/auth/me`, patch).pipe(
+      tap(({ user }) => {
+        if (typeof window !== 'undefined') window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+        this.user.set(user);
+      })
     );
   }
 

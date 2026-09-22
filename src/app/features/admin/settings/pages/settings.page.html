@@ -1,23 +1,23 @@
 <div class="space-y-6">
   <!-- Header -->
   <div>
-    <h2 class="font-heading text-2xl font-semibold text-text sm:text-2xl">Settings</h2>
-    <p class="mt-1 text-sm text-muted">Manage your profile, notifications and marketplace preferences.</p>
+    <h2 class="font-['Poppins',sans-serif] text-2xl font-semibold tracking-[-0.02em] text-[#0B1720] sm:text-[26px]">Settings</h2>
+    <p class="mt-1 text-sm text-[#5F7078]">Manage your profile, notifications and marketplace preferences — all saved to the database.</p>
   </div>
 
   <div class="grid gap-6 lg:grid-cols-[240px_1fr]">
     <!-- Tabs -->
-    <div class="flex gap-2 overflow-x-auto rounded-2xl border border-border bg-surface p-2 shadow-sm lg:flex-col lg:gap-1.5 lg:overflow-visible lg:self-start">
+    <div class="flex gap-2 overflow-x-auto rounded-[16px] border border-[#E2E9E7] bg-white p-2 shadow-sm lg:flex-col lg:gap-1.5 lg:overflow-visible lg:self-start">
       @for (item of tabs; track item.value) {
         <button
           type="button"
           (click)="setTab(item.value)"
-          class="flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-200"
-          [class.bg-primary]="tab() === item.value"
+          class="flex shrink-0 items-center gap-2.5 rounded-[14px] px-4 py-3 text-sm font-semibold transition-colors duration-200"
+          [class.bg-[#062D32]]="tab() === item.value"
           [class.text-white]="tab() === item.value"
-          [class.shadow-primary]="tab() === item.value"
-          [class.text-muted]="tab() !== item.value"
-          [class.hover:bg-surface-2]="tab() !== item.value"
+          [class.shadow-sm]="tab() === item.value"
+          [class.text-[#5F7078]]="tab() !== item.value"
+          [class.hover:bg-[#F7FAF9]]="tab() !== item.value"
         >
           <span class="flex h-4.5 w-4.5 items-center justify-center">
             @switch (item.icon) {
@@ -33,9 +33,15 @@
     </div>
 
     <!-- Panel -->
-    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8">
+    <div class="rounded-[16px] border border-[#E2E9E7] bg-white p-6 shadow-sm sm:p-8">
+      @if (loading()) {
+        <div class="flex items-center justify-center gap-2 py-12 text-sm text-[#8AA0A8]">
+          <svg lucideLoaderCircle class="h-5 w-5 animate-spin"></svg>
+          Loading settings from database…
+        </div>
+      } @else {
       @if (saved()) {
-        <div class="mb-6 flex items-center gap-3 rounded-xl border border-success/30 bg-success/5 px-4 py-3 text-sm font-semibold text-success">
+        <div class="mb-6 flex items-center gap-3 rounded-[14px] border border-[#16a34a]/30 bg-[#16a34a]/5 px-4 py-3 text-sm font-semibold text-[#16a34a]">
           <svg lucideCheckCircle2 class="h-5 w-5"></svg>
           Settings saved successfully.
         </div>
@@ -70,9 +76,9 @@
                 </div>
               </div>
 
-              <button type="submit" appRipple class="inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover active:scale-[0.99]">
-                <svg lucideSave class="h-4 w-4"></svg>
-                Save Changes
+              <button type="submit" appRipple [disabled]="saving()" class="inline-flex items-center gap-2 overflow-hidden rounded-[14px] bg-[#062D32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0a3a42] disabled:opacity-60">
+                @if (saving()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> } @else { <svg lucideSave class="h-4 w-4"></svg> }
+                {{ saving() ? 'Saving…' : 'Save Changes' }}
               </button>
             </form>
           </div>
@@ -104,9 +110,9 @@
               }
             </div>
 
-            <button type="button" appRipple (click)="save()" class="mt-6 inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover active:scale-[0.99]">
-              <svg lucideSave class="h-4 w-4"></svg>
-              Save Preferences
+            <button type="button" appRipple (click)="save()" [disabled]="saving()" class="mt-6 inline-flex items-center gap-2 overflow-hidden rounded-[14px] bg-[#062D32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0a3a42] disabled:opacity-60">
+              @if (saving()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> } @else { <svg lucideSave class="h-4 w-4"></svg> }
+              {{ saving() ? 'Saving…' : 'Save Preferences' }}
             </button>
           </div>
         }
@@ -136,9 +142,9 @@
                 <p class="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm font-medium text-danger">{{ securityError() }}</p>
               }
 
-              <button type="submit" appRipple class="inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover active:scale-[0.99]">
-                <svg lucideLock class="h-4 w-4"></svg>
-                Update Password
+              <button type="submit" appRipple [disabled]="saving()" class="inline-flex items-center gap-2 overflow-hidden rounded-[14px] bg-[#062D32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0a3a42] disabled:opacity-60">
+                @if (saving()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> } @else { <svg lucideLock class="h-4 w-4"></svg> }
+                {{ saving() ? 'Updating…' : 'Update Password' }}
               </button>
             </form>
           </div>
@@ -190,12 +196,13 @@
               }
             </div>
 
-            <button type="button" appRipple (click)="save()" class="mt-6 inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-primary transition-all duration-300 hover:bg-primary-hover active:scale-[0.99]">
-              <svg lucideSave class="h-4 w-4"></svg>
-              Save Preferences
+            <button type="button" appRipple (click)="save()" [disabled]="saving()" class="mt-6 inline-flex items-center gap-2 overflow-hidden rounded-[14px] bg-[#062D32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0a3a42] disabled:opacity-60">
+              @if (saving()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> } @else { <svg lucideSave class="h-4 w-4"></svg> }
+              {{ saving() ? 'Saving…' : 'Save Preferences' }}
             </button>
           </div>
         }
+      }
       }
     </div>
   </div>

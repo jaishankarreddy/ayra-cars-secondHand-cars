@@ -17,12 +17,12 @@ export class ToastService {
 
   private readonly timers = new Map<number, ReturnType<typeof setTimeout>>();
 
-  show(type: ToastType, title: string, message?: string): number {
+  show(type: ToastType, title: string, message?: string, duration = 4500): number {
     const id = ++toastId;
     this.toasts.update((list) => [...list, { id, type, title, message }]);
     this.timers.set(
       id,
-      setTimeout(() => this.dismiss(id), 4000)
+      setTimeout(() => this.dismiss(id), duration)
     );
     return id;
   }

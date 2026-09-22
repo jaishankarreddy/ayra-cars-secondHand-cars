@@ -21,13 +21,23 @@ export interface AdminVehicle {
   abs: 'Yes' | 'No' | '—';
   image: string;
   images?: string[];
-  status: 'Available' | 'Sold';
+  status: 'Available' | 'Reserved' | 'Sold';
+  availability: 'available' | 'reserved' | 'sold';
   rating?: number;
 }
 
-const SOLD_IDS = new Set(['c2', 'c8', 'c5', 'b7', 'b2']);
+function availabilityToStatus(av: string | undefined): AdminVehicle['status'] {
+  const normalized = String(av || 'available').toLowerCase();
+  if (normalized === 'sold') return 'Sold';
+  if (normalized === 'reserved') return 'Reserved';
+  return 'Available';
+}
 
 export function toAdminVehicle(v: Car | Bike): AdminVehicle {
+  const av = (v as unknown as { availability?: string }).availability;
+  const status = availabilityToStatus(av);
+  const availability: AdminVehicle['availability'] =
+    status === 'Sold' ? 'sold' : status === 'Reserved' ? 'reserved' : 'available';
   if ('transmission' in v) {
     const c = v as Car;
     return {
@@ -50,7 +60,8 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
       abs: '—',
       image: c.image,
       images: c.images,
-      status: SOLD_IDS.has(c.id) ? 'Sold' : 'Available',
+      status,
+      availability,
       rating: c.rating
     };
   }
@@ -75,7 +86,8 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
     abs: b.abs ? 'Yes' : 'No',
     image: b.image,
     images: b.images,
-    status: SOLD_IDS.has(b.id) ? 'Sold' : 'Available',
+    status,
+    availability,
     rating: b.rating
   };
 }

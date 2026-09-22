@@ -118,7 +118,7 @@ export const TESTIMONIALS: Testimonial[] = [
   {
     name: 'Imran Shaikh',
     role: 'Bought XUV700 · Kalaburagi',
-    quote: 'Cleanest used car I have ever bought. The warranty and after-sales support feel like buying brand new.',
+    quote: 'Cleanest used car I have ever bought. The RC transfer and transparent history feel like buying brand new.',
     rating: 4,
     color: '#7c3aed'
   },
@@ -145,7 +145,7 @@ export const FAQS: FaqItem[] = [
   {
     question: 'What is included in the price?',
     answer:
-      'The displayed price is all-inclusive with transparent pricing. It covers inspection, RTO transfer, roadworthiness and a limited warranty. There are no hidden charges or surprise fees.'
+      'The displayed price is all-inclusive with transparent pricing. It covers inspection, RTO transfer and roadworthiness. There are no hidden charges or surprise fees.'
   },
   {
     question: 'How do I sell my current car or bike?',
@@ -158,9 +158,9 @@ export const FAQS: FaqItem[] = [
       'Yes, we deliver vehicles across all 31 districts of Karnataka. Select home delivery at checkout and we will manage the safe transport for you.'
   },
   {
-    question: 'Is there a return or warranty policy?',
+    question: 'How do I get support after purchase?',
     answer:
-      'Every vehicle includes a standard warranty and buyback assurance. If you find any undisclosed issue, our support team will resolve it promptly within the warranty period.'
+      'Our support team is with you after delivery — for RC transfer, service history and any questions. Contact us in your language and we will resolve it promptly.'
   }
 ];
 

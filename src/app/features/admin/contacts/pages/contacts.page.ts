@@ -6,7 +6,12 @@ import {
   LucideMail,
   LucidePhone,
   LucideCheck,
-  LucideMailOpen
+  LucideMailOpen,
+  LucideEye,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideX,
+  LucideCalendarDays
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { AdminContact, ContactStatus } from '../../data/admin.data';
@@ -22,7 +27,12 @@ export type ContactFilter = 'all' | ContactStatus;
     LucideMail,
     LucidePhone,
     LucideCheck,
-    LucideMailOpen
+    LucideMailOpen,
+    LucideEye,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideX,
+    LucideCalendarDays
   ],
   templateUrl: './contacts.page.html',
   styleUrl: './contacts.page.scss'
@@ -33,6 +43,10 @@ export class AdminContactsPageComponent implements OnInit {
   readonly contacts = signal<AdminContact[]>([]);
   readonly search = signal('');
   readonly statusFilter = signal<ContactFilter>('all');
+  readonly page = signal(1);
+  readonly pageSize = 10;
+  readonly selectedContact = signal<AdminContact | null>(null);
+  readonly drawerOpen = signal(false);
 
   ngOnInit(): void {
     this.load();
@@ -63,12 +77,27 @@ export class AdminContactsPageComponent implements OnInit {
       return true;
     });
   });
+  readonly totalCount = computed(() => this.filteredContacts().length);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize)));
+  readonly paginatedContacts = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.filteredContacts().slice(start, start + this.pageSize);
+  });
 
   readonly filterOptions: { value: ContactFilter; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'New', label: 'New' },
     { value: 'Replied', label: 'Replied' }
   ];
+
+  setSearch(v: string): void { this.search.set(v); this.page.set(1); }
+  setFilter(v: ContactFilter): void { this.statusFilter.set(v); this.page.set(1); }
+  goToPage(n: number): void { if (n >= 1 && n <= this.totalPages()) this.page.set(n); }
+  nextPage(): void { if (this.page() < this.totalPages()) this.page.update((p) => p + 1); }
+  prevPage(): void { if (this.page() > 1) this.page.update((p) => p - 1); }
+
+  openContact(c: AdminContact): void { this.selectedContact.set(c); this.drawerOpen.set(true); }
+  closeDrawer(): void { this.drawerOpen.set(false); }
 
   markReplied(id: string): void {
     this.contacts.update((list) =>

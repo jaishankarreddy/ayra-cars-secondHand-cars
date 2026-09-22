@@ -13,7 +13,8 @@ const UserSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address']
     },
     phone: { type: String, default: '', unique: true, sparse: true },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String, default: '' },
+    googleId: { type: String, sparse: true, unique: true },
     role: { type: String, enum: ['user'], default: 'user' },
     emailVerified: { type: Boolean, default: false },
     phoneVerified: { type: Boolean, default: false },
@@ -28,13 +29,17 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre('save', async function (next) {
-  if (this.isModified('passwordHash')) {
-    this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+  if (this.isModified('passwordHash') && this.passwordHash) {
+    // avoid double-hashing if already hashed (bcrypt hashes start with $2a/$2b)
+    if (!this.passwordHash.startsWith('$2a') && !this.passwordHash.startsWith('$2b')) {
+      this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+    }
   }
   next();
 });
 
 UserSchema.methods.comparePassword = function (candidate) {
+  if (!this.passwordHash) return Promise.resolve(false);
   return bcrypt.compare(candidate, this.passwordHash);
 };
 

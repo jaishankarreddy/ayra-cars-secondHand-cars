@@ -106,7 +106,11 @@ export class AdminLayoutComponent implements OnInit {
   readonly notifyOpen = signal(false);
 
   readonly summary = signal<DashboardSummary | null>(null);
-  readonly unreadCount = signal(3);
+  readonly unreadCount = computed(() => {
+    const s = this.summary();
+    if (!s) return 0;
+    return s.pendingOffers + s.newContacts + s.pendingTestDrives + s.newSellRequests;
+  });
 
   readonly vehiclesBadge = computed(() => this.summary()?.totalVehicles ?? 0);
   readonly offersBadge = computed(() => this.summary()?.pendingOffers ?? 0);
@@ -132,10 +136,20 @@ export class AdminLayoutComponent implements OnInit {
     { path: '/admin/offers', label: 'Offers', icon: 'offers', badgeKey: 'offers' },
     { path: '/admin/contacts', label: 'Contacts', icon: 'mail', badgeKey: 'contacts' },
     { path: '/admin/test-drives', label: 'Test Drives', icon: 'calendar', badgeKey: 'testDrives' },
-    { path: '/admin/sell-requests', label: 'Sell Requests', icon: 'sell', badgeKey: 'sellRequests' }
+    { path: '/admin/sell-requests', label: 'Sell Requests', icon: 'sell', badgeKey: 'sellRequests' },
+    { path: '/admin/settings', label: 'Settings', icon: 'settings' }
   ];
 
-  readonly notifications = signal<{ id: number; title: string; detail: string }[]>([]);
+  readonly notifications = computed<{ id: number; title: string; detail: string }[]>(() => {
+    const s = this.summary();
+    if (!s) return [];
+    const list: { id: number; title: string; detail: string }[] = [];
+    if (s.pendingOffers) list.push({ id: 1, title: `${s.pendingOffers} pending offers`, detail: 'Review buyer offers waiting for response.' });
+    if (s.newContacts) list.push({ id: 2, title: `${s.newContacts} new enquiries`, detail: 'Messages from the contact page need a reply.' });
+    if (s.pendingTestDrives) list.push({ id: 3, title: `${s.pendingTestDrives} test drives pending`, detail: 'Confirm scheduled visits at the vehicle location.' });
+    if (s.newSellRequests) list.push({ id: 4, title: `${s.newSellRequests} sell requests`, detail: 'Sellers want to list via Ayra consignment.' });
+    return list;
+  });
 
   constructor() {
     this.router.events
@@ -168,14 +182,13 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   markAllRead(): void {
-    this.unreadCount.set(0);
     this.notifyOpen.set(false);
   }
 
   searchSubmit(): void {
     const kw = this.search().trim();
     if (kw) {
-      this.router.navigate(['/search'], { queryParams: { q: kw } });
+      this.router.navigate(['/admin/vehicles'], { queryParams: { q: kw } });
     }
   }
 

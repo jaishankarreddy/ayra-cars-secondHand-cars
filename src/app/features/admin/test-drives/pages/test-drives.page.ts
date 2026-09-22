@@ -6,7 +6,9 @@ import {
   LucideCheck,
   LucideX,
   LucidePhone,
-  LucideCalendarDays
+  LucideCalendarDays,
+  LucideChevronLeft,
+  LucideChevronRight
 } from '@lucide/angular';
 import { RippleDirective } from '../../../cars/directives/ripple.directive';
 import { AdminTestDrive, TestDriveStatus } from '../../data/admin.data';
@@ -22,7 +24,9 @@ export type TestDriveFilter = 'all' | TestDriveStatus;
     LucideCheck,
     LucideX,
     LucidePhone,
-    LucideCalendarDays
+    LucideCalendarDays,
+    LucideChevronLeft,
+    LucideChevronRight
   ],
   templateUrl: './test-drives.page.html',
   styleUrl: './test-drives.page.scss'
@@ -33,6 +37,8 @@ export class AdminTestDrivesPageComponent implements OnInit {
   readonly testDrives = signal<AdminTestDrive[]>([]);
   readonly search = signal('');
   readonly statusFilter = signal<TestDriveFilter>('all');
+  readonly page = signal(1);
+  readonly pageSize = 10;
 
   ngOnInit(): void {
     this.load();
@@ -73,6 +79,17 @@ export class AdminTestDrivesPageComponent implements OnInit {
     { value: 'Completed', label: 'Completed' },
     { value: 'Cancelled', label: 'Cancelled' }
   ];
+  readonly totalCount = computed(() => this.filteredTestDrives().length);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize)));
+  readonly paginatedTestDrives = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.filteredTestDrives().slice(start, start + this.pageSize);
+  });
+  setSearch(v: string): void { this.search.set(v); this.page.set(1); }
+  setFilter(v: TestDriveFilter): void { this.statusFilter.set(v); this.page.set(1); }
+  goToPage(n: number): void { if (n >= 1 && n <= this.totalPages()) this.page.set(n); }
+  nextPage(): void { if (this.page() < this.totalPages()) this.page.update((p) => p + 1); }
+  prevPage(): void { if (this.page() > 1) this.page.update((p) => p - 1); }
 
   setStatus(id: string, status: TestDriveStatus): void {
     this.testDrives.update((list) =>
