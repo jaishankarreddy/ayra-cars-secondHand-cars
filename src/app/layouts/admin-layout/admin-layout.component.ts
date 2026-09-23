@@ -23,14 +23,16 @@ import {
   LucideChevronsRight,
   LucideSearch,
   LucideCheckCheck,
-  LucideBadgeIndianRupee
+  LucideBadgeIndianRupee,
+  LucideUsers,
+  LucideImagePlus
 } from '@lucide/angular';
 import { AdminAuthService } from '../../features/admin/services/admin-auth.service';
 
 interface NavItem {
   path: string;
   label: string;
-  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'sell' | 'settings';
+  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'sell' | 'admins' | 'bulk' | 'settings';
   badgeKey?: 'vehicles' | 'offers' | 'contacts' | 'testDrives' | 'sellRequests';
 }
 
@@ -43,6 +45,8 @@ const PAGE_TITLES: Record<string, string> = {
   contacts: 'Contact Enquiries',
   'test-drives': 'Test Drives',
   'sell-requests': 'Sell Requests',
+  admins: 'Admins',
+  'bulk-upload': 'Bulk Upload',
   settings: 'Settings',
   login: 'Sign in'
 };
@@ -83,7 +87,9 @@ interface DashboardSummary {
     LucideChevronsRight,
     LucideSearch,
     LucideCheckCheck,
-    LucideBadgeIndianRupee
+    LucideBadgeIndianRupee,
+    LucideUsers,
+    LucideImagePlus
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
@@ -131,12 +137,14 @@ export class AdminLayoutComponent implements OnInit {
   readonly navItems: NavItem[] = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { path: '/admin/vehicles', label: 'Vehicles', icon: 'warehouse', badgeKey: 'vehicles' },
+    { path: '/admin/bulk-upload', label: 'Bulk Upload', icon: 'bulk' },
     { path: '/admin/cars', label: 'Cars', icon: 'car' },
     { path: '/admin/bikes', label: 'Bikes', icon: 'bike' },
     { path: '/admin/offers', label: 'Offers', icon: 'offers', badgeKey: 'offers' },
     { path: '/admin/contacts', label: 'Contacts', icon: 'mail', badgeKey: 'contacts' },
     { path: '/admin/test-drives', label: 'Test Drives', icon: 'calendar', badgeKey: 'testDrives' },
     { path: '/admin/sell-requests', label: 'Sell Requests', icon: 'sell', badgeKey: 'sellRequests' },
+    { path: '/admin/admins', label: 'Admins', icon: 'admins' },
     { path: '/admin/settings', label: 'Settings', icon: 'settings' }
   ];
 

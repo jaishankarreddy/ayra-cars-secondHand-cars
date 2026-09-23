@@ -1,0 +1,224 @@
+<div class="mb-6 inline-flex rounded-[14px] border border-[#E2E9E7] bg-white p-1">
+  <button type="button" (click)="mode.set('manual')" class="rounded-[10px] px-5 py-2 text-xs font-semibold transition-colors duration-200" [class.bg-[#062D32]]="mode() === 'manual'" [class.text-white]="mode() === 'manual'" [class.text-[#5F7078]]="mode() !== 'manual'">Manual cards</button>
+  <button type="button" (click)="mode.set('excel')" class="rounded-[10px] px-5 py-2 text-xs font-semibold transition-colors duration-200" [class.bg-[#062D32]]="mode() === 'excel'" [class.text-white]="mode() === 'excel'" [class.text-[#5F7078]]="mode() !== 'excel'">Excel import</button>
+</div>
+
+@if (mode() === 'excel') {
+  <app-excel-import />
+} @else {
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-['Poppins',sans-serif] text-2xl font-semibold tracking-[-0.02em] text-[#0B1720]">Bulk Upload</h2>
+      <p class="mt-1 text-sm text-[#5F7078]">Add up to {{ maxDrafts }} vehicles at once — up to {{ maxImages }} photos each.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="rounded-full border border-[#E2E9E7] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#5F7078]">{{ readyCount() }} ready</span>
+      <span class="status-chip status-replied">{{ doneCount() }} live</span>
+      @if (failedCount() > 0) {
+        <span class="status-chip status-rejected">{{ failedCount() }} failed</span>
+      }
+      <button type="button" (click)="addDraft()" [disabled]="drafts().length >= maxDrafts" appRipple class="inline-flex items-center gap-1.5 rounded-[12px] border border-[#E2E9E7] bg-white px-4 py-2.5 text-xs font-semibold text-[#062D32] hover:bg-[#F7FAF9] disabled:opacity-40">
+        <svg lucidePlus class="h-4 w-4"></svg>
+        Add vehicle
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  @if (uploading()) {
+    <div class="rounded-[16px] border border-[#E2E9E7] bg-white px-5 py-4 shadow-sm">
+      <div class="flex items-center gap-3">
+        <svg lucideLoaderCircle class="h-5 w-5 animate-spin text-[#062D32]"></svg>
+        <p class="text-sm font-semibold text-[#0B1720]">Uploading… {{ uploadedCount() }} of {{ drafts().length }} done</p>
+      </div>
+      <div class="mt-3 h-2 overflow-hidden rounded-full bg-[#F7FAF9]">
+        <div class="h-full rounded-full bg-[#062D32] transition-all duration-300" [style.width.%]="drafts().length ? (uploadedCount() / drafts().length) * 100 : 0"></div>
+      </div>
+      <p class="mt-2 text-xs text-[#8AA0A8]">Uploading one vehicle at a time so photos never get mixed up.</p>
+    </div>
+  }
+
+  <!-- Draft cards -->
+  @for (d of drafts(); track d.uid; let i = $index) {
+    <div class="overflow-hidden rounded-[16px] border border-[#E2E9E7] bg-white shadow-sm" [class.opacity-75]="d.status === 'done'">
+      <!-- Card header -->
+      <div class="flex flex-wrap items-center gap-3 border-b border-[#E2E9E7] bg-[#F7FAF9] px-5 py-3.5">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#062D32] text-xs font-bold text-white">{{ i + 1 }}</span>
+        <button type="button" (click)="toggleCollapse(d.uid)" class="min-w-0 flex-1 text-left">
+          <span class="block truncate font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">{{ draftTitle(d, i) }}</span>
+          <span class="block text-xs text-[#8AA0A8]">{{ d.vehicleType === 'car' ? 'Car' : 'Bike' }} · {{ d.photos.length }}/{{ maxImages }} photos {{ d.collapsed ? '· tap to expand' : '' }}</span>
+        </button>
+        @if (d.status === 'done') {
+          <span class="status-chip status-replied"><svg lucideCheck class="h-3 w-3"></svg>Live</span>
+        } @else if (d.status === 'uploading') {
+          <span class="status-chip status-pending"><svg lucideLoaderCircle class="h-3 w-3 animate-spin"></svg>Uploading</span>
+        } @else if (d.status === 'error') {
+          <span class="status-chip status-rejected">Failed</span>
+        } @else if (isValid(d)) {
+          <span class="status-chip status-confirmed">Ready</span>
+        } @else {
+          <span class="status-chip status-sold">Draft</span>
+        }
+        @if (d.status !== 'uploading' && d.status !== 'done') {
+          <button type="button" (click)="duplicateDraft(d.uid)" [disabled]="drafts().length >= maxDrafts" class="rounded-[10px] border border-[#E2E9E7] bg-white px-3 py-1.5 text-xs font-semibold text-[#5F7078] hover:text-[#0B1720] hover:bg-[#F7FAF9] disabled:opacity-40">Duplicate</button>
+          <button type="button" (click)="removeDraft(d.uid)" [disabled]="drafts().length <= 1" class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#E2E9E7] bg-white text-[#8AA0A8] hover:text-red-600 hover:bg-red-50 disabled:opacity-40">
+            <svg lucideX class="h-4 w-4"></svg>
+          </button>
+        }
+      </div>
+
+      @if (!d.collapsed) {
+        <div class="space-y-5 p-5">
+          <!-- Type toggle -->
+          <div class="inline-flex rounded-[12px] border border-[#E2E9E7] bg-[#F7FAF9] p-1">
+            <button type="button" (click)="switchType(d.uid, 'car')" class="flex items-center gap-1.5 rounded-[8px] px-4 py-1.5 text-xs font-semibold" [class.bg-[#062D32]]="d.vehicleType === 'car'" [class.text-white]="d.vehicleType === 'car'" [class.text-[#5F7078]]="d.vehicleType !== 'car'">
+              <svg lucideCar class="h-3.5 w-3.5"></svg>Car
+            </button>
+            <button type="button" (click)="switchType(d.uid, 'bike')" class="flex items-center gap-1.5 rounded-[8px] px-4 py-1.5 text-xs font-semibold" [class.bg-[#062D32]]="d.vehicleType === 'bike'" [class.text-white]="d.vehicleType === 'bike'" [class.text-[#5F7078]]="d.vehicleType !== 'bike'">
+              <svg lucideBike class="h-3.5 w-3.5"></svg>Bike
+            </button>
+          </div>
+
+          <!-- Fields -->
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Brand *</span>
+              <input type="text" [attr.list]="'brands-' + d.uid" placeholder="e.g. Honda" [value]="d.brand" (input)="patch(d.uid, { brand: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+              <datalist id="brands-{{ d.uid }}">
+                @for (b of brandsFor(d); track b) { <option [value]="b"></option> }
+              </datalist>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Model *</span>
+              <input type="text" placeholder="e.g. City" [value]="d.model" (input)="patch(d.uid, { model: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Variant</span>
+              <input type="text" placeholder="e.g. VX CVT" [value]="d.variant" (input)="patch(d.uid, { variant: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Year *</span>
+              <input type="number" placeholder="e.g. 2021" [value]="d.year" (input)="patch(d.uid, { year: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Price (₹) *</span>
+              <input type="number" placeholder="e.g. 750000" [value]="d.price" (input)="patch(d.uid, { price: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Fuel</span>
+              <select [value]="d.fuel" (change)="patch(d.uid, { fuel: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]">
+                @for (f of fuels; track f) { <option [value]="f">{{ f }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Transmission</span>
+              <select [value]="d.transmission" (change)="patch(d.uid, { transmission: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]">
+                @for (t of transmissions; track t) { <option [value]="t">{{ t }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">{{ d.vehicleType === 'car' ? 'Body type' : 'Bike type' }}</span>
+              <select [value]="d.bodyType" (change)="patch(d.uid, { bodyType: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]">
+                <option value="">Select</option>
+                @for (b of bodyTypesFor(d); track b) { <option [value]="b">{{ b }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Kilometers</span>
+              <input type="number" placeholder="e.g. 42000" [value]="d.kilometers" (input)="patch(d.uid, { kilometers: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Owners</span>
+              <input type="number" min="1" [value]="d.owners" (input)="patch(d.uid, { owners: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Color</span>
+              <input type="text" [value]="d.color" (input)="patch(d.uid, { color: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">District</span>
+              <select [value]="d.district" (change)="patch(d.uid, { district: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]">
+                @for (dist of districts; track dist) { <option [value]="dist">{{ dist }}</option> }
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Mileage (km/l)</span>
+              <input type="number" [value]="d.mileage" (input)="patch(d.uid, { mileage: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Engine CC</span>
+              <input type="number" [value]="d.engineCC" (input)="patch(d.uid, { engineCC: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]" />
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Registration</span>
+              <input type="text" placeholder="KA-05-AB-1234" [value]="d.registration" (input)="patch(d.uid, { registration: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+            </label>
+            <label class="flex items-end gap-2 pb-1">
+              <input type="checkbox" [checked]="d.abs" (change)="patch(d.uid, { abs: $any($event.target).checked })" class="h-5 w-5 accent-[#062D32]" />
+              <span class="text-xs font-semibold text-[#0B1720]">ABS</span>
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-xs font-semibold text-[#0B1720]">Description</span>
+            <textarea rows="2" placeholder="Condition, service history, extras…" [value]="d.description" (input)="patch(d.uid, { description: $any($event.target).value })" class="mt-1.5 w-full resize-y rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]"></textarea>
+          </label>
+
+          <!-- Photos -->
+          <div>
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-semibold text-[#0B1720]">Photos <span class="font-normal text-[#8AA0A8]">{{ d.photos.length }}/{{ maxImages }} · auto-compressed</span></p>
+              @if (d.compressing > 0) {
+                <p class="flex items-center gap-1.5 text-xs font-semibold text-[#5F7078]"><svg lucideLoaderCircle class="h-3.5 w-3.5 animate-spin"></svg>Processing {{ d.compressing }}…</p>
+              }
+            </div>
+            <div class="mt-2 flex flex-wrap gap-2">
+              @for (p of d.photos; track p.preview; let pi = $index) {
+                <div class="relative h-20 w-20 overflow-hidden rounded-[12px] border border-[#E2E9E7]">
+                  <img [src]="p.preview" alt="Vehicle photo {{ pi + 1 }}" class="h-full w-full object-cover" />
+                  @if (pi === 0) {
+                    <span class="absolute bottom-1 left-1 rounded-full bg-[#062D32] px-1.5 py-0.5 text-[9px] font-bold text-white">COVER</span>
+                  }
+                  <button type="button" (click)="removePhoto(d.uid, pi)" class="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white hover:bg-red-600">
+                    <svg lucideX class="h-3 w-3"></svg>
+                  </button>
+                </div>
+              }
+              @if (d.photos.length + d.compressing < maxImages && d.status !== 'done') {
+                <label class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed border-[#8AA0A8] bg-[#F7FAF9] text-[#5F7078] hover:border-[#062D32] hover:text-[#062D32]">
+                  <svg lucideImagePlus class="h-5 w-5"></svg>
+                  <span class="text-[10px] font-semibold">Add</span>
+                  <input type="file" accept="image/*" multiple class="hidden" (change)="onPhotosPicked(d.uid, $event)" />
+                </label>
+              }
+            </div>
+          </div>
+
+          @if (d.error) {
+            <p class="rounded-[12px] bg-red-50 px-3.5 py-2.5 text-xs font-semibold text-red-600">{{ d.error }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Footer actions -->
+  <div class="sticky bottom-4 flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-[#E2E9E7] bg-white/95 px-5 py-4 shadow-lg backdrop-blur">
+    <p class="text-xs font-medium text-[#5F7078]">{{ drafts().length }} vehicle(s) · {{ readyCount() }} ready · {{ doneCount() }} live</p>
+    <div class="flex flex-wrap items-center gap-2">
+      @if (failedCount() > 0 && !uploading()) {
+        <button type="button" (click)="retryFailed()" appRipple class="rounded-[12px] border border-[#E2E9E7] bg-white px-4 py-2.5 text-xs font-semibold text-[#0B1720] hover:bg-[#F7FAF9]">Retry {{ failedCount() }} failed</button>
+      }
+      @if (doneCount() > 0 && !uploading()) {
+        <button type="button" (click)="clearDone()" class="rounded-[12px] border border-[#E2E9E7] bg-white px-4 py-2.5 text-xs font-semibold text-[#5F7078] hover:bg-[#F7FAF9]">Clear uploaded</button>
+      }
+      <button type="button" (click)="uploadAll()" [disabled]="uploading() || !readyCount()" appRipple class="inline-flex items-center gap-1.5 rounded-[12px] bg-[#062D32] px-5 py-2.5 text-xs font-semibold text-white hover:bg-[#0a3a42] disabled:opacity-40">
+        @if (uploading()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> Uploading… }
+        @else { <svg lucideCheck class="h-4 w-4"></svg> Upload all }
+      </button>
+    </div>
+  </div>
+</div>
+}

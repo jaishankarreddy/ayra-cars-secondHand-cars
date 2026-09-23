@@ -487,7 +487,17 @@ app.post('/api/admin/login', async (req, res, next) => {
       { expiresIn: '12h' }
     );
 
-    res.json({ token, admin: admin.toSafeJSON() });
+    res.json({
+      token,
+      admin: {
+        id: String(admin._id),
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        isActive: admin.isActive,
+        lastLoginAt: admin.lastLoginAt
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -1099,6 +1109,115 @@ app.patch('/api/admin/password', adminRequired, async (req, res, next) => {
     admin.passwordHash = String(newPassword);
     await admin.save();
     res.json({ message: 'Password updated successfully.' });
+  } catch (err) { next(err); }
+});
+
+// --- Admin management (all admins have equal permissions) ---------------------
+function adminToJSON(a) {
+  return {
+    id: String(a._id),
+    name: a.name,
+    email: a.email,
+    role: a.role,
+    isActive: a.isActive,
+    lastLoginAt: a.lastLoginAt,
+    createdAt: a.createdAt
+  };
+}
+
+// Admin: list all admins
+app.get('/api/admin/admins', adminRequired, async (_req, res, next) => {
+  try {
+    const list = await Admin.find().sort({ createdAt: -1 }).lean();
+    res.json(list.map((a) => ({
+      id: String(a._id),
+      name: a.name,
+      email: a.email,
+      role: a.role,
+      isActive: a.isActive,
+      lastLoginAt: a.lastLoginAt,
+      createdAt: a.createdAt
+    })));
+  } catch (err) { next(err); }
+});
+
+// Admin: create a new admin (equal permissions — always role 'admin')
+app.post('/api/admin/admins', adminRequired, async (req, res, next) => {
+  try {
+    const { name, email, password, isActive } = req.body || {};
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email and password are required.' });
+    }
+    const cleanName = String(name).trim();
+    const cleanEmail = String(email).toLowerCase().trim();
+    if (!cleanName) return res.status(400).json({ message: 'Name cannot be empty.' });
+    if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) return res.status(400).json({ message: 'Please provide a valid email address.' });
+    if (String(password).length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters.' });
+    const existing = await Admin.findOne({ email: cleanEmail });
+    if (existing) return res.status(409).json({ message: 'An admin with this email already exists.' });
+    const created = await Admin.create({
+      name: cleanName,
+      email: cleanEmail,
+      passwordHash: String(password),
+      role: 'admin',
+      isActive: isActive === undefined ? true : !!isActive
+    });
+    res.status(201).json(adminToJSON(created));
+  } catch (err) { next(err); }
+});
+
+// Admin: update an admin (name / email / active / password)
+app.patch('/api/admin/admins/:id', adminRequired, async (req, res, next) => {
+  try {
+    const { name, email, isActive, password } = req.body || {};
+    const target = await Admin.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: 'Admin not found.' });
+    const isSelf = String(target._id) === String(req.adminId);
+    if (name !== undefined) {
+      const n = String(name).trim();
+      if (!n) return res.status(400).json({ message: 'Name cannot be empty.' });
+      target.name = n;
+    }
+    if (email !== undefined) {
+      const e = String(email).toLowerCase().trim();
+      if (!/^\S+@\S+\.\S+$/.test(e)) return res.status(400).json({ message: 'Please provide a valid email address.' });
+      if (e !== target.email) {
+        const exists = await Admin.findOne({ email: e });
+        if (exists) return res.status(409).json({ message: 'An admin with this email already exists.' });
+        target.email = e;
+      }
+    }
+    if (isActive !== undefined) {
+      if (isSelf && !isActive) {
+        return res.status(400).json({ message: 'You cannot deactivate your own account.' });
+      }
+      target.isActive = !!isActive;
+    }
+    if (password !== undefined && password !== null && String(password) !== '') {
+      if (String(password).length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters.' });
+      target.passwordHash = String(password);
+    }
+    // Equal permissions — role stays 'admin' for everyone.
+    target.role = 'admin';
+    await target.save();
+    res.json(adminToJSON(target));
+  } catch (err) { next(err); }
+});
+
+// Admin: remove an admin
+app.delete('/api/admin/admins/:id', adminRequired, async (req, res, next) => {
+  try {
+    const target = await Admin.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: 'Admin not found.' });
+    if (String(target._id) === String(req.adminId)) {
+      return res.status(400).json({ message: 'You cannot remove your own account.' });
+    }
+    const activeCount = await Admin.countDocuments({ isActive: true });
+    if (target.isActive && activeCount <= 1) {
+      return res.status(400).json({ message: 'Cannot remove the last active admin.' });
+    }
+    await target.deleteOne();
+    res.json({ message: 'Admin removed.', id: req.params.id });
   } catch (err) { next(err); }
 });
 

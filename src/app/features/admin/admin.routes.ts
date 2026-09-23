@@ -13,6 +13,11 @@ export const ADMIN_ROUTES: Routes = [
       import('./vehicles/pages/vehicles.page').then((m) => m.AdminVehiclesPageComponent)
   },
   {
+    path: 'bulk-upload',
+    loadComponent: () =>
+      import('./bulk-upload/pages/bulk-upload.page').then((m) => m.AdminBulkUploadPageComponent)
+  },
+  {
     path: 'cars',
     loadComponent: () =>
       import('./cars/pages/admin-cars.page').then((m) => m.AdminCarsPageComponent)
@@ -41,6 +46,11 @@ export const ADMIN_ROUTES: Routes = [
     path: 'sell-requests',
     loadComponent: () =>
       import('./sell-requests/pages/sell-requests.page').then((m) => m.AdminSellRequestsPageComponent)
+  },
+  {
+    path: 'admins',
+    loadComponent: () =>
+      import('./admins/pages/admins.page').then((m) => m.AdminAdminsPageComponent)
   },
   {
     path: 'settings',

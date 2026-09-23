@@ -53,6 +53,16 @@ export interface BrandStat {
 
 export type SellRequestStatus = 'New' | 'Contacted' | 'Closed';
 
+export interface AdminManagedUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  lastLoginAt: string | null;
+  createdAt: string;
+}
+
 export interface AdminSellRequest {
   id: string;
   vehicleType: 'car' | 'bike';

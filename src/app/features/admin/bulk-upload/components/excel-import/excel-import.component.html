@@ -1,0 +1,136 @@
+<div class="space-y-6">
+  <!-- Steps -->
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div class="rounded-[16px] border border-[#E2E9E7] bg-white p-4">
+      <p class="flex items-center gap-1.5 text-xs font-bold tracking-[0.08em] text-[#8AA0A8]"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#062D32] text-[10px] font-bold text-white">1</span>EXCEL FILE</p>
+      <p class="mt-2 text-[13px] leading-snug text-[#5F7078]">Use the template — one vehicle per row, brands auto-matched.</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" (click)="downloadTemplate()" appRipple class="inline-flex items-center gap-1.5 rounded-[12px] border border-[#E2E9E7] bg-white px-3.5 py-2 text-xs font-semibold text-[#062D32] hover:bg-[#F7FAF9]">
+          <svg lucideDownload class="h-4 w-4"></svg>Template
+        </button>
+        <label class="inline-flex cursor-pointer items-center gap-1.5 rounded-[12px] bg-[#062D32] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#0a3a42]">
+          <svg lucideFileText class="h-4 w-4"></svg>
+          {{ fileName() || 'Choose Excel' }}
+          <input type="file" accept=".xlsx,.xls,.csv" class="hidden" (change)="onExcelPicked($event)" />
+        </label>
+      </div>
+    </div>
+    <div class="rounded-[16px] border border-[#E2E9E7] bg-white p-4">
+      <p class="flex items-center gap-1.5 text-xs font-bold tracking-[0.08em] text-[#8AA0A8]"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#062D32] text-[10px] font-bold text-white">2</span>PHOTOS (ZIP)</p>
+      <p class="mt-2 text-[13px] leading-snug text-[#5F7078]">Name photos <span class="font-semibold text-[#0B1720]">V1_front.jpg, V1_side.jpg…</span> matching the Code column. Max 10 per vehicle.</p>
+      <label class="mt-3 inline-flex cursor-pointer items-center gap-1.5 rounded-[12px] border border-dashed border-[#8AA0A8] bg-[#F7FAF9] px-3.5 py-2 text-xs font-semibold text-[#5F7078] hover:border-[#062D32] hover:text-[#062D32]">
+        <svg lucideImagePlus class="h-4 w-4"></svg>
+        {{ zipName() || 'Choose ZIP (optional)' }}
+        <input type="file" accept=".zip" class="hidden" [disabled]="!rows().length" (change)="onZipPicked($event)" />
+      </label>
+    </div>
+    <div class="rounded-[16px] border border-[#E2E9E7] bg-white p-4">
+      <p class="flex items-center gap-1.5 text-xs font-bold tracking-[0.08em] text-[#8AA0A8]"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#062D32] text-[10px] font-bold text-white">3</span>REVIEW & IMPORT</p>
+      <p class="mt-2 text-[13px] leading-snug text-[#5F7078]">{{ validCount() }} ready · {{ errorCount() }} need fixes · {{ doneCount() }} live</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" (click)="importAll()" [disabled]="importing() || !validCount()" appRipple class="inline-flex items-center gap-1.5 rounded-[12px] bg-[#062D32] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#0a3a42] disabled:opacity-40">
+          @if (importing()) { <svg lucideLoaderCircle class="h-4 w-4 animate-spin"></svg> Importing {{ importedCount() }}… }
+          @else { <svg lucideUpload class="h-4 w-4"></svg> Import {{ validCount() }} }
+        </button>
+        @if (rows().length && !importing()) {
+          <button type="button" (click)="clearAll()" class="rounded-[12px] border border-[#E2E9E7] bg-white px-3.5 py-2 text-xs font-semibold text-[#5F7078] hover:bg-[#F7FAF9]">Clear</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (parsing()) {
+    <div class="flex items-center gap-3 rounded-[16px] border border-[#E2E9E7] bg-white px-5 py-4">
+      <svg lucideLoaderCircle class="h-5 w-5 animate-spin text-[#062D32]"></svg>
+      <p class="text-sm font-semibold text-[#0B1720]">Reading file…</p>
+    </div>
+  }
+
+  <!-- Review table -->
+  @if (rows().length) {
+    <div class="overflow-x-auto rounded-[16px] border border-[#E2E9E7] bg-white shadow-sm">
+      <table class="w-full min-w-[880px] text-left text-sm">
+        <thead>
+          <tr class="border-b border-[#E2E9E7] bg-[#F7FAF9] text-[11px] uppercase tracking-[0.12em] text-[#8AA0A8]">
+            <th class="px-5 py-4 font-semibold">Code</th>
+            <th class="px-4 py-4 font-semibold">Vehicle</th>
+            <th class="px-4 py-4 font-semibold">Brand</th>
+            <th class="px-4 py-4 font-semibold">Price</th>
+            <th class="px-4 py-4 font-semibold">Photos</th>
+            <th class="px-4 py-4 font-semibold">Status</th>
+            <th class="px-4 py-4 text-right font-semibold">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#E2E9E7]">
+          @for (r of rows(); track r.uid) {
+            <tr class="transition-colors hover:bg-[#F7FAF9]">
+              <td class="px-5 py-3.5 font-mono text-xs font-bold text-[#062D32]">{{ r.code }}</td>
+              <td class="px-4 py-3.5">
+                <p class="font-semibold text-[#0B1720]">{{ r.brand }} {{ r.model }} {{ r.variant }}</p>
+                <p class="text-xs text-[#5F7078]">{{ r.vehicleType === 'car' ? 'Car' : 'Bike' }} · {{ r.year || '—' }} · {{ r.district }}</p>
+                @if (r.warnings.length) {
+                  <p class="mt-1 max-w-64 text-[11px] leading-snug text-amber-600">{{ r.warnings[0] }}{{ r.warnings.length > 1 ? ' (+' + (r.warnings.length - 1) + ' more)' : '' }}</p>
+                }
+              </td>
+              <td class="px-4 py-3.5">
+                @if (r.brandNew || !r.brand) {
+                  <input type="text" placeholder="Fix brand" [value]="r.brand" (input)="setBrand(r.uid, $any($event.target).value)" class="w-32 rounded-[10px] border border-amber-400 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-[#0B1720] outline-none focus:border-[#062D32]" />
+                } @else {
+                  <span class="inline-flex items-center gap-1 font-semibold text-[#0B1720]">
+                    {{ r.brand }}
+                    @if (r.brandAuto) { <span class="rounded-full bg-[#B7F23A]/30 px-1.5 py-0.5 text-[9px] font-bold text-[#4a6b12]">AUTO</span> }
+                  </span>
+                }
+              </td>
+              <td class="px-4 py-3.5 font-semibold text-[#062D32]">₹{{ r.price || '—' }}</td>
+              <td class="px-4 py-3.5">
+                @if (r.photos.length) {
+                  <span class="flex items-center gap-1 text-xs font-semibold text-[#0B1720]">
+                    <svg lucideImagePlus class="h-3.5 w-3.5 text-[#8AA0A8]"></svg>{{ r.photos.length }}
+                  </span>
+                  <span class="mt-1 flex gap-1">
+                    @for (p of r.photos.slice(0, 3); track p.preview) {
+                      <img [src]="p.preview" alt="" class="h-8 w-8 rounded-lg border border-[#E2E9E7] object-cover" />
+                    }
+                    @if (r.photos.length > 3) {
+                      <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7FAF9] text-[10px] font-bold text-[#5F7078]">+{{ r.photos.length - 3 }}</span>
+                    }
+                  </span>
+                } @else {
+                  <span class="text-xs text-[#8AA0A8]">No photos</span>
+                }
+              </td>
+              <td class="px-4 py-3.5">
+                @if (r.status === 'done') {
+                  <span class="status-chip status-replied"><svg lucideCheck class="h-3 w-3"></svg>Live</span>
+                } @else if (r.status === 'uploading') {
+                  <span class="status-chip status-pending"><svg lucideLoaderCircle class="h-3 w-3 animate-spin"></svg>Uploading</span>
+                } @else if (r.status === 'error') {
+                  <span class="status-chip status-rejected">Failed</span>
+                  <p class="mt-1 max-w-48 text-[11px] text-red-600">{{ r.error }}</p>
+                } @else if (r.issues.length) {
+                  <span class="status-chip status-rejected">Needs fix</span>
+                  <p class="mt-1 max-w-48 text-[11px] text-red-600">{{ r.issues[0] }}{{ r.issues.length > 1 ? ' (+' + (r.issues.length - 1) + ' more)' : '' }}</p>
+                } @else {
+                  <span class="status-chip status-confirmed">Ready</span>
+                }
+              </td>
+              <td class="px-4 py-3.5 text-right">
+                @if (r.status !== 'uploading' && r.status !== 'done') {
+                  <button type="button" (click)="removeRow(r.uid)" class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#E2E9E7] bg-white text-[#8AA0A8] hover:text-red-600 hover:bg-red-50">
+                    <svg lucideX class="h-4 w-4"></svg>
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else if (!parsing()) {
+    <div class="rounded-[16px] border border-dashed border-[#8AA0A8] bg-white px-5 py-14 text-center">
+      <p class="font-['Poppins',sans-serif] text-lg font-semibold text-[#0B1720]">No Excel loaded yet</p>
+      <p class="mx-auto mt-1 max-w-md text-sm text-[#8AA0A8]">Download the template, fill one vehicle per row, then choose the file above. Brands, fuel, transmission and districts are matched automatically.</p>
+    </div>
+  }
+</div>
