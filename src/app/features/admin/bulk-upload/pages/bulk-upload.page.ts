@@ -136,13 +136,15 @@ export class AdminBulkUploadPageComponent {
   readonly readyCount = computed(() => this.drafts().filter((d) => this.isValid(d)).length);
 
   constructor() {
-    this.service.fetchFacets('car').subscribe({
-      next: (res) => this.carBrands.set(res.brands.map((b) => b.charAt(0).toUpperCase() + b.slice(1)).sort()),
-      error: () => this.carBrands.set([])
-    });
-    this.service.fetchFacets('bike').subscribe({
-      next: (res) => this.bikeBrands.set(res.brands.map((b) => b.charAt(0).toUpperCase() + b.slice(1)).sort()),
-      error: () => this.bikeBrands.set([])
+    this.service.listBrands().subscribe({
+      next: (res) => {
+        this.carBrands.set(res.filter((b) => b.type === 'car' || b.type === 'both').map((b) => b.name).sort());
+        this.bikeBrands.set(res.filter((b) => b.type === 'bike' || b.type === 'both').map((b) => b.name).sort());
+      },
+      error: () => {
+        this.carBrands.set([]);
+        this.bikeBrands.set([]);
+      }
     });
   }
 

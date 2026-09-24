@@ -25,14 +25,15 @@ import {
   LucideCheckCheck,
   LucideBadgeIndianRupee,
   LucideUsers,
-  LucideImagePlus
+  LucideImagePlus,
+  LucideTags
 } from '@lucide/angular';
 import { AdminAuthService } from '../../features/admin/services/admin-auth.service';
 
 interface NavItem {
   path: string;
   label: string;
-  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'sell' | 'admins' | 'bulk' | 'settings';
+  icon: 'dashboard' | 'warehouse' | 'car' | 'bike' | 'offers' | 'mail' | 'calendar' | 'sell' | 'admins' | 'bulk' | 'brands' | 'settings';
   badgeKey?: 'vehicles' | 'offers' | 'contacts' | 'testDrives' | 'sellRequests';
 }
 
@@ -46,6 +47,7 @@ const PAGE_TITLES: Record<string, string> = {
   'test-drives': 'Test Drives',
   'sell-requests': 'Sell Requests',
   admins: 'Admins',
+  brands: 'Brands',
   'bulk-upload': 'Bulk Upload',
   settings: 'Settings',
   login: 'Sign in'
@@ -89,7 +91,8 @@ interface DashboardSummary {
     LucideCheckCheck,
     LucideBadgeIndianRupee,
     LucideUsers,
-    LucideImagePlus
+    LucideImagePlus,
+    LucideTags
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
@@ -137,6 +140,7 @@ export class AdminLayoutComponent implements OnInit {
   readonly navItems: NavItem[] = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { path: '/admin/vehicles', label: 'Vehicles', icon: 'warehouse', badgeKey: 'vehicles' },
+    { path: '/admin/brands', label: 'Brands', icon: 'brands' },
     { path: '/admin/bulk-upload', label: 'Bulk Upload', icon: 'bulk' },
     { path: '/admin/cars', label: 'Cars', icon: 'car' },
     { path: '/admin/bikes', label: 'Bikes', icon: 'bike' },

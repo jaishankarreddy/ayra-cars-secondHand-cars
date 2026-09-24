@@ -13,6 +13,11 @@ export const ADMIN_ROUTES: Routes = [
       import('./vehicles/pages/vehicles.page').then((m) => m.AdminVehiclesPageComponent)
   },
   {
+    path: 'brands',
+    loadComponent: () =>
+      import('./brands/pages/brands.page').then((m) => m.AdminBrandsPageComponent)
+  },
+  {
     path: 'bulk-upload',
     loadComponent: () =>
       import('./bulk-upload/pages/bulk-upload.page').then((m) => m.AdminBulkUploadPageComponent)

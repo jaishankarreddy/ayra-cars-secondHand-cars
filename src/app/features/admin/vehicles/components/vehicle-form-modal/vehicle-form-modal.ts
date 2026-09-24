@@ -144,8 +144,10 @@ export class VehicleFormModalComponent implements OnInit {
   }
 
   loadBrands(type: 'car' | 'bike'): void {
-    this.service.fetchFacets(type).subscribe({
-      next: (res) => this.brandList.set(res.brands.map((b) => b.charAt(0).toUpperCase() + b.slice(1)).sort()),
+    this.service.listBrands().subscribe({
+      next: (res) => this.brandList.set(
+        res.filter((b) => b.type === type || b.type === 'both').map((b) => b.name).sort()
+      ),
       error: () => this.brandList.set([])
     });
   }

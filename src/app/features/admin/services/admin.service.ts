@@ -44,7 +44,20 @@ export interface ApiVehicle {
   [key: string]: unknown;
 }
 
+export interface AdminBrand {
+  id: string;
+  name: string;
+  code: string;
+  color: string;
+  logo: string;
+  type: 'car' | 'bike' | 'both';
+  vehicleCount: number;
+  createdAt: string;
+}
+
 const API = `${API_BASE}/admin/vehicles`;
+const BRANDS_API = `${API_BASE}/admin/brands`;
+const PUBLIC_BRANDS_API = `${API_BASE}/brands`;
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -104,6 +117,28 @@ export class AdminService {
 
   fetchFacets(type: 'car' | 'bike'): Observable<{ brands: string[] }> {
     return this.http.get<{ brands: string[] }>(`${API_BASE}/facets?type=${type}`);
+  }
+
+  /** Brand master (admin-managed) — feeds vehicle dropdowns. */
+  listBrands(): Observable<AdminBrand[]> {
+    return this.http.get<AdminBrand[]>(BRANDS_API);
+  }
+
+  createBrand(payload: { name: string; type: string; code?: string; color?: string; logo?: string }): Observable<AdminBrand> {
+    return this.http.post<AdminBrand>(BRANDS_API, payload);
+  }
+
+  updateBrand(id: string, payload: { name?: string; type?: string; code?: string; color?: string; logo?: string }): Observable<AdminBrand> {
+    return this.http.patch<AdminBrand>(`${BRANDS_API}/${id}`, payload);
+  }
+
+  removeBrand(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${BRANDS_API}/${id}`);
+  }
+
+  /** Public brand master (no auth) — for Excel matcher etc. */
+  publicBrands(): Observable<{ name: string; type: string }[]> {
+    return this.http.get<{ name: string; type: string }[]>(PUBLIC_BRANDS_API);
   }
 }
 

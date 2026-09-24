@@ -1,0 +1,154 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-['Poppins',sans-serif] text-2xl font-semibold tracking-[-0.02em] text-[#0B1720]">Brands</h2>
+      <p class="mt-1 text-sm text-[#5F7078]">These names feed every vehicle dropdown and listing filter.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="rounded-full border border-[#E2E9E7] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#5F7078]">{{ counts().total }} total</span>
+      <span class="status-chip status-confirmed">{{ counts().car }} cars</span>
+      <span class="status-chip status-new">{{ counts().bike }} bikes</span>
+      <button type="button" (click)="openAdd()" appRipple class="inline-flex items-center gap-1.5 rounded-[12px] bg-[#062D32] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#0a3a42]">
+        <svg lucidePlus class="h-4 w-4"></svg>
+        Add brand
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="inline-flex flex-wrap rounded-[14px] border border-[#E2E9E7] bg-white p-1">
+      @for (opt of filterOptions; track opt.value) {
+        <button
+          type="button"
+          (click)="setFilter(opt.value)"
+          class="rounded-[10px] px-4 py-2 text-xs font-semibold transition-colors duration-200"
+          [class.bg-[#062D32]]="typeFilter() === opt.value"
+          [class.text-white]="typeFilter() === opt.value"
+          [class.text-[#5F7078]]="typeFilter() !== opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      }
+    </div>
+
+    <div class="relative w-full sm:w-72">
+      <svg lucideSearch class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8AA0A8]"></svg>
+      <input
+        type="text"
+        placeholder="Search brands…"
+        [value]="search()"
+        (input)="setSearch($any($event.target).value)"
+        class="w-full rounded-[14px] border border-[#E2E9E7] bg-white py-2.5 pl-10 pr-4 text-sm font-medium text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-[16px] border border-[#E2E9E7] bg-white shadow-sm">
+    <table class="w-full min-w-[560px] text-left text-sm">
+      <thead>
+        <tr class="border-b border-[#E2E9E7] bg-[#F7FAF9] text-[11px] uppercase tracking-[0.12em] text-[#8AA0A8]">
+          <th class="px-5 py-4 font-semibold">Brand name</th>
+          <th class="px-4 py-4 font-semibold">Type</th>
+          <th class="px-4 py-4 font-semibold">Vehicles</th>
+          <th class="px-4 py-4 text-right font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[#E2E9E7]">
+        @for (b of paginatedBrands(); track b.id) {
+          <tr class="transition-colors hover:bg-[#F7FAF9]">
+            <td class="px-5 py-3.5 font-semibold text-[#0B1720]">{{ b.name }}</td>
+            <td class="px-4 py-3.5">
+              <span class="status-chip" [class.status-confirmed]="b.type !== 'bike'" [class.status-new]="b.type === 'bike'">{{ typeLabel(b) }}</span>
+            </td>
+            <td class="px-4 py-3.5 text-[#5F7078]">{{ b.vehicleCount }}</td>
+            <td class="px-4 py-3.5">
+              <div class="flex items-center justify-end gap-1.5">
+                <button type="button" (click)="openEdit(b)" appRipple class="rounded-[10px] border border-[#E2E9E7] bg-white px-3 py-1.5 text-xs font-semibold text-[#062D32] hover:bg-[#F7FAF9]">Edit</button>
+                <button type="button" (click)="askDelete(b)" appRipple class="rounded-[10px] bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100">Remove</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="px-5 py-16 text-center">
+              <p class="font-['Poppins',sans-serif] text-lg font-semibold text-[#0B1720]">
+                @if (loading()) { Loading brands… } @else { No brands found }
+              </p>
+              <p class="mt-1 text-sm text-[#8AA0A8]">Add your first brand — it appears in dropdowns instantly.</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (totalPages() > 1) {
+    <div class="flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-[#E2E9E7] bg-white px-4 py-3">
+      <p class="text-xs font-medium text-[#5F7078]">Showing {{ paginatedBrands().length }} of {{ totalCount() }} · Page {{ page() }} of {{ totalPages() }}</p>
+      <div class="flex items-center gap-1.5">
+        <button type="button" (click)="prevPage()" [disabled]="page()===1" class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#E2E9E7] bg-white text-[#0B1720] hover:bg-[#F7FAF9] disabled:opacity-40"><svg lucideChevronLeft class="h-4 w-4"></svg></button>
+        @for (n of [1,2,3,4,5]; track n) { @if (n <= totalPages()) { <button type="button" (click)="goToPage(n)" class="min-w-8 rounded-[10px] px-2.5 py-1.5 text-xs font-semibold" [class.bg-[#062D32]]="page()===n" [class.text-white]="page()===n" [class.bg-white]="page()!==n" [class.border]="page()!==n" [class.border-[#E2E9E7]]="page()!==n">{{ n }}</button> } }
+        <button type="button" (click)="nextPage()" [disabled]="page()===totalPages()" class="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#E2E9E7] bg-white text-[#0B1720] hover:bg-[#F7FAF9] disabled:opacity-40"><svg lucideChevronRight class="h-4 w-4"></svg></button>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Add / Edit modal -->
+@if (modalOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-[#062D32]/40 backdrop-blur-sm" (click)="closeModal()"></div>
+    <div class="relative w-full max-w-[400px] rounded-[16px] border border-[#E2E9E7] bg-white p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold tracking-[0.12em] text-[#8AA0A8]">{{ editing() ? 'EDIT BRAND' : 'NEW BRAND' }}</p>
+          <h3 class="mt-1 font-['Poppins',sans-serif] text-lg font-semibold text-[#0B1720]">{{ editing() ? 'Edit brand' : 'Add brand' }}</h3>
+        </div>
+        <button type="button" (click)="closeModal()" class="flex h-9 w-9 items-center justify-center rounded-[12px] border border-[#E2E9E7] bg-white text-[#5F7078] hover:bg-[#F7FAF9]">
+          <svg lucideX class="h-4 w-4"></svg>
+        </button>
+      </div>
+
+      <div class="mt-5 space-y-4">
+        <div>
+          <label class="text-xs font-semibold text-[#0B1720]">Brand name *</label>
+          <input type="text" placeholder="e.g. Honda" [value]="formName()" (input)="formName.set($any($event.target).value)" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3.5 py-2.5 text-sm font-medium text-[#0B1720] outline-none placeholder:text-[#8AA0A8] focus:border-[#062D32]" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-[#0B1720]">Type</label>
+          <div class="mt-1.5 grid grid-cols-2 gap-2">
+            <button type="button" (click)="formType.set('car')" class="rounded-[12px] border px-3 py-2.5 text-xs font-semibold" [class.border-[#062D32]]="formType() === 'car'" [class.bg-[#062D32]]="formType() === 'car'" [class.text-white]="formType() === 'car'" [class.border-[#E2E9E7]]="formType() !== 'car'" [class.text-[#5F7078]]="formType() !== 'car'">Car</button>
+            <button type="button" (click)="formType.set('bike')" class="rounded-[12px] border px-3 py-2.5 text-xs font-semibold" [class.border-[#062D32]]="formType() === 'bike'" [class.bg-[#062D32]]="formType() === 'bike'" [class.text-white]="formType() === 'bike'" [class.border-[#E2E9E7]]="formType() !== 'bike'" [class.text-[#5F7078]]="formType() !== 'bike'">Bike</button>
+          </div>
+        </div>
+        @if (formError()) {
+          <p class="rounded-[12px] bg-red-50 px-3.5 py-2.5 text-xs font-semibold text-red-600">{{ formError() }}</p>
+        }
+      </div>
+
+      <div class="mt-6 flex gap-2">
+        <button type="button" (click)="closeModal()" class="flex-1 rounded-[14px] border border-[#E2E9E7] bg-white py-3 text-sm font-semibold text-[#5F7078] hover:bg-[#F7FAF9]">Cancel</button>
+        <button type="button" (click)="save()" [disabled]="saving()" class="flex-1 rounded-[14px] bg-[#062D32] py-3 text-sm font-semibold text-white hover:bg-[#0a3a42] disabled:opacity-60">{{ saving() ? 'Saving…' : (editing() ? 'Save changes' : 'Add brand') }}</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete confirm -->
+@if (deleteTarget(); as d) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-[#062D32]/40 backdrop-blur-sm" (click)="cancelDelete()"></div>
+    <div class="relative w-full max-w-[400px] rounded-[16px] border border-[#E2E9E7] bg-white p-6 text-center shadow-2xl">
+      <h3 class="font-['Poppins',sans-serif] text-lg font-semibold text-[#0B1720]">Remove brand?</h3>
+      <p class="mt-2 text-sm text-[#5F7078]"><span class="font-semibold text-[#0B1720]">{{ d.name }}</span> disappears from all dropdowns and filters. Brands with live vehicles cannot be removed.</p>
+      <div class="mt-6 flex gap-2">
+        <button type="button" (click)="cancelDelete()" class="flex-1 rounded-[14px] border border-[#E2E9E7] bg-white py-2.5 text-sm font-semibold text-[#5F7078] hover:bg-[#F7FAF9]">Keep</button>
+        <button type="button" (click)="confirmDelete()" [disabled]="deleting()" class="flex-1 rounded-[14px] bg-red-600 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60">{{ deleting() ? 'Removing…' : 'Remove' }}</button>
+      </div>
+    </div>
+  </div>
+}

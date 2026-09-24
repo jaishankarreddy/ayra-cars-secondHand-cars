@@ -1,8 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
-import { API_BASE } from '@config/api';
 import {
   LucideUpload,
   LucideDownload,
@@ -128,7 +127,6 @@ function titleCase(s: string): string {
   styleUrl: './excel-import.component.scss'
 })
 export class ExcelImportComponent {
-  private readonly http = inject(HttpClient);
   private readonly service = inject(AdminService);
   private readonly catalog = inject(CatalogService);
   private readonly toast = inject(ToastService);
@@ -147,28 +145,10 @@ export class ExcelImportComponent {
   readonly doneCount = computed(() => this.rows().filter((r) => r.status === 'done').length);
 
   constructor() {
-    this.http.get<{ name: string }[]>(`${API_BASE}/brands`).subscribe({
+    this.service.listBrands().subscribe({
       next: (list) => {
         for (const b of list ?? []) {
           if (b?.name) this.brandMap.set(norm(b.name), b.name);
-        }
-      },
-      error: () => undefined
-    });
-    this.service.fetchFacets('car').subscribe({
-      next: (res) => {
-        for (const b of res.brands ?? []) {
-          const proper = b.charAt(0).toUpperCase() + b.slice(1);
-          if (!this.brandMap.has(norm(b))) this.brandMap.set(norm(b), proper);
-        }
-      },
-      error: () => undefined
-    });
-    this.service.fetchFacets('bike').subscribe({
-      next: (res) => {
-        for (const b of res.brands ?? []) {
-          const proper = b.charAt(0).toUpperCase() + b.slice(1);
-          if (!this.brandMap.has(norm(b))) this.brandMap.set(norm(b), proper);
         }
       },
       error: () => undefined

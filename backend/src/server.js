@@ -612,7 +612,7 @@ app.get('/api/brands/directory', async (_req, res, next) => {
     const counts = await Vehicle.aggregate([
       { $group: { _id: '$brand', count: { $sum: 1 } } }
     ]);
-    const countMap = new Map(counts.map((c) => [c._id, c.count]));
+    const countMap = new Map(counts.map((c) => [String(c._id).toLowerCase(), c.count]));
     const brands = await Brand.find().sort({ name: 1 }).lean();
     const result = brands
       .map((b) => ({
@@ -621,7 +621,7 @@ app.get('/api/brands/directory', async (_req, res, next) => {
         color: b.color,
         logo: b.logo,
         type: b.type,
-        count: countMap.get(b.name) || 0
+        count: countMap.get(String(b.name).toLowerCase()) || 0
       }))
       .filter((b) => b.count > 0);
     res.json(result);
@@ -705,6 +705,26 @@ app.get('/api/facets', async (req, res, next) => {
     }
 
     const brands = rawBrands.map((b) => b.toLowerCase());
+
+    // Union with the admin-managed brand master so admin-added brands show in
+    // filters/dropdowns even before any vehicle uses them.
+    try {
+      const master = await Brand.find(
+        { type: { $in: [type, 'both'] } },
+        'name'
+      ).lean();
+      const seen = new Set(brands);
+      for (const b of master) {
+        const lower = String(b.name || '').toLowerCase().trim();
+        if (lower && !seen.has(lower)) {
+          seen.add(lower);
+          brands.push(lower);
+        }
+      }
+      brands.sort();
+    } catch {
+      // facets must never fail because of the brand master lookup
+    }
 
     res.json({
       type,
@@ -1218,6 +1238,95 @@ app.delete('/api/admin/admins/:id', adminRequired, async (req, res, next) => {
     }
     await target.deleteOne();
     res.json({ message: 'Admin removed.', id: req.params.id });
+  } catch (err) { next(err); }
+});
+
+// --- Admin: brand master (feeds admin dropdowns + listing filters) ---------------
+function brandToJSON(b) {
+  return {
+    id: String(b._id),
+    name: b.name,
+    code: b.code || '',
+    color: b.color || '#2563eb',
+    logo: b.logo || '',
+    type: b.type || 'both',
+    createdAt: b.createdAt
+  };
+}
+
+// Admin: list all brands with live vehicle counts
+app.get('/api/admin/brands', adminRequired, async (_req, res, next) => {
+  try {
+    const [brands, counts] = await Promise.all([
+      Brand.find().sort({ name: 1 }).lean(),
+      Vehicle.aggregate([{ $group: { _id: '$brand', count: { $sum: 1 } } }])
+    ]);
+    const countMap = new Map(counts.map((c) => [String(c._id).toLowerCase(), c.count]));
+    res.json(brands.map((b) => ({ ...brandToJSON(b), vehicleCount: countMap.get(String(b.name).toLowerCase()) || 0 })));
+  } catch (err) { next(err); }
+});
+
+// Admin: add a brand
+app.post('/api/admin/brands', adminRequired, async (req, res, next) => {
+  try {
+    const { name, type, code, color, logo } = req.body || {};
+    const cleanName = String(name || '').trim();
+    if (!cleanName) return res.status(400).json({ message: 'Brand name is required.' });
+    const cleanType = type === 'car' || type === 'bike' ? type : 'both';
+    const existing = await Brand.findOne({ name: new RegExp(`^${cleanName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+    if (existing) return res.status(409).json({ message: 'This brand already exists.' });
+    const created = await Brand.create({
+      name: cleanName,
+      type: cleanType,
+      code: String(code || '').trim(),
+      color: String(color || '#2563eb').trim(),
+      logo: String(logo || '').trim()
+    });
+    res.status(201).json({ ...brandToJSON(created), vehicleCount: 0 });
+  } catch (err) { next(err); }
+});
+
+// Admin: update a brand
+app.patch('/api/admin/brands/:id', adminRequired, async (req, res, next) => {
+  try {
+    const { name, type, code, color, logo } = req.body || {};
+    const target = await Brand.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: 'Brand not found.' });
+    if (name !== undefined) {
+      const cleanName = String(name).trim();
+      if (!cleanName) return res.status(400).json({ message: 'Brand name cannot be empty.' });
+      if (cleanName.toLowerCase() !== String(target.name).toLowerCase()) {
+        const exists = await Brand.findOne({ name: new RegExp(`^${cleanName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+        if (exists) return res.status(409).json({ message: 'Another brand with this name already exists.' });
+        // Keep existing vehicle listings linked — rename them too.
+        await Vehicle.updateMany(
+          { brand: new RegExp(`^${String(target.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+          { $set: { brand: cleanName } }
+        );
+        target.name = cleanName;
+      }
+    }
+    if (type !== undefined) target.type = type === 'car' || type === 'bike' ? type : 'both';
+    if (code !== undefined) target.code = String(code).trim();
+    if (color !== undefined) target.color = String(color).trim() || '#2563eb';
+    if (logo !== undefined) target.logo = String(logo).trim();
+    await target.save();
+    const count = await Vehicle.countDocuments({ brand: new RegExp(`^${String(target.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+    res.json({ ...brandToJSON(target), vehicleCount: count });
+  } catch (err) { next(err); }
+});
+
+// Admin: remove a brand (blocked while vehicles use it)
+app.delete('/api/admin/brands/:id', adminRequired, async (req, res, next) => {
+  try {
+    const target = await Brand.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: 'Brand not found.' });
+    const used = await Vehicle.countDocuments({ brand: new RegExp(`^${String(target.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+    if (used > 0) {
+      return res.status(400).json({ message: `Cannot remove — ${used} vehicle(s) use this brand. Reassign them first.` });
+    }
+    await target.deleteOne();
+    res.json({ message: 'Brand removed.', id: req.params.id });
   } catch (err) { next(err); }
 });
 
