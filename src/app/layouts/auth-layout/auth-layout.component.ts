@@ -17,13 +17,13 @@ export class AuthLayoutComponent {
     },
     {
       icon: 'handCoins',
-      title: 'Fixed fair prices',
-      detail: 'No haggling, no hidden charges.'
+      title: 'Negotiable fair prices',
+      detail: 'Talk to us, no hidden charges.'
     },
     {
       icon: 'mapPin',
-      title: 'Easy test drives',
-      detail: 'Visit our office or the vehicle.'
+      title: 'Free test drives',
+      detail: 'Office · Doorstep within 5 km.'
     },
     {
       icon: 'badgeCheck',

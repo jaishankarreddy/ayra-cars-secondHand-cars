@@ -57,6 +57,8 @@ export interface ListingVehicle {
   image: string;
   featured?: boolean;
   rating: string;
+  emiFrom?: number;
+  emiNote?: string;
 }
 
 @Component({
@@ -353,7 +355,9 @@ export class InventoryPageComponent {
       abs: v.abs,
       image: v.image || '/home_landing.png',
       featured: v.featured,
-      rating: v.rating ? v.rating.toFixed(1) : '4.5'
+      rating: v.rating ? v.rating.toFixed(1) : '4.5',
+      emiFrom: (v as unknown as { emiFrom?: number }).emiFrom || undefined,
+      emiNote: (v as unknown as { emiNote?: string }).emiNote || undefined
     };
   }
 
@@ -461,8 +465,8 @@ export class InventoryPageComponent {
   );
   readonly heroSubtitle = computed(() =>
     this.type() === 'Bike'
-      ? 'Mileage champions for city traffic — RTO-checked, inspected, ready for a scheduled test drive.'
-      : 'Family SUVs to city hatchbacks — RTO-checked, inspected, ready for a scheduled test drive.'
+      ? 'Mileage champions for city traffic — RTO-checked, inspected, ready for a free test drive.'
+      : 'Family SUVs to city hatchbacks — RTO-checked, inspected, ready for a free test drive.'
   );
 
   /** Applied-filter pills with one-tap remove — core listing UX. */

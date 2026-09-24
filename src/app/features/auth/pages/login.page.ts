@@ -13,6 +13,7 @@ import { RippleDirective } from '../../cars/directives/ripple.directive';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
+import { googleReady, promptGoogleOneTap } from '../utils/google-one-tap.util';
 
 @Component({
   selector: 'app-login-page',
@@ -83,9 +84,11 @@ export class LoginPageComponent implements AfterViewInit {
   }
 
   triggerGoogleOneTap(): void {
-    const w = window as any;
-    if (w.google?.accounts?.id) w.google.accounts.id.prompt();
-    else this.error.set('Google sign-in is not ready. Please refresh or add Client ID in environment.ts');
+    if (!googleReady()) {
+      this.error.set('Google sign-in is not ready. Please refresh or add Client ID in environment.ts');
+      return;
+    }
+    promptGoogleOneTap((message) => this.error.set(message));
   }
 
   onSubmit(event: Event): void {

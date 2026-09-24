@@ -66,7 +66,7 @@ export class ContactPageComponent {
     {
       icon: 'steering' as const,
       question: 'Can I schedule a\ntest drive?',
-      answer: 'Yes, absolutely. Contact us and we\'ll help you schedule a test drive at a convenient time.'
+      answer: 'Yes — and it is free. Visit our office for any vehicle, or book a doorstep test drive if you are within 5 km of us.'
     },
     {
       icon: 'whatsapp' as const,

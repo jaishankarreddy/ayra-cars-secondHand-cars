@@ -1,4 +1,4 @@
-﻿import { Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LucidePlus, LucideMinus } from '@lucide/angular';
 import { SectionHeadingComponent } from '../section-heading/section-heading.component';
 import { RevealDirective } from '../../directives/reveal.directive';
@@ -35,7 +35,7 @@ const FAQ_DATA: Faq[] = [
   },
   {
     question: 'How do I get support after purchase?',
-    answer: 'Our team stays with you after delivery — for RC transfer, service history and any questions. Contact us in your language and we will resolve it promptly.'
+    answer: 'Our team stays with you after delivery � for RC transfer, service history and any questions. Contact us in your language and we will resolve it promptly.'
   },
   {
     question: 'How do I contact support?',

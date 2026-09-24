@@ -5,6 +5,7 @@ import { filter } from 'rxjs';
 import {
   LucideArrowRight,
   LucideCircleUser,
+  LucideHandCoins,
   LucideHeart,
   LucideLogOut,
   LucideMenu,
@@ -25,6 +26,7 @@ import { ToastService } from '../../services/toast.service';
     RouterLink,
     LucideArrowRight,
     LucideCircleUser,
+    LucideHandCoins,
     LucideHeart,
     LucideLogOut,
     LucideMenu,
@@ -78,6 +80,7 @@ export class SiteNavbarComponent {
   readonly compareCount = () => this.compareService.count();
   readonly isLoggedIn = () => this.auth.isAuthenticated();
   readonly userName = computed(() => this.auth.user()?.name ?? '');
+  readonly userPhone = computed(() => this.auth.user()?.phone ?? '');
   readonly userInitials = computed(() =>
     this.userName()
       .split(' ')

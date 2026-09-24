@@ -68,7 +68,7 @@ export class PrivacyComponent {
       title: 'How we use your information',
       paragraphs: [],
       bullets: [
-        'Respond to enquiries and arrange test drives at our office or at the vehicle location.',
+        'Respond to enquiries and arrange test drives at our office.',
         'Verify vehicle records such as RC, insurance and challan history through RTO and verification partners.',
         'Share sell requests with our team and connect genuine buyers.',
         'Improve our listings, search experience and website performance.',

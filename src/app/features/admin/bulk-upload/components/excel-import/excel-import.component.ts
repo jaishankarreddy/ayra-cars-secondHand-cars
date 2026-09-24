@@ -46,6 +46,7 @@ export interface ExcelRow {
   engineCC: string;
   abs: boolean;
   registration: string;
+  insurance: string;
   description: string;
   photos: ExcelPhoto[];
   issues: string[];
@@ -57,8 +58,10 @@ export interface ExcelRow {
 const TEMPLATE_HEADERS = [
   'Code', 'Type', 'Brand', 'Model', 'Variant', 'Year', 'Price', 'Fuel',
   'Transmission', 'BodyType', 'Color', 'District', 'Kilometers', 'Owners',
-  'Mileage', 'EngineCC', 'ABS', 'Registration', 'Description'
+  'Mileage', 'EngineCC', 'ABS', 'Registration', 'Insurance', 'Description'
 ];
+
+const INSURANCE_OPTIONS = ['Comprehensive', 'Third Party', 'Expired'];
 
 const FUELS = ['Petrol', 'Diesel', 'CNG', 'Electric', 'Hybrid'];
 const TRANSMISSIONS = ['Manual', 'Automatic', 'Electric'];
@@ -157,8 +160,8 @@ export class ExcelImportComponent {
 
   downloadTemplate(): void {
     const example = [
-      ['V1', 'car', 'Honda', 'City', 'VX CVT', 2021, 750000, 'Petrol', 'Automatic', 'Sedan', 'White', 'Bengaluru', 42000, 1, 18, 1498, 'Yes', 'KA-05-AB-1234', 'Single owner, serviced regularly'],
-      ['V2', 'bike', 'Royal Enfield', 'Classic 350', '', 2022, 185000, 'Petrol', 'Manual', 'Cruiser', 'Black', 'Mysuru', 12000, 1, 35, 349, '', 'KA-11-C-5678', '']
+      ['V1', 'car', 'Honda', 'City', 'VX CVT', 2021, 750000, 'Petrol', 'Automatic', 'Sedan', 'White', 'Bengaluru', 42000, 1, 18, 1498, 'Yes', 'KA-05-AB-1234', 'Comprehensive', 'Single owner, serviced regularly'],
+      ['V2', 'bike', 'Royal Enfield', 'Classic 350', '', 2022, 185000, 'Petrol', 'Manual', 'Cruiser', 'Black', 'Mysuru', 12000, 1, 35, 349, '', 'KA-11-C-5678', '', '']
     ];
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet([TEMPLATE_HEADERS, ...example]);
@@ -265,6 +268,7 @@ export class ExcelImportComponent {
       engineCC: get('cc'),
       abs: ['yes', 'true', '1', 'y'].includes(norm(get('abs'))),
       registration: get('reg'),
+      insurance: this.matchEnum(get('ins'), INSURANCE_OPTIONS, '', 'Insurance').value,
       description: get('desc'),
       photos: [],
       issues,
@@ -320,6 +324,7 @@ export class ExcelImportComponent {
       cc: idx(['enginecc', 'engine', 'cc', 'displacement']),
       abs: idx(['abs']),
       reg: idx(['registration', 'reg', 'regno', 'number']),
+      ins: idx(['insurance', 'policy']),
       desc: idx(['description', 'desc', 'notes', 'remarks'])
     };
   }
@@ -427,12 +432,10 @@ export class ExcelImportComponent {
       engineCC: parseInt(r.engineCC, 10) || 0,
       abs: r.abs,
       engine: '',
-      power: '',
       registration: r.registration.trim(),
-      insurance: '',
+      insurance: r.insurance,
       featured: false,
       availability: 'available',
-      rating: 4,
       description: r.description,
       images: r.photos.map((p) => p.file)
     };

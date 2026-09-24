@@ -24,6 +24,8 @@ export interface AdminVehicle {
   status: 'Available' | 'Reserved' | 'Sold';
   availability: 'available' | 'reserved' | 'sold';
   rating?: number;
+  emiFrom?: number;
+  emiNote?: string;
 }
 
 function availabilityToStatus(av: string | undefined): AdminVehicle['status'] {
@@ -62,7 +64,9 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
       images: c.images,
       status,
       availability,
-      rating: c.rating
+      rating: c.rating,
+      emiFrom: (c as unknown as { emiFrom?: number }).emiFrom,
+      emiNote: (c as unknown as { emiNote?: string }).emiNote
     };
   }
   const b = v as Bike;
@@ -88,6 +92,8 @@ export function toAdminVehicle(v: Car | Bike): AdminVehicle {
     images: b.images,
     status,
     availability,
-    rating: b.rating
+    rating: b.rating,
+    emiFrom: (b as unknown as { emiFrom?: number }).emiFrom,
+    emiNote: (b as unknown as { emiNote?: string }).emiNote
   };
 }

@@ -42,6 +42,7 @@ export interface BulkDraft {
   mileage: string;
   engineCC: string;
   abs: boolean;
+  insurance: string;
   registration: string;
   description: string;
   photos: BulkPhoto[];
@@ -87,6 +88,7 @@ function emptyDraft(): BulkDraft {
     engineCC: '',
     abs: false,
     registration: '',
+    insurance: '',
     description: '',
     photos: [],
     compressing: 0,
@@ -120,6 +122,7 @@ export class AdminBulkUploadPageComponent {
 
   readonly drafts = signal<BulkDraft[]>([emptyDraft()]);
   readonly mode = signal<'manual' | 'excel'>('manual');
+  readonly dragPhoto = signal<{ uid: number; index: number } | null>(null);
   readonly uploading = signal(false);
   readonly uploadedCount = signal(0);
   readonly carBrands = signal<string[]>([]);
@@ -185,7 +188,8 @@ export class AdminBulkUploadPageComponent {
         color: src.color,
         district: src.district,
         owners: src.owners,
-        abs: src.abs
+        abs: src.abs,
+        insurance: src.insurance
       };
       return [...list, copy];
     });
@@ -263,6 +267,34 @@ export class AdminBulkUploadPageComponent {
     );
   }
 
+  allowPhotoDrop(event: Event): void {
+    event.preventDefault();
+  }
+
+  endPhotoDrag(): void {
+    this.dragPhoto.set(null);
+  }
+
+  startPhotoDrag(uid: number, index: number): void {
+    this.dragPhoto.set({ uid, index });
+  }
+
+  dropPhoto(uid: number, index: number, event: Event): void {
+    event.preventDefault();
+    const drag = this.dragPhoto();
+    this.dragPhoto.set(null);
+    if (!drag || drag.uid !== uid || drag.index === index) return;
+    this.drafts.update((list) =>
+      list.map((d) => {
+        if (d.uid !== uid) return d;
+        const next = [...d.photos];
+        const [moved] = next.splice(drag.index, 1);
+        next.splice(index, 0, moved);
+        return { ...d, photos: next, status: 'draft' as BulkStatus, error: '' };
+      })
+    );
+  }
+
   isValid(d: BulkDraft): boolean {
     return !!(d.brand.trim() && d.model.trim() && d.year && d.price);
   }
@@ -292,12 +324,10 @@ export class AdminBulkUploadPageComponent {
       engineCC: parseInt(d.engineCC, 10) || 0,
       abs: d.abs,
       engine: '',
-      power: '',
       registration: d.registration.trim(),
-      insurance: '',
+      insurance: d.insurance,
       featured: false,
       availability: 'available',
-      rating: 4,
       description: d.description,
       images: d.photos.map((p) => p.file)
     };

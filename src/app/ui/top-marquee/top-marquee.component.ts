@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6" />
             </svg>
-            Fixed Price — No Haggling
+            Negotiable Prices — Fair Deals
           </span>
           <span class="divider">|</span>
           <span class="marquee-item">
@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 5l7 7-7 7" />
             </svg>
-            Pay After Sale — Consignment
+            Same-Day / After-Sale Payout
           </span>
           <span class="divider">|</span>
           <span class="marquee-item">
@@ -46,7 +46,7 @@ import { Component } from '@angular/core';
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6" />
             </svg>
-            Fixed Price — No Haggling
+            Negotiable Prices — Fair Deals
           </span>
           <span class="divider">|</span>
           <span class="marquee-item">
@@ -54,7 +54,7 @@ import { Component } from '@angular/core';
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 5l7 7-7 7" />
             </svg>
-            Pay After Sale — Consignment
+            Same-Day / After-Sale Payout
           </span>
           <span class="divider">|</span>
           <span class="marquee-item">
@@ -123,6 +123,11 @@ import { Component } from '@angular/core';
     .divider {
       color: rgba(255, 255, 255, 0.15);
       font-size: 12px;
+    }
+
+    /* Small screens: reclaim the 36px — the sticky navbar stays, content breathes */
+    @media (max-width: 640px) {
+      .top-bar { display: none; }
     }
 
     @keyframes marquee {

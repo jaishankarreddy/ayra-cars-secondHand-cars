@@ -3,6 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE } from '@config/api';
 
+/** Brand master entry from the admin-managed `/api/brands` collection. */
+export interface MasterBrand {
+  name: string;
+  code?: string;
+  color?: string;
+  logo?: string;
+  type: 'car' | 'bike' | 'both';
+  count?: number;
+}
+
 /** Shape returned by the Node backend `/api/vehicles` documents. */
 export interface CatalogVehicle {
   id: string;
@@ -69,6 +79,36 @@ export class CatalogService {
     for (const v of this.data()) set.add(v.brand);
     return [...set].sort();
   });
+
+  // ---- Admin-managed brand master (feeds every brand picker site-wide) ----
+  private readonly master = signal<MasterBrand[]>([]);
+  private startedMasterLoad = false;
+
+  /** Proper-cased master brand names for a vehicle type (falls back to stock when offline). */
+  readonly carBrandNames = computed(() => this.masterNames('car'));
+  readonly bikeBrandNames = computed(() => this.masterNames('bike'));
+
+  private masterNames(type: 'car' | 'bike'): string[] {
+    const list = this.master().filter((b) => b.type === type || b.type === 'both').map((b) => b.name);
+    if (list.length) return [...new Set(list)].sort();
+    const fallback = new Set<string>();
+    for (const v of this.data()) {
+      if (v.vehicleType !== type) continue;
+      const proper = v.brand.charAt(0).toUpperCase() + v.brand.slice(1);
+      fallback.add(proper);
+    }
+    return [...fallback].sort();
+  }
+
+  /** Loads the brand master once (idempotent). Safe to call from any component. */
+  loadMasterBrands(): void {
+    if (this.startedMasterLoad) return;
+    this.startedMasterLoad = true;
+    this.http.get<MasterBrand[]>(`${API_BASE}/brands`).subscribe({
+      next: (list) => this.master.set(list ?? []),
+      error: () => this.master.set([])
+    });
+  }
 
   /** Loads the full catalogue once (idempotent, single in-flight request). */
   load(): void {

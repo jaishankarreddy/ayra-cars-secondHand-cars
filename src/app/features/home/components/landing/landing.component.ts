@@ -69,13 +69,13 @@ export class LandingComponent {
   readonly searchBudget = signal('');
 
   readonly budgetOptions = BUDGET_OPTIONS;
-  readonly brands = computed(() => {
-    const vehicles = this.searchType() === 'car' ? this.catalog.cars() : this.catalog.bikes();
-    return [...new Set(vehicles.map((vehicle) => vehicle.brand))].sort();
-  });
+  readonly brands = computed(() =>
+    this.searchType() === 'car' ? this.catalog.carBrandNames() : this.catalog.bikeBrandNames()
+  );
 
   constructor() {
     this.catalog.load();
+    this.catalog.loadMasterBrands();
   }
 
   toggleDropdown(dropdown: 'type' | 'brand' | 'budget'): void {

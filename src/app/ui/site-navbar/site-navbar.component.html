@@ -54,18 +54,36 @@
             </button>
             @if (profileMenuOpen()) {
               <div class="fixed inset-0 z-[90]" (click)="closeProfileMenu()" aria-hidden="true"></div>
-              <div class="absolute right-0 top-[44px] z-[95] w-56 overflow-hidden rounded-xl border border-[#E2E9E7] bg-white shadow-[0_8px_28px_rgba(6,47,53,0.12)]">
-                <div class="border-b border-[#E2E9E7] bg-[#F7FAF9] px-4 py-3">
-                  <p class="truncate text-sm font-semibold text-[#0B1720]">{{ userName() }}</p>
-                  <p class="text-xs text-[#5F7078]">My Account</p>
+              <div class="absolute right-0 top-[44px] z-[95] w-64 max-[480px]:w-[calc(100vw-48px)] max-[480px]:max-w-64 overflow-hidden rounded-2xl border border-[#E2E9E7] bg-white shadow-[0_16px_48px_rgba(6,47,53,0.18)]">
+                <div class="bg-[#062D32] px-4 pb-4 pt-4">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 border border-white/20 text-sm font-bold text-white">{{ userInitials() }}</span>
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-semibold text-white">{{ userName() || 'Ayra User' }}</p>
+                      @if (userPhone()) {
+                        <p class="text-xs text-white/60">+91 {{ userPhone() }}</p>
+                      } @else {
+                        <p class="text-xs text-white/60">My Account</p>
+                      }
+                    </div>
+                  </div>
                 </div>
                 <div class="p-2">
-                  <a routerLink="/profile" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
-                    <svg lucideUser size="16" class="text-[#062F35]"></svg>
-                    My Profile
+                  <a routerLink="/profile" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7FAF9] text-[#062D32]"><svg lucideUser size="15"></svg></span>
+                    My Account
                   </a>
-                  <button (click)="logout()" class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-[#FF4D4F] transition-colors hover:bg-[#FFF1F1]">
-                    <svg lucideLogOut size="16"></svg>
+                  <a routerLink="/profile" [queryParams]="{ tab: 'offers' }" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7FAF9] text-[#062D32]"><svg lucideHandCoins size="15"></svg></span>
+                    My Offers
+                  </a>
+                  <a routerLink="/profile" [queryParams]="{ tab: 'wishlist' }" (click)="closeProfileMenu()" class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0B1720] transition-colors hover:bg-[#F7FAF9]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7FAF9] text-[#DC2626]"><svg lucideHeart size="15"></svg></span>
+                    Wishlist
+                  </a>
+                  <div class="mx-3 my-1.5 h-px bg-[#E2E9E7]"></div>
+                  <button (click)="logout()" class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#FF4D4F] transition-colors hover:bg-[#FFF1F1]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFF1F1]"><svg lucideLogOut size="15"></svg></span>
                     Logout
                   </button>
                 </div>

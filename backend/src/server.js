@@ -45,6 +45,27 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// --- Abuse protection ---------------------------------------------------------
+const rateLimit = require('express-rate-limit');
+
+// Strict: login / register / OTP-style endpoints (brute-force protection).
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { message: 'Too many attempts. Please wait 15 minutes and try again.' }
+});
+
+// Lenient: public lead forms (offers, contact, test drives, sell requests).
+const formLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 60,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { message: 'Too many submissions. Please wait 15 minutes and try again.' }
+});
+
 // --- Image uploads (Cloudinary) ----------------------------------------------
 const { v2: cloudinary } = require('cloudinary');
 
@@ -87,7 +108,7 @@ async function cleanUpload(imageUrl) {
 
 // Fields the admin form may submit (everything else is ignored).
 const VEHICLE_FIELDS = [
-  'vehicleType', 'brand', 'model', 'variant', 'year', 'price', 'rating',
+  'vehicleType', 'brand', 'model', 'variant', 'year', 'price', 'rating', 'emiFrom', 'emiNote',
   'featured', 'availability', 'fuel', 'transmission', 'mileage', 'kilometers',
   'district', 'location', 'owners', 'bodyType', 'color', 'engineCC', 'abs',
   'engine', 'power', 'registration', 'insurance', 'description'
@@ -110,6 +131,7 @@ function buildVehiclePayload(body) {
       case 'year':
       case 'price':
       case 'rating':
+      case 'emiFrom':
       case 'mileage':
       case 'kilometers':
       case 'owners':
@@ -161,6 +183,37 @@ function signUserToken(user) {
   );
 }
 
+// Optional user JWT — attaches req.userId when a valid USER token is present,
+// otherwise continues as guest (never rejects).
+function optionalAuth(req, _res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (token) {
+    try {
+      const payload = jwt.verify(token, JWT_SECRET);
+      if (payload.role === 'user') req.userId = payload.sub;
+    } catch {
+      // invalid/expired token → treat as guest
+    }
+  }
+  next();
+}
+
+// Link guest offers (same phone, no owner yet) to a freshly signed-in user.
+async function claimGuestOffers(user) {
+  try {
+    if (!user || !user.phone) return;
+    const digits = String(user.phone).replace(/\D/g, '');
+    const candidates = await VehicleOffer.find({ userId: null });
+    const ids = candidates
+      .filter((o) => String(o.phone || '').replace(/\D/g, '') === digits)
+      .map((o) => o._id);
+    if (ids.length) await VehicleOffer.updateMany({ _id: { $in: ids } }, { $set: { userId: user._id } });
+  } catch (err) {
+    console.error('Offer claim failed:', err.message);
+  }
+}
+
 // Require a valid user JWT. Populates req.userId.
 function authRequired(req, res, next) {
   const header = req.headers.authorization || '';
@@ -198,7 +251,7 @@ function adminRequired(req, res, next) {
 }
 
 // POST /api/auth/register — create a user account with phone + password
-app.post('/api/auth/register', async (req, res, next) => {
+app.post('/api/auth/register', authLimiter, async (req, res, next) => {
   try {
     const { phone, password } = req.body || {};
     if (!phone || !password) {
@@ -221,6 +274,7 @@ app.post('/api/auth/register', async (req, res, next) => {
       phone: normalized,
       passwordHash: String(password)
     });
+    await claimGuestOffers(user);
     const token = signUserToken(user);
     res.status(201).json({ token, user: user.toSafeJSON() });
   } catch (err) {
@@ -229,7 +283,7 @@ app.post('/api/auth/register', async (req, res, next) => {
 });
 
 // POST /api/auth/login — sign a user in with phone + password
-app.post('/api/auth/login', async (req, res, next) => {
+app.post('/api/auth/login', authLimiter, async (req, res, next) => {
   try {
     const { phone, password } = req.body || {};
     if (!phone || !password) {
@@ -240,6 +294,7 @@ app.post('/api/auth/login', async (req, res, next) => {
     if (!user || !(await user.comparePassword(String(password)))) {
       return res.status(401).json({ message: 'Invalid mobile number or password.' });
     }
+    await claimGuestOffers(user);
     const token = signUserToken(user);
     res.json({ token, user: user.toSafeJSON() });
   } catch (err) {
@@ -291,6 +346,11 @@ app.patch('/api/auth/me', authRequired, async (req, res, next) => {
       }
     }
     if (avatar !== undefined) user.avatar = String(avatar).trim();
+    if (req.body.preferences && typeof req.body.preferences === 'object') {
+      const prefs = req.body.preferences;
+      if (prefs.notifyOffers !== undefined) user.preferences.notifyOffers = !!prefs.notifyOffers;
+      if (prefs.notifyNewsletter !== undefined) user.preferences.notifyNewsletter = !!prefs.notifyNewsletter;
+    }
     await user.save();
     res.json({ user: user.toSafeJSON() });
   } catch (err) {
@@ -299,7 +359,7 @@ app.patch('/api/auth/me', authRequired, async (req, res, next) => {
 });
 
 // POST /api/auth/google — verify Google ID token and sign in / sign up
-app.post('/api/auth/google', async (req, res, next) => {
+app.post('/api/auth/google', authLimiter, async (req, res, next) => {
   try {
     const { idToken } = req.body || {};
     if (!idToken) return res.status(400).json({ message: 'Google ID token is required.' });
@@ -333,6 +393,7 @@ app.post('/api/auth/google', async (req, res, next) => {
       if (emailVerified && !user.emailVerified) { user.emailVerified = true; changed = true; }
       if (changed) await user.save();
     }
+    await claimGuestOffers(user);
     const token = signUserToken(user);
     res.json({ token, user: user.toSafeJSON() });
   } catch (err) {
@@ -360,25 +421,20 @@ app.get('/api/wishlist', authRequired, async (req, res, next) => {
 // POST /api/wishlist/:id — add a vehicle to the user's wishlist
 app.post('/api/wishlist/:id', authRequired, async (req, res, next) => {
   try {
-    console.log(`[Wishlist] POST add ${req.params.id} for user ${req.userId}`);
     const user = await User.findById(req.userId);
     if (!user) {
-      console.log(`[Wishlist] User ${req.userId} not found`);
       return res.status(404).json({ message: 'User not found.' });
     }
     const vehicle = await Vehicle.findOne({ id: req.params.id });
     if (!vehicle) {
-      console.log(`[Wishlist] Vehicle ${req.params.id} not found`);
       return res.status(404).json({ message: 'Vehicle not found.' });
     }
     if (!user.wishlist.includes(req.params.id)) {
       user.wishlist.push(req.params.id);
       await user.save();
     }
-    console.log(`[Wishlist] OK — user ${req.userId} now has ${user.wishlist.length} items`);
     res.json({ wishlist: user.wishlist });
   } catch (err) {
-    console.error('[Wishlist] POST error:', err.message);
     next(err);
   }
 });
@@ -386,14 +442,12 @@ app.post('/api/wishlist/:id', authRequired, async (req, res, next) => {
 // DELETE /api/wishlist/:id — remove a vehicle from the user's wishlist
 app.delete('/api/wishlist/:id', authRequired, async (req, res, next) => {
   try {
-    console.log(`[Wishlist] DELETE ${req.params.id} for user ${req.userId}`);
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found.' });
     user.wishlist = user.wishlist.filter((id) => id !== req.params.id);
     await user.save();
     res.json({ wishlist: user.wishlist });
   } catch (err) {
-    console.error('[Wishlist] DELETE error:', err.message);
     next(err);
   }
 });
@@ -412,7 +466,7 @@ app.get('/api/compare', async (req, res, next) => {
 });
 
 // POST /api/compare — add vehicles to comparison basket (guest, sessionId-based)
-app.post('/api/compare', async (req, res, next) => {
+app.post('/api/compare', formLimiter, async (req, res, next) => {
   try {
     const { sessionId, vehicleId } = req.body;
     if (!sessionId || !vehicleId) {
@@ -464,7 +518,7 @@ app.delete('/api/compare', async (req, res, next) => {
 });
 
 // Admin: sign in (issues a short-lived JWT)
-app.post('/api/admin/login', async (req, res, next) => {
+app.post('/api/admin/login', authLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body || {};
     if (!email || !password) {
@@ -572,7 +626,7 @@ app.get('/api/vehicles', async (req, res, next) => {
 
     const skip = (Number(page) - 1) * Number(limit);
     const LIST_PROJECTION =
-      'id vehicleType brand model variant year price rating featured availability ' +
+      'id vehicleType brand model variant year price rating emiFrom emiNote featured availability ' +
       'fuel transmission mileage kilometers district location owners bodyType color ' +
       'engineCC abs engine power registration insurance image images';
     const [items, total] = await Promise.all([
@@ -790,8 +844,8 @@ app.get('/api/homestats', async (req, res, next) => {
   }
 });
 
-// POST /api/offers — submit an offer (guest allowed)
-app.post('/api/offers', async (req, res, next) => {
+// POST /api/offers — submit an offer (guest allowed; linked to user when logged in)
+app.post('/api/offers', formLimiter, optionalAuth, async (req, res, next) => {
   try {
     const { vehicleId, name, phone, offerPrice, message } = req.body;
     if (!vehicleId || !name || !phone || !offerPrice) {
@@ -801,6 +855,7 @@ app.post('/api/offers', async (req, res, next) => {
     if (!vehicle) return res.status(404).json({ message: 'Vehicle not found' });
     const offer = await VehicleOffer.create({
       vehicleId,
+      userId: req.userId || null,
       name,
       phone,
       offerPrice,
@@ -813,8 +868,39 @@ app.post('/api/offers', async (req, res, next) => {
   }
 });
 
+// GET /api/offers/mine — logged-in user's offers with live status (for profile tracking)
+app.get('/api/offers/mine', authRequired, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    const or = [{ userId: user._id }];
+    if (user.phone) or.push({ phone: user.phone });
+    const offers = await VehicleOffer.find({ $or: or }).sort({ createdAt: -1 }).lean();
+    const ids = [...new Set(offers.map((o) => o.vehicleId).filter(Boolean))];
+    const vehicles = await Vehicle.find({ id: { $in: ids } }).lean();
+    const vehicleById = new Map(vehicles.map((v) => [v.id, v]));
+    res.json(offers.map((o) => {
+      const v = vehicleById.get(o.vehicleId);
+      return {
+        id: o.id,
+        vehicleId: o.vehicleId,
+        vehicle: v ? `${v.brand} ${v.model} ${v.variant || ''}`.trim() : 'Vehicle',
+        image: v ? v.image : '',
+        offerPrice: o.offerPrice,
+        askingPrice: o.askingPrice,
+        counterPrice: o.counterPrice ?? null,
+        status: o.status,
+        date: o.createdAt,
+        updatedAt: o.updatedAt
+      };
+    }));
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST /api/contacts — submit a contact/enquiry message
-app.post('/api/contacts', async (req, res, next) => {
+app.post('/api/contacts', formLimiter, async (req, res, next) => {
   try {
     const { name, email, phone, subject, message } = req.body;
     if (!name || !email || !message) {
@@ -828,7 +914,7 @@ app.post('/api/contacts', async (req, res, next) => {
 });
 
 // POST /api/test-drives — book a test drive
-app.post('/api/test-drives', async (req, res, next) => {
+app.post('/api/test-drives', formLimiter, async (req, res, next) => {
   try {
     const { vehicleId, name, phone, preferredDate, preferredTime } = req.body;
     if (!vehicleId || !name || !phone) {
@@ -850,12 +936,24 @@ app.post('/api/test-drives', async (req, res, next) => {
   }
 });
 
-// POST /api/sell-requests — submit a sell-your-vehicle request (guest allowed)
-app.post('/api/sell-requests', async (req, res, next) => {
+// POST /api/sell-requests — submit a sell-your-vehicle request (guest allowed, up to 10 photos)
+app.post(
+  '/api/sell-requests',
+  formLimiter,
+  (req, res, next) => {
+    // Accept plain JSON (no photos) as well as multipart/form-data (with `images`).
+    if (req.is('multipart/*')) return upload.array('images', 10)(req, res, next);
+    next();
+  },
+  async (req, res, next) => {
   try {
     const { vehicleType, brand, model, year, kilometers, fuel, transmission, name, phone, district, expectedPrice, notes } = req.body;
     if (!brand || !model || !name || !phone) {
       return res.status(400).json({ message: 'brand, model, name and phone are required' });
+    }
+    let images = [];
+    if (req.files && req.files.length > 0) {
+      images = await Promise.all(req.files.map((f) => uploadToCloudinary(f)));
     }
     const request = await SellRequest.create({
       vehicleType: vehicleType === 'bike' ? 'bike' : 'car',
@@ -869,13 +967,15 @@ app.post('/api/sell-requests', async (req, res, next) => {
       phone,
       district: district || '',
       expectedPrice: expectedPrice ? Number(expectedPrice) : null,
-      notes: notes || ''
+      notes: notes || '',
+      images
     });
     res.status(201).json(request);
   } catch (err) {
     next(err);
   }
-});
+  }
+);
 
 // Admin: dashboard summary counts
 app.get('/api/admin/dashboard', adminRequired, async (_req, res, next) => {
@@ -1028,6 +1128,7 @@ app.get('/api/admin/sell-requests', adminRequired, async (_req, res, next) => {
       district: r.district,
       expectedPrice: r.expectedPrice,
       notes: r.notes,
+      images: r.images || [],
       status: r.status,
       date: r.createdAt
     })));
@@ -1117,7 +1218,7 @@ app.patch('/api/admin/settings', adminRequired, async (req, res, next) => {
 });
 
 // Admin: change password (requires current password)
-app.patch('/api/admin/password', adminRequired, async (req, res, next) => {
+app.patch('/api/admin/password', adminRequired, authLimiter, async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body || {};
     if (!currentPassword || !newPassword) return res.status(400).json({ message: 'Current and new password are required.' });
@@ -1403,7 +1504,7 @@ app.put('/api/admin/vehicles/:id', adminRequired, upload.array('images', 10), as
       } catch {
         kept = [];
       }
-      kept = kept.filter((u) => typeof u === 'string' && u.includes('res.cloudinary.com'));
+      kept = kept.filter((u) => typeof u === 'string' && u.trim() !== '');
       const newUrls = req.files && req.files.length > 0
         ? await Promise.all(req.files.map((f) => uploadToCloudinary(f)))
         : [];

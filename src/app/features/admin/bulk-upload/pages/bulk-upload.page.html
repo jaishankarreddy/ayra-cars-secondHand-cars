@@ -159,6 +159,15 @@
               <input type="checkbox" [checked]="d.abs" (change)="patch(d.uid, { abs: $any($event.target).checked })" class="h-5 w-5 accent-[#062D32]" />
               <span class="text-xs font-semibold text-[#0B1720]">ABS</span>
             </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-[#0B1720]">Insurance</span>
+              <select [value]="d.insurance" (change)="patch(d.uid, { insurance: $any($event.target).value })" class="mt-1.5 w-full rounded-[12px] border border-[#E2E9E7] bg-white px-3 py-2.5 text-sm text-[#0B1720] outline-none focus:border-[#062D32]">
+                <option value="">Select</option>
+                <option value="Comprehensive">Comprehensive</option>
+                <option value="Third Party">Third Party</option>
+                <option value="Expired">Expired</option>
+              </select>
+            </label>
           </div>
 
           <label class="block">
@@ -169,15 +178,24 @@
           <!-- Photos -->
           <div>
             <div class="flex items-center justify-between">
-              <p class="text-xs font-semibold text-[#0B1720]">Photos <span class="font-normal text-[#8AA0A8]">{{ d.photos.length }}/{{ maxImages }} · auto-compressed</span></p>
+              <p class="text-xs font-semibold text-[#0B1720]">Photos <span class="font-normal text-[#8AA0A8]">{{ d.photos.length }}/{{ maxImages }} · auto-compressed · drag to reorder</span></p>
               @if (d.compressing > 0) {
                 <p class="flex items-center gap-1.5 text-xs font-semibold text-[#5F7078]"><svg lucideLoaderCircle class="h-3.5 w-3.5 animate-spin"></svg>Processing {{ d.compressing }}…</p>
               }
             </div>
             <div class="mt-2 flex flex-wrap gap-2">
               @for (p of d.photos; track p.preview; let pi = $index) {
-                <div class="relative h-20 w-20 overflow-hidden rounded-[12px] border border-[#E2E9E7]">
-                  <img [src]="p.preview" alt="Vehicle photo {{ pi + 1 }}" class="h-full w-full object-cover" />
+                <div
+                  class="relative h-20 w-20 overflow-hidden rounded-[12px] border border-[#E2E9E7] cursor-grab active:cursor-grabbing"
+                  [class.opacity-50]="dragPhoto()?.uid === d.uid && dragPhoto()?.index === pi"
+                  draggable="true"
+                  title="Drag to reorder"
+                  (dragstart)="startPhotoDrag(d.uid, pi)"
+                  (dragover)="allowPhotoDrop($event)"
+                  (drop)="dropPhoto(d.uid, pi, $event)"
+                  (dragend)="endPhotoDrag()"
+                >
+                  <img [src]="p.preview" alt="Vehicle photo {{ pi + 1 }}" class="h-full w-full object-cover pointer-events-none" />
                   @if (pi === 0) {
                     <span class="absolute bottom-1 left-1 rounded-full bg-[#062D32] px-1.5 py-0.5 text-[9px] font-bold text-white">COVER</span>
                   }

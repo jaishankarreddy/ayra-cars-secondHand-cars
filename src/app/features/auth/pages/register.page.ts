@@ -13,6 +13,7 @@ import { environment } from '../../../../environments/environment';
 import { RippleDirective } from '../../cars/directives/ripple.directive';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { googleReady, promptGoogleOneTap } from '../utils/google-one-tap.util';
 
 @Component({
   selector: 'app-register-page',
@@ -71,9 +72,11 @@ export class RegisterPageComponent implements AfterViewInit {
   }
 
   triggerGoogleOneTap(): void {
-    const w = window as any;
-    if (w.google?.accounts?.id) w.google.accounts.id.prompt();
-    else this.error.set('Google sign-in is not ready. Please add Client ID in environment.ts');
+    if (!googleReady()) {
+      this.error.set('Google sign-in is not ready. Please add Client ID in environment.ts');
+      return;
+    }
+    promptGoogleOneTap((message) => this.error.set(message));
   }
 
   onSubmit(event: Event): void {

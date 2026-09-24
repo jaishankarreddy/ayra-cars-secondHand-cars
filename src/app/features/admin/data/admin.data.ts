@@ -9,6 +9,7 @@ export interface AdminOffer {
   askingPrice: number;
   status: OfferStatus;
   date: string;
+  rawDate?: string;
 }
 
 export type ContactStatus = 'New' | 'Replied';
@@ -22,6 +23,7 @@ export interface AdminContact {
   message: string;
   status: ContactStatus;
   date: string;
+  rawDate?: string;
 }
 
 export interface AdminNotification {
@@ -44,6 +46,7 @@ export interface AdminTestDrive {
   status: TestDriveStatus;
   note: string;
   date: string;
+  rawDate?: string;
 }
 
 export interface BrandStat {
@@ -77,6 +80,7 @@ export interface AdminSellRequest {
   district: string;
   expectedPrice: number | null;
   notes: string;
+  images: string[];
   status: SellRequestStatus;
   date: string;
 }

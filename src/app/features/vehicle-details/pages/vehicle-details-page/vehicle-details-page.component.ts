@@ -151,8 +151,8 @@ export class VehicleDetailsPageComponent {
     return 'Matches the asking price';
   });
 
-  readonly phoneLink = computed(() => this.vehicle()?.seller.phone ?? '+91 98765 43210');
-  readonly whatsappLink = computed(() => this.vehicle()?.seller.whatsapp ?? '919844555308');
+  readonly phoneLink = computed(() => this.vehicle()?.seller.phone ?? '+91 98445 55308');
+  readonly whatsappLink = computed(() => this.vehicle()?.seller.whatsapp ?? '919844304116');
   readonly contactPhone = this.phoneLink;
   readonly contactWhatsapp = this.whatsappLink;
   readonly contactPrice = computed(() => this.vehicle()?.price ?? 0);

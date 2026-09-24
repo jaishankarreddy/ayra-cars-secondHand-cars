@@ -15,6 +15,10 @@ export interface AuthUser {
   role: string;
   avatar?: string;
   emailVerified?: boolean;
+  preferences?: {
+    notifyOffers?: boolean;
+    notifyNewsletter?: boolean;
+  };
 }
 
 export interface AuthResponse {
@@ -56,7 +60,7 @@ export class AuthService {
     );
   }
 
-  updateProfile(patch: Partial<Pick<AuthUser, 'name' | 'email' | 'phone' | 'avatar'>>): Observable<{ user: AuthUser }> {
+  updateProfile(patch: Partial<Pick<AuthUser, 'name' | 'email' | 'phone' | 'avatar'>> & { preferences?: { notifyOffers?: boolean; notifyNewsletter?: boolean } }): Observable<{ user: AuthUser }> {
     return this.http.patch<{ user: AuthUser }>(`${API_BASE}/auth/me`, patch).pipe(
       tap(({ user }) => {
         if (typeof window !== 'undefined') window.localStorage.setItem(USER_KEY, JSON.stringify(user));

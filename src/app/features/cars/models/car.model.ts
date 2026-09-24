@@ -34,4 +34,6 @@ export interface Car {
   images?: string[];
   featured?: boolean;
   rating?: number;
+  emiFrom?: number;
+  emiNote?: string;
 }

@@ -29,19 +29,8 @@
     </main>
   } @else if (vehicle(); as vehicle) {
     <main id="top">
-      <!-- Breadcrumbs -->
-      <div class="flex items-center justify-between gap-3 py-5 pb-[18px] max-[620px]:py-3.5">
-        <div class="flex items-center gap-1.5 text-[13px] text-[#8a908c] max-[620px]:text-[11px] min-w-0">
-          <a routerLink="/" class="text-[#6b7370] no-underline hover:text-[#1a2c30] shrink-0">Home</a>
-          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
-          <a [routerLink]="isBike() ? '/bikes' : '/cars'" class="text-[#6b7370] no-underline hover:text-[#1a2c30] shrink-0">{{ isBike() ? 'Bikes' : 'Cars' }}</a>
-          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
-          <span class="truncate">{{ vehicle.brand }}</span>
-          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
-          <span class="truncate">{{ vehicle.model }}</span>
-          <svg lucideChevronRight size="14" class="text-[#c0c5c2] shrink-0"></svg>
-          <strong class="text-[#1a2c30] font-semibold shrink-0">{{ vehicle.year }}</strong>
-        </div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-3 py-5 pb-[18px] max-[620px]:py-3.5">
         <button type="button" (click)="share()" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[9px] border border-[#E2E9E7] bg-white text-[12px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors shrink-0" aria-label="Share this vehicle">
           <svg lucideShare2 size="14"></svg><span class="max-[620px]:hidden">Share</span>
         </button>
@@ -62,7 +51,7 @@
           <!-- Price Row -->
           <div class="flex items-center gap-2.5 mt-3.5 flex-wrap">
             <span class="text-[29px] font-bold text-[#0B1720] leading-[1.1] max-[620px]:text-[24px] max-[390px]:text-[22px]">{{ formatPrice(vehicle.price) }}</span>
-            <span class="inline-flex items-center px-2.5 py-[5px] bg-[#EEF8E8] border border-[#D4EBCC] text-[#0d6b32] rounded-[10px] text-[11px] font-semibold ml-2.5">Fixed price · No haggling</span>
+            <span class="inline-flex items-center px-2.5 py-[5px] bg-[#EEF8E8] border border-[#D4EBCC] text-[#0d6b32] rounded-[10px] text-[11px] font-semibold ml-2.5">Negotiable price · Make an offer</span>
           </div>
 
           <!-- EMI -->
@@ -276,7 +265,7 @@
                   <span class="flex items-center justify-center w-10 h-10 rounded-[10px] bg-[#062D32] text-[#B9F24A] shrink-0"><svg lucideCalendarDays size="18"></svg></span>
                   <div>
                     <h3 class="m-0 font-['Poppins',sans-serif] font-semibold text-[17px] leading-[1.3] text-[#0b1720]">Book a test drive</h3>
-                    <p class="m-0 mt-0.5 text-[#52616d] text-xs font-['Poppins',sans-serif]">At our office or the vehicle · We confirm on call</p>
+                    <p class="m-0 mt-0.5 text-[#52616d] text-xs font-['Poppins',sans-serif]">Free at our office · Doorstep within 5 km</p>
                   </div>
                 </div>
               </div>
@@ -284,7 +273,7 @@
                 <div class="flex flex-col items-center py-7 px-3.5 rounded-[8px] bg-[#f0faf1] text-center">
                   <span class="flex items-center justify-center w-12 h-12 rounded-full bg-[#e8f5e9] text-[#15803d] mb-1"><svg lucideCircleCheck size="28"></svg></span>
                   <h4 class="mt-2 mb-1 text-[#0b1720] font-['Poppins',sans-serif] font-semibold text-[15px]">Request received!</h4>
-                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our team will confirm your test drive shortly.</p>
+                  <p class="m-0 text-[#52616d] text-xs font-['Poppins',sans-serif]">Our team will confirm your office test drive shortly.</p>
                 </div>
               } @else {
                 <form (submit)="submitTestDrive()" class="flex flex-col">

@@ -17,6 +17,7 @@ const SellRequestSchema = new mongoose.Schema(
     district: { type: String, default: '' },
     expectedPrice: { type: Number, default: null },
     notes: { type: String, default: '' },
+    images: { type: [String], default: [] }, // seller-uploaded photos (Cloudinary URLs, max 10)
     status: { type: String, enum: SellRequestStatusSchema, default: 'New', index: true }
   },
   { timestamps: true }

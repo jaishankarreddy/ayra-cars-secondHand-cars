@@ -11,6 +11,7 @@ import {
   LucideSlidersHorizontal
 } from '@lucide/angular';
 import { MagneticDirective } from '../../directives/magnetic.directive';
+import { CatalogService } from '../../../../services/catalog.service';
 
 interface SearchOption {
   value: string;
@@ -36,6 +37,7 @@ interface SearchOption {
 })
 export class VehicleSearchComponent {
   private readonly router = inject(Router);
+  private readonly catalog = inject(CatalogService);
 
   readonly vehicleType = signal('car');
   readonly brand = signal('');
@@ -49,35 +51,15 @@ export class VehicleSearchComponent {
     { value: 'bike', label: 'Bike' }
   ];
 
-  readonly carBrands: SearchOption[] = [
-    { value: 'hyundai', label: 'Hyundai' },
-    { value: 'toyota', label: 'Toyota' },
-    { value: 'honda', label: 'Honda' },
-    { value: 'tata', label: 'Tata' },
-    { value: 'mahindra', label: 'Mahindra' },
-    { value: 'maruti', label: 'Maruti Suzuki' },
-    { value: 'kia', label: 'Kia' },
-    { value: 'skoda', label: 'Skoda' },
-    { value: 'volkswagen', label: 'Volkswagen' }
-  ];
+  constructor() {
+    this.catalog.loadMasterBrands();
+  }
 
-  readonly bikeBrands: SearchOption[] = [
-    { value: 'hero', label: 'Hero' },
-    { value: 'honda', label: 'Honda' },
-    { value: 'bajaj', label: 'Bajaj' },
-    { value: 'yamaha', label: 'Yamaha' },
-    { value: 'tvs', label: 'TVS' },
-    { value: 'royal-enfield', label: 'Royal Enfield' },
-    { value: 'ktm', label: 'KTM' },
-    { value: 'ather', label: 'Ather' },
-    { value: 'ola', label: 'Ola' }
-  ];
-
-  /** Brands are filtered by the selected vehicle type (car vs bike). */
-  readonly brands = computed<SearchOption[]>(() => [
-    { value: '', label: 'Any brand' },
-    ...(this.vehicleType() === 'bike' ? this.bikeBrands : this.carBrands)
-  ]);
+  /** Admin-managed master brands, filtered by the selected vehicle type. */
+  readonly brands = computed<SearchOption[]>(() => {
+    const names = this.vehicleType() === 'bike' ? this.catalog.bikeBrandNames() : this.catalog.carBrandNames();
+    return [{ value: '', label: 'Any brand' }, ...names.map((n) => ({ value: n, label: n }))];
+  });
 
   setType(value: string): void {
     this.vehicleType.set(value);
@@ -97,29 +79,41 @@ export class VehicleSearchComponent {
 
   readonly fuels: SearchOption[] = [
     { value: '', label: 'Any fuel' },
-    { value: 'petrol', label: 'Petrol' },
-    { value: 'diesel', label: 'Diesel' },
-    { value: 'electric', label: 'Electric' }
+    { value: 'Petrol', label: 'Petrol' },
+    { value: 'Diesel', label: 'Diesel' },
+    { value: 'Electric', label: 'Electric' }
   ];
 
   readonly locations: SearchOption[] = [
     { value: '', label: 'All locations' },
-    { value: 'bengaluru', label: 'Bengaluru' },
-    { value: 'mysuru', label: 'Mysuru' },
-    { value: 'hubballi', label: 'Hubballi' },
-    { value: 'mangaluru', label: 'Mangaluru' },
-    { value: 'belagavi', label: 'Belagavi' },
-    { value: 'kalaburagi', label: 'Kalaburagi' }
+    { value: 'Bengaluru', label: 'Bengaluru' },
+    { value: 'Mysuru', label: 'Mysuru' },
+    { value: 'Hubballi', label: 'Hubballi' },
+    { value: 'Mangaluru', label: 'Mangaluru' },
+    { value: 'Belagavi', label: 'Belagavi' },
+    { value: 'Kalaburagi', label: 'Kalaburagi' }
   ];
 
   search(): void {
     const params: Record<string, string> = {};
-    if (this.vehicleType()) params['type'] = this.vehicleType();
     if (this.brand()) params['brand'] = this.brand();
     if (this.model().trim()) params['q'] = this.model().trim();
-    if (this.budget()) params['budget'] = this.budget();
     if (this.fuel()) params['fuel'] = this.fuel();
-    if (this.location()) params['location'] = this.location();
-    this.router.navigate(['/search'], { queryParams: params });
+    if (this.location()) params['district'] = this.location();
+    const range = this.budgetToPriceRange(this.budget());
+    if (range.min > 0) params['priceMin'] = String(range.min);
+    if (range.max < Number.POSITIVE_INFINITY) params['priceMax'] = String(range.max);
+    this.router.navigate([this.vehicleType() === 'bike' ? '/bikes' : '/cars'], { queryParams: params });
+  }
+
+  private budgetToPriceRange(budget: string): { min: number; max: number } {
+    switch (budget) {
+      case '0-5': return { min: 0, max: 500000 };
+      case '5-10': return { min: 500000, max: 1000000 };
+      case '10-15': return { min: 1000000, max: 1500000 };
+      case '15-25': return { min: 1500000, max: 2500000 };
+      case '25+': return { min: 2500000, max: Number.POSITIVE_INFINITY };
+      default: return { min: 0, max: Number.POSITIVE_INFINITY };
+    }
   }
 }

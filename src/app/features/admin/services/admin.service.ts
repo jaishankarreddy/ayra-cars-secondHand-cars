@@ -11,11 +11,13 @@ export interface VehicleFormPayload {
   variant: string;
   year: number;
   price: number;
+  emiFrom?: number;
+  emiNote?: string;
   fuel: string;
   transmission: string;
   mileage: number;
   kilometers: number;
-  district: string;
+  district?: string;
   location: string;
   owners: number;
   bodyType: string;
@@ -23,12 +25,10 @@ export interface VehicleFormPayload {
   engineCC: number;
   abs: boolean;
   engine: string;
-  power: string;
   registration: string;
   insurance: string;
   featured: boolean;
   availability: 'available' | 'reserved' | 'sold';
-  rating: number;
   description: string;
   oldImage?: string;
   images?: File[];
@@ -75,11 +75,12 @@ export class AdminService {
     set('variant', payload.variant);
     set('year', payload.year);
     set('price', payload.price);
+    set('emiFrom', payload.emiFrom);
+    set('emiNote', payload.emiNote);
     set('fuel', payload.fuel);
     set('transmission', payload.transmission);
     set('mileage', payload.mileage);
     set('kilometers', payload.kilometers);
-    set('district', payload.district);
     set('location', payload.location);
     set('owners', payload.owners);
     set('bodyType', payload.bodyType);
@@ -87,12 +88,10 @@ export class AdminService {
     set('engineCC', payload.engineCC ?? 0);
     set('abs', payload.abs);
     set('engine', payload.engine);
-    set('power', payload.power);
     set('registration', payload.registration);
     set('insurance', payload.insurance);
     set('featured', payload.featured);
     set('availability', payload.availability);
-    set('rating', payload.rating ?? 0);
     set('description', payload.description);
     for (const file of payload.images ?? []) {
       fd.append('images', file, file.name);

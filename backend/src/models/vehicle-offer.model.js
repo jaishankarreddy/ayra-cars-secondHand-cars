@@ -26,5 +26,6 @@ const VehicleOfferSchema = new mongoose.Schema(
 );
 
 VehicleOfferSchema.index({ status: 1, createdAt: -1 });
+VehicleOfferSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.model('VehicleOffer', VehicleOfferSchema);

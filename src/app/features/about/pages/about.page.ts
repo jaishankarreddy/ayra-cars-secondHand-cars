@@ -58,7 +58,7 @@ export class AboutPageComponent {
     },
     {
       question: 'How do I schedule a test drive?',
-      answer: 'Just contact us or visit our office — we will schedule your test drive at the vehicle\'s location at a time that suits you, in your language.',
+      answer: 'Just contact us or visit our office — test drives are free for any vehicle, and doorstep test drives are available within 5 km of our office, in your language.',
       open: false
     },
     {

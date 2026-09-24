@@ -99,12 +99,12 @@ export class TermsComponent {
         'If you choose to sell through Ayra Cars, you authorise us to list, market, photograph and show your vehicle to prospective buyers.'
       ],
       bullets: [
-        'Our selling model is consignment. Your vehicle is listed on the platform and the payout to you is made after the sale is completed with the buyer, along with the applicable transfer paperwork. There is no same-day payment on pickup.',
+        'Two payout options: if your vehicle passes our inspection we may buy it directly with same-day payment — otherwise it is listed on consignment and you are paid after the sale is completed with the buyer, along with the transfer paperwork.',
         'The final sale price is mutually agreed before transfer.',
         'You remain the owner until the transfer process is completed.',
         'You must disclose accident history, loans or hypothecation, challans and pending dues.'
       ],
-      callout: 'Consignment means we sell first, then you get paid — transparently, with the paperwork handled.'
+      callout: 'Pass inspection = same-day payment. Otherwise we list it and pay after the sale — transparently, with the paperwork handled.'
     },
     {
       id: 'buyers',
@@ -122,7 +122,7 @@ export class TermsComponent {
       number: '08',
       title: 'Test drives and inspections',
       paragraphs: [
-        'Test drives are by appointment — at our Bengaluru office or at the vehicle location, whichever we confirm with you.'
+        'Test drives are free and by appointment at our Bengaluru office (Vasanthapura Main Road, Konanakunte Cross). Doorstep test drives are available within 5 km of our office.'
       ],
       bullets: [
         'Bring a valid driving licence; our team may accompany the drive.',

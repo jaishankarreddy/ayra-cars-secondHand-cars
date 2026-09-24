@@ -5,9 +5,14 @@
       <h2 class="font-heading text-xl font-semibold text-text">
         {{ model() ? 'Edit Vehicle' : 'Add Vehicle' }}
       </h2>
-      <button type="button" (click)="closed.emit()" class="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-text" aria-label="Close">
-        <svg lucideX class="h-5 w-5"></svg>
-      </button>
+      <div class="flex items-center gap-2">
+        @if (restoredDraft()) {
+          <span class="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">Draft restored</span>
+        }
+        <button type="button" (click)="closed.emit()" class="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-text" aria-label="Close">
+          <svg lucideX class="h-5 w-5"></svg>
+        </button>
+      </div>
     </div>
 
     <form (submit)="submit()" class="max-h-[75vh] space-y-5 overflow-y-auto px-6 py-5">
@@ -30,7 +35,7 @@
         <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">Identity</h3>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Brand</span>
+            <span class="mb-1 block text-xs font-semibold text-text">Brand <span class="text-danger">*</span></span>
             <select [value]="form().brand" (change)="set('brand', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
               <option value="">Select brand</option>
               @for (b of brandList(); track b) {
@@ -39,7 +44,7 @@
             </select>
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Model</span>
+            <span class="mb-1 block text-xs font-semibold text-text">Model <span class="text-danger">*</span></span>
             <input [value]="form().model" (input)="set('model', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. Creta" />
           </label>
           <label class="block">
@@ -47,16 +52,17 @@
             <input [value]="form().variant" (input)="set('variant', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. SX (O)" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Year</span>
+            <span class="mb-1 block text-xs font-semibold text-text">Year <span class="text-danger">*</span></span>
             <input [value]="form().year" (input)="set('year', $any($event.target).value)" type="number" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="2024" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Price (₹)</span>
+            <span class="mb-1 block text-xs font-semibold text-text">Price (₹) <span class="text-danger">*</span></span>
             <input [value]="form().price" (input)="set('price', $any($event.target).value)" type="number" step="1000" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. 120000" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Body type</span>
+            <span class="mb-1 block text-xs font-semibold text-text">Body type <span class="text-danger">*</span></span>
             <select [value]="form().bodyType" (change)="set('bodyType', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select body type</option>
               @for (b of bodyTypes(); track b) {
                 <option [value]="b">{{ b }}</option>
               }
@@ -72,6 +78,7 @@
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Fuel</span>
             <select [value]="form().fuel" (change)="set('fuel', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select fuel</option>
               @for (f of fuels; track f) {
                 <option [value]="f">{{ f }}</option>
               }
@@ -80,18 +87,15 @@
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Transmission</span>
             <select [value]="form().transmission" (change)="set('transmission', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select gearbox</option>
               @for (t of transmissions; track t) {
-                <option [value]="t" [selected]="type() === 'bike' && t === 'Electric'">{{ t }}</option>
+                <option [value]="t">{{ t }}</option>
               }
             </select>
           </label>
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Color</span>
-            <select [value]="form().color" (change)="set('color', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
-              @for (c of colors; track c) {
-                <option [value]="c">{{ c }}</option>
-              }
-            </select>
+            <input [value]="form().color" (input)="set('color', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. Pearl White" />
           </label>
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Mileage (km/l)</span>
@@ -113,6 +117,7 @@
             <label class="block">
               <span class="mb-1 block text-xs font-semibold text-text">ABS</span>
               <select [value]="form().abs" (change)="set('abs', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+                <option value="">Select</option>
                 @for (b of yesNo; track b) {
                   <option [value]="b">{{ b === 'true' ? 'Yes' : 'No' }}</option>
                 }
@@ -131,16 +136,17 @@
             <input [value]="form().engine" (input)="set('engine', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="1493 cc" />
           </label>
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Power</span>
-            <input [value]="form().power" (input)="set('power', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="113 bhp" />
-          </label>
-          <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Registration no.</span>
             <input [value]="form().registration" (input)="set('registration', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="KA 01 MK 8214" />
           </label>
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Insurance</span>
-            <input [value]="form().insurance" (input)="set('insurance', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="Valid till Mar 2027" />
+            <select [value]="form().insurance" (change)="set('insurance', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select insurance</option>
+              <option value="Comprehensive">Comprehensive</option>
+              <option value="Third Party">Third Party</option>
+              <option value="Expired">Expired</option>
+            </select>
           </label>
         </div>
       </section>
@@ -150,16 +156,23 @@
         <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">Location</h3>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">District</span>
-            <select [value]="form().district" (change)="set('district', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
-              @for (d of districts; track d) {
-                <option [value]="d">{{ d }}</option>
-              }
-            </select>
-          </label>
-          <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Location detail</span>
             <input [value]="form().location" (input)="set('location', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. Whitefield, Bengaluru" />
+          </label>
+        </div>
+      </section>
+
+      <!-- EMI (optional, shown under the price on vehicle cards) -->
+      <section>
+        <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">EMI options</h3>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-xs font-semibold text-text">EMI from (₹/month)</span>
+            <input [value]="form().emiFrom" (input)="set('emiFrom', $any($event.target).value)" type="number" min="0" step="100" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. 12500" />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-xs font-semibold text-text">EMI note</span>
+            <input [value]="form().emiNote" (input)="set('emiNote', $any($event.target).value)" type="text" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="e.g. Zero down payment" />
           </label>
         </div>
       </section>
@@ -168,21 +181,43 @@
       <section>
         <div class="mb-2 flex items-center justify-between">
           <h3 class="text-xs font-semibold uppercase tracking-wider text-muted">Photos</h3>
-          <span class="text-xs text-muted">{{ totalImages() }} / {{ maxImages }}</span>
+          <span class="text-xs text-muted">{{ totalImages() }} / {{ maxImages }} · drag to reorder, first is cover</span>
         </div>
         @if (totalImages() > 0) {
           <div class="mb-2 flex flex-wrap gap-2">
             @for (img of existingImages(); track img; let i = $index) {
-              <div class="relative">
-                <img [src]="img" alt="Vehicle photo" class="h-24 w-32 rounded-lg border border-border object-cover" />
+              <div
+                class="relative cursor-grab active:cursor-grabbing"
+                [class.opacity-50]="dragExistingIndex() === i"
+                [class.ring-2]="dragExistingIndex() !== null && dragExistingIndex() !== i"
+                [class.ring-primary]="dragExistingIndex() !== null && dragExistingIndex() !== i"
+                draggable="true"
+                title="Drag to reorder"
+                (dragstart)="startExistingDrag(i)"
+                (dragover)="allowPhotoDrop($event)"
+                (drop)="dropExistingPhoto(i, $event)"
+                (dragend)="endPhotoDrag()"
+              >
+                <img [src]="img" alt="Vehicle photo" class="h-24 w-32 rounded-lg border border-border object-cover pointer-events-none" />
                 <button type="button" (click)="removeExistingImage(i)" class="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-danger text-white shadow" aria-label="Remove photo">
                   <svg lucideX class="h-3.5 w-3.5"></svg>
                 </button>
               </div>
             }
             @for (p of photos(); track p.preview; let i = $index) {
-              <div class="relative">
-                <img [src]="p.preview" alt="New vehicle photo" class="h-24 w-32 rounded-lg border border-border object-cover" />
+              <div
+                class="relative cursor-grab active:cursor-grabbing"
+                [class.opacity-50]="dragNewIndex() === i"
+                [class.ring-2]="dragNewIndex() !== null && dragNewIndex() !== i"
+                [class.ring-primary]="dragNewIndex() !== null && dragNewIndex() !== i"
+                draggable="true"
+                title="Drag to reorder"
+                (dragstart)="startNewDrag(i)"
+                (dragover)="allowPhotoDrop($event)"
+                (drop)="dropNewPhoto(i, $event)"
+                (dragend)="endPhotoDrag()"
+              >
+                <img [src]="p.preview" alt="New vehicle photo" class="h-24 w-32 rounded-lg border border-border object-cover pointer-events-none" />
                 <button type="button" (click)="removePhoto(i)" class="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-danger text-white shadow" aria-label="Remove photo">
                   <svg lucideX class="h-3.5 w-3.5"></svg>
                 </button>
@@ -216,6 +251,7 @@
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Featured</span>
             <select [value]="form().featured" (change)="set('featured', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select</option>
               @for (b of yesNo; track b) {
                 <option [value]="b">{{ b === 'true' ? 'Yes' : 'No' }}</option>
               }
@@ -224,21 +260,22 @@
           <label class="block">
             <span class="mb-1 block text-xs font-semibold text-text">Status</span>
             <select [value]="form().availability" (change)="set('availability', $any($event.target).value)" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary">
+              <option value="">Select status</option>
               @for (a of availabilityOptions; track a) {
-                <option [value]="a" [selected]="a === 'available'">{{ a }}</option>
+                <option [value]="a">{{ a }}</option>
               }
             </select>
-          </label>
-          <label class="block">
-            <span class="mb-1 block text-xs font-semibold text-text">Rating (0–5)</span>
-            <input [value]="form().rating" (input)="set('rating', $any($event.target).value)" type="number" step="0.1" min="0" max="5" class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none focus:border-primary" placeholder="4.5" />
           </label>
         </div>
       </section>
     </form>
 
     <!-- Footer -->
-    <div class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
+    <div class="flex items-center justify-between gap-3 border-t border-border px-6 py-4">
+      <button type="button" (click)="resetForm()" title="Clear the form and start fresh" class="rounded-xl border border-dashed border-border px-5 py-2.5 text-sm font-semibold text-muted transition-colors hover:border-danger hover:text-danger">
+        Reset form
+      </button>
+      <div class="flex items-center gap-3">
       <button type="button" (click)="closed.emit()" class="rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-surface-2 hover:text-text">
         Cancel
       </button>
@@ -251,6 +288,7 @@
           {{ model() ? 'Save Changes' : 'Create Vehicle' }}
         }
       </button>
+      </div>
     </div>
   </div>
 </div>

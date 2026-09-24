@@ -65,6 +65,8 @@ const VehicleSchema = new Schema(
     year: { type: Number, required: true },
     price: { type: Number, required: true, index: true },
     rating: { type: Number, default: 0, min: 0, max: 5 },
+    emiFrom: { type: Number, default: 0 }, // ₹/month starting EMI shown under the price
+    emiNote: { type: String, default: '' }, // e.g. "Zero down payment · 60 months"
     featured: { type: Boolean, default: false, index: true },
     availability: { type: String, enum: AVAILABILITIES, default: 'available', index: true },
 

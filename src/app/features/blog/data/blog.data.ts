@@ -30,7 +30,7 @@ export const BLOG_POSTS: BlogPost[] = [
       <h2>2. Drive cold start</h2><p>Start the engine cold. Listen for knocks, check exhaust smoke and let the car idle for 2 minutes — cheap trick, big reveal.</p>
       <h2>3. City vs highway mileage</h2><p>Bangalore traffic wears clutches faster. Prefer cars with steady highway runs and documented mileage.</p>
       <h2>4. Price vs market</h2><p>Compare 5 similar listings on Ayra Cars. Our transparent pricing model shows fair value — if a deal looks too good, inspect twice.</p>
-      <blockquote>Pro tip: Book a doorstep test drive via Ayra Cars — we bring the vehicle and the inspection report to your home.</blockquote>
+      <blockquote>Pro tip: Take a free test drive at our Ayra Cars office — or doorstep within 5 km — and inspect the vehicle with the report in hand before you decide.</blockquote>
       <p>Ready to browse? <a href="/cars">Explore verified used cars</a> or <a href="/sell">sell your car</a> in minutes.</p>
     `,
     cover: 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&auto=format&fit=crop&q=60',

@@ -72,17 +72,17 @@ export const WHY_CHOOSE_US: FeatureItem[] = [
   {
     icon: 'messageCircle',
     title: 'Quick WhatsApp Support',
-    description: 'Our experts are one message away. Get answers, video calls and test drives instantly.'
+    description: 'Our experts are one message away. Get answers, video calls and free test drives — office or doorstep within 5 km.'
   },
   {
     icon: 'handCoins',
     title: 'Easy Offer System',
-    description: 'Sell your vehicle in minutes. Get a fair offer, doorstep pickup and instant payment.'
+    description: 'List your vehicle in minutes. Free inspection, genuine buyers across Karnataka, and payout after the sale.'
   },
   {
     icon: 'truck',
-    title: 'Doorstep Delivery',
-    description: 'Choose home delivery or pick up from our experience centres across Karnataka. Additional delivery charges may apply based on your location.'
+    title: 'Scheduled Visits',
+    description: 'Visit our office for scheduled test drives and pickup anywhere in Karnataka.'
   }
 ];
 
@@ -104,7 +104,7 @@ export const TESTIMONIALS: Testimonial[] = [
   {
     name: 'Arjun Nair',
     role: 'Sold Royal Enfield · Mangaluru',
-    quote: 'I sold my Classic 350 within 24 hours. Fair offer, doorstep pickup and instant payment. Could not ask for more.',
+    quote: 'I sold my Classic 350 in days. Free inspection, genuine buyers and quick payout after the sale. Could not ask for more.',
     rating: 5,
     color: '#f59e0b'
   },
@@ -140,7 +140,7 @@ export const FAQS: FaqItem[] = [
   {
     question: 'Can I get a test drive before buying?',
     answer:
-      'Absolutely. You can book a doorstep test drive or visit one of our experience centres. Our team also arranges video calls and detailed walkthroughs for out-of-town buyers.'
+      'Absolutely — and it is free. Visit our office for any vehicle, or book a doorstep test drive if you are within 5 km of us.'
   },
   {
     question: 'What is included in the price?',
@@ -150,7 +150,7 @@ export const FAQS: FaqItem[] = [
   {
     question: 'How do I sell my current car or bike?',
     answer:
-      'Share a few details and get an instant fair offer. We arrange free doorstep inspection and pickup, handle the paperwork, and pay you the agreed amount quickly.'
+      'Share a few details and photos, get a fair valuation. Pass our inspection and we buy your vehicle with same-day payment — otherwise we list it and pay you after the sale is completed.'
   },
   {
     question: 'Do you deliver outside my city?',

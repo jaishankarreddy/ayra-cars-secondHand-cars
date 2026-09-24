@@ -5,11 +5,6 @@
     <div class="absolute inset-0 bg-gradient-to-r from-[#F8FAF9] via-[#F8FAF9]/88 to-[#F8FAF9]/15 max-[768px]:via-[#F8FAF9]/94" aria-hidden="true"></div>
     <div class="relative w-full max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-12 max-[768px]:py-8">
       <div class="max-w-[560px] w-full">
-        <nav class="flex items-center gap-1.5 text-[12px] font-medium text-[#66757A]" aria-label="Breadcrumb">
-          <a routerLink="/" class="hover:text-[#062D32] transition-colors">Home</a>
-          <span class="text-[#B6C2C6]">/</span>
-          <span class="text-[#062D32] font-semibold">Sell</span>
-        </nav>
         <div class="mt-4 flex items-center gap-[7px]">
           <span class="font-['Poppins',sans-serif] text-[11px] font-bold tracking-[0.14em] text-[#5C9F1F] uppercase leading-none">SELL YOUR VEHICLE</span>
           <span class="inline-block w-[25px] h-[2px] bg-[#B9F24A]"></span>
@@ -18,7 +13,7 @@
         <p class="mt-4 max-w-[480px] font-['Poppins',sans-serif] text-[13px] font-normal leading-[1.65] text-[#34454F]">Free inspection, fair price and genuine buyers across Karnataka — tell us about your vehicle, we call back within 24 hours.</p>
         <div class="mt-5 flex items-center gap-2 flex-wrap">
           <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]"><svg lucideShieldCheck size="13"></svg> Free inspection</span>
-          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]"><svg lucideBadgeCheck size="13"></svg> Pay after sale</span>
+          <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/80 backdrop-blur border border-[#E2E9E7] text-[11px] font-semibold text-[#062D32]"><svg lucideBadgeCheck size="13"></svg> Same-day pay option</span>
           <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-[#062D32] text-white text-[11px] font-semibold"><svg lucideMapPin size="13"></svg> Karnataka</span>
         </div>
       </div>
@@ -63,7 +58,7 @@
           <!-- STEP 1 -->
           @if (step() === 1) {
             <h2 class="mt-6 font-['Poppins',sans-serif] text-[20px] font-semibold text-[#0B1720]">Tell us about your vehicle</h2>
-            <p class="mt-1 text-[13px] text-[#66757A]">Brand and model are enough to continue — the rest helps us price fairly.</p>
+            <p class="mt-1 text-[13px] text-[#66757A]">Brand and model are enough to continue — add up to 10 photos, it speeds up your offer.</p>
             <div class="mt-5 flex items-center gap-1 rounded-full bg-[#F4F7F5] border border-[#EAEFE9] p-1 w-fit">
               <button type="button" (click)="setType('car')" [class]="vehicleType() === 'car' ? 'h-9 px-5 rounded-full text-[13px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-9 px-5 rounded-full text-[13px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Cars</button>
               <button type="button" (click)="setType('bike')" [class]="vehicleType() === 'bike' ? 'h-9 px-5 rounded-full text-[13px] font-semibold bg-[#062D32] text-white shadow-sm transition-all' : 'h-9 px-5 rounded-full text-[13px] font-semibold text-[#52616D] hover:text-[#062D32] transition-all'">Bikes</button>
@@ -102,6 +97,29 @@
                   @for (t of transmissions; track t) { <option [value]="t">{{ t }}</option> }
                 </select>
               </label>
+            </div>
+            <div class="mt-4">
+              <span class="mb-1.5 block text-[13px] font-semibold text-[#0B1720]">Vehicle photos <span class="font-normal text-[#8A969D]">({{ photos().length }}/{{ maxPhotos }} · first photo is the cover)</span></span>
+              <div class="mt-2 flex flex-wrap gap-2">
+                @for (p of photos(); track p.preview; let pi = $index) {
+                  <div class="relative h-20 w-20 overflow-hidden rounded-[12px] border border-[#E2E9E7]">
+                    <img [src]="p.preview" alt="Vehicle photo {{ pi + 1 }}" class="h-full w-full object-cover" />
+                    @if (pi === 0) {
+                      <span class="absolute bottom-1 left-1 rounded-full bg-[#062D32] px-1.5 py-0.5 text-[9px] font-bold text-white">COVER</span>
+                    }
+                    <button type="button" (click)="removePhoto(pi)" class="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white hover:bg-red-600" aria-label="Remove photo">
+                      <svg lucideX size="12"></svg>
+                    </button>
+                  </div>
+                }
+                @if (photos().length + compressing() < maxPhotos) {
+                  <label class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed border-[#8AA0A8] bg-[#F7FAF9] text-[#5F7078] hover:border-[#062D32] hover:text-[#062D32]">
+                    <svg lucideImagePlus size="20"></svg>
+                    <span class="text-[10px] font-semibold">@if (compressing() > 0) { Processing… } @else { Add }</span>
+                    <input type="file" accept="image/*" multiple class="hidden" (change)="onPhotosPicked($event)" />
+                  </label>
+                }
+              </div>
             </div>
             <div class="mt-6 flex justify-end">
               <button type="button" (click)="next()" class="inline-flex items-center gap-2 h-11 px-6 rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Continue <svg lucideArrowRight size="15"></svg></button>
@@ -158,6 +176,13 @@
                 </div>
               }
             </div>
+            @if (photos().length) {
+              <div class="mt-3 flex flex-wrap gap-2">
+                @for (p of photos(); track p.preview) {
+                  <img [src]="p.preview" alt="Vehicle photo" class="h-16 w-16 rounded-[10px] border border-[#EAEFE9] object-cover" />
+                }
+              </div>
+            }
             <div class="mt-6 flex items-center justify-between gap-3">
               <button type="button" (click)="back()" class="inline-flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors"><svg lucideArrowLeft size="15"></svg> Back</button>
               <button type="button" (click)="submit()" [disabled]="submitting()" class="inline-flex items-center gap-2 h-11 px-6 rounded-[10px] bg-[#B9F24A] text-[#062D32] text-[13px] font-bold hover:bg-[#C8F54A] transition-colors disabled:opacity-60">
@@ -184,7 +209,7 @@
             </div>
             <div class="flex items-start gap-3">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-[#B9F24A] text-[#062D32] text-[12px] font-bold">3</span>
-              <span class="text-[13px] leading-[1.55] text-white/80"><strong class="text-white">Pay after sale</strong> — we list your vehicle and pay after buyer pays &amp; RC transfer.</span>
+              <span class="text-[13px] leading-[1.55] text-white/80"><strong class="text-white">Two ways to get paid</strong> — pass inspection and we buy it with same-day payment, or we list it and pay after buyer pays &amp; RC transfer.</span>
             </div>
           </div>
         </div>
@@ -193,7 +218,7 @@
           <p class="mt-3 font-['Poppins',sans-serif] text-[15px] font-semibold text-[#0B1720]">Prefer to just talk?</p>
           <p class="mt-1 text-[13px] leading-[1.6] text-[#66757A]">Call or WhatsApp us in your language — we take your details on the call.</p>
           <div class="mt-4 flex gap-2.5">
-            <a href="tel:+919876543210" class="inline-flex h-10 flex-1 items-center justify-center rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Call us</a>
+            <a href="tel:+919844555308" class="inline-flex h-10 flex-1 items-center justify-center rounded-[10px] bg-[#062D32] text-white text-[13px] font-semibold hover:bg-[#0A3B40] transition-colors">Call us</a>
             <a routerLink="/contact" class="inline-flex h-10 flex-1 items-center justify-center rounded-[10px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors">Contact</a>
           </div>
         </div>

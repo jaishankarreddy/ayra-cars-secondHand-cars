@@ -158,8 +158,8 @@ export class AdminLayoutComponent implements OnInit {
     const list: { id: number; title: string; detail: string }[] = [];
     if (s.pendingOffers) list.push({ id: 1, title: `${s.pendingOffers} pending offers`, detail: 'Review buyer offers waiting for response.' });
     if (s.newContacts) list.push({ id: 2, title: `${s.newContacts} new enquiries`, detail: 'Messages from the contact page need a reply.' });
-    if (s.pendingTestDrives) list.push({ id: 3, title: `${s.pendingTestDrives} test drives pending`, detail: 'Confirm scheduled visits at the vehicle location.' });
-    if (s.newSellRequests) list.push({ id: 4, title: `${s.newSellRequests} sell requests`, detail: 'Sellers want to list via Ayra consignment.' });
+    if (s.pendingTestDrives) list.push({ id: 3, title: `${s.pendingTestDrives} test drives pending`, detail: 'Confirm office test drives booked by buyers.' });
+    if (s.newSellRequests) list.push({ id: 4, title: `${s.newSellRequests} sell requests`, detail: 'Sellers want Ayra to buy or list their vehicles.' });
     return list;
   });
 

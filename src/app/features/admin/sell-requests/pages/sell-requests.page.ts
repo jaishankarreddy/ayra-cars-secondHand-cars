@@ -42,6 +42,10 @@ export class AdminSellRequestsPageComponent implements OnInit {
   readonly page = signal(1);
   readonly pageSize = 10;
 
+  readonly viewerPhotos = signal<string[]>([]);
+  readonly viewerIndex = signal(0);
+  readonly viewerTitle = signal('');
+
   ngOnInit(): void {
     this.load();
   }
@@ -113,6 +117,28 @@ export class AdminSellRequestsPageComponent implements OnInit {
 
   vehicleLabel(r: AdminSellRequest): string {
     return `${r.brand} ${r.model}${r.year ? ` ${r.year}` : ''}`;
+  }
+
+  openViewer(r: AdminSellRequest): void {
+    if (!r.images?.length) return;
+    this.viewerPhotos.set(r.images);
+    this.viewerIndex.set(0);
+    this.viewerTitle.set(this.vehicleLabel(r));
+  }
+
+  closeViewer(): void {
+    this.viewerPhotos.set([]);
+    this.viewerIndex.set(0);
+  }
+
+  viewerPrev(): void {
+    const n = this.viewerPhotos().length;
+    if (n) this.viewerIndex.update((i) => (i - 1 + n) % n);
+  }
+
+  viewerNext(): void {
+    const n = this.viewerPhotos().length;
+    if (n) this.viewerIndex.update((i) => (i + 1) % n);
   }
 
   formatPrice(value: number | null): string {

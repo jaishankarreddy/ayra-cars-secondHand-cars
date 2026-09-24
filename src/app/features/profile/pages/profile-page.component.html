@@ -1,161 +1,378 @@
 <div class="min-h-screen bg-[#F7FAF9]">
-  <!-- Hero -->
-  <section class="bg-[#062D32] relative overflow-hidden">
-    <div class="pointer-events-none absolute -right-20 -top-28 w-[360px] h-[360px] rounded-full border border-[#B9F24A]/[0.07] max-[1024px]:hidden" aria-hidden="true"></div>
-    <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-8">
-      <nav class="flex items-center gap-1.5 text-[12px] font-medium text-white/55" aria-label="Breadcrumb">
-        <a routerLink="/" class="hover:text-white transition-colors">Home</a>
-        <span class="text-white/25">/</span>
-        <span class="text-white font-semibold">My Profile</span>
-      </nav>
-      <div class="mt-3 flex items-end justify-between gap-4 flex-wrap">
-        <div>
-          <h1 class="font-['Poppins',sans-serif] text-[26px] font-semibold tracking-[-0.02em] text-white">My Profile</h1>
-          <p class="mt-1.5 text-[13px] text-white/70">View and manage your Ayra Cars account — wishlist, contact and preferences.</p>
-        </div>
-        <span class="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-white/[0.08] border border-white/10 text-[11px] font-semibold text-white"><svg lucideShieldCheck size="13" class="text-[#B9F24A]"></svg> Secure account</span>
-      </div>
-    </div>
-  </section>
+  <div class="max-w-[1460px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-4">
+    <h1 class="font-['Poppins',sans-serif] text-[24px] font-semibold tracking-[-0.02em] text-[#0B1720]">My Profile</h1>
+    <p class="mt-1 text-[13px] text-[#5F7078]">Manage your account and preferences.</p>
 
-  @if (loading()) {
-    <div class="max-w-[860px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-10">
-      <div class="bg-white rounded-[16px] border border-[#E6ECEA] p-8 shadow-sm">
-        <div class="flex gap-6 max-[768px]:flex-col">
-          <div class="h-24 w-24 rounded-full skeleton shrink-0"></div>
-          <div class="flex-1 space-y-3">
-            <div class="h-5 w-1/3 rounded skeleton"></div>
-            <div class="h-4 w-1/2 rounded skeleton"></div>
-            <div class="h-10 rounded-[10px] skeleton"></div>
-          </div>
+    @if (loading()) {
+      <div class="mt-5 bg-white rounded-[10px] border border-[#E6ECEA] p-6">
+        <div class="flex items-center gap-4">
+          <div class="h-16 w-16 rounded-full skeleton shrink-0"></div>
+          <div class="flex-1 space-y-2"><div class="h-4 w-1/3 rounded skeleton"></div><div class="h-3 w-1/2 rounded skeleton"></div></div>
         </div>
       </div>
-    </div>
-  } @else if (!isAuthenticated() || !user()) {
-    <div class="max-w-[560px] mx-auto px-6 py-16 text-center">
-      <div class="bg-white rounded-[16px] border border-[#E6ECEA] p-10">
-        <p class="text-sm font-medium text-[#5F7078]">Please log in to view your profile.</p>
-        <a routerLink="/auth/login" class="mt-4 inline-flex items-center gap-1.5 rounded-[10px] bg-[#062D32] px-6 py-3 text-sm font-bold text-white">Sign In <svg lucideArrowRight size="14"></svg></a>
+    } @else if (!isAuthenticated() || !user()) {
+      <div class="mt-5 bg-white rounded-[10px] border border-[#E6ECEA] p-10 text-center">
+        <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#062D32] text-white"><svg lucideUser size="20"></svg></span>
+        <p class="mt-4 font-['Poppins',sans-serif] text-lg font-semibold text-[#0B1720]">Sign in to your account</p>
+        <p class="mt-1 text-sm text-[#5F7078]">Track offers, manage your wishlist and details in one place.</p>
+        <a routerLink="/auth/login" class="mt-5 inline-flex items-center gap-1.5 rounded-[10px] bg-[#062D32] px-6 py-3 text-sm font-bold text-white">Sign In <svg lucideArrowRight size="14"></svg></a>
       </div>
-    </div>
-  } @else {
-    <div class="max-w-[860px] mx-auto px-[72px] max-[1024px]:px-10 max-[768px]:px-5 py-8">
-      <!-- Card -->
-      <div class="bg-white rounded-[16px] border border-[#E6ECEA] p-6 sm:p-8 shadow-[0_8px_28px_rgba(6,47,53,0.06)]">
-        <!-- header -->
-        <div class="flex items-start gap-5 max-[600px]:flex-col">
-          <div class="relative shrink-0">
+    } @else {
+      <div id="profile-top" class="mt-4 grid grid-cols-[260px_minmax(0,1fr)] gap-5 items-start max-[900px]:grid-cols-1">
+        <!-- Side navigation -->
+        <aside class="flex flex-col self-start overflow-hidden bg-white rounded-[10px] border border-[#E6ECEA] lg:sticky lg:top-[70px] lg:h-[calc(100dvh-70px)]">
+          <div class="flex items-center gap-3 border-b border-[#EEF3F1] px-4 py-4">
             @if (user()!.avatar) {
-              <img [src]="user()!.avatar" [alt]="user()!.name" class="h-24 w-24 rounded-full object-cover border-2 border-white shadow-[0_4px_16px_rgba(6,47,53,0.12)]" />
+              <img [src]="user()!.avatar" [alt]="user()!.name" class="h-11 w-11 rounded-full object-cover shrink-0" />
             } @else {
-              <div class="flex h-24 w-24 items-center justify-center rounded-full bg-[#062D32] text-white text-[28px] font-bold tracking-[-0.02em] border-2 border-white shadow-[0_4px_16px_rgba(6,47,53,0.12)]">{{ initials() }}</div>
+              <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[#062D32] text-white text-[15px] font-bold shrink-0">{{ initials() }}</div>
             }
-            <span class="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#B9F24A] border-2 border-white text-[#062D32]"><svg lucideBadgeCheck size="14"></svg></span>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold text-[#0B1720]">{{ user()!.name || 'Ayra User' }}</p>
+              <p class="truncate text-xs text-[#8AA0A8]">{{ user()!.email }}</p>
+            </div>
           </div>
-          <div class="min-w-0 flex-1">
-            <h2 class="font-['Poppins',sans-serif] text-[20px] font-semibold text-[#0B1720]">{{ user()!.name || 'Ayra User' }}</h2>
-            <p class="mt-1 inline-flex items-center gap-1.5 text-[13px] text-[#5F7078]"><svg lucideMail size="14" class="text-[#8A969D]"></svg> {{ user()!.email }}</p>
-            @if (user()!.phone) {
-              <p class="mt-1 inline-flex items-center gap-1.5 text-[13px] text-[#5F7078]"><svg lucidePhone size="14" class="text-[#8A969D]"></svg> +91 {{ user()!.phone }}</p>
-            }
-            <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#F0F7E8] border border-[#D4EBCC] px-2.5 py-1 text-[11px] font-bold text-[#0a3622]"><svg lucideShieldCheck size="12"></svg> {{ user()!.emailVerified ? 'Verified' : 'Ayra member' }} · {{ user()!.role }}</p>
-          </div>
-          <div class="flex gap-2 shrink-0 max-[600px]:w-full">
-            @if (!editMode()) {
-              <button type="button" (click)="startEdit()" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-full border border-[#E2E9E7] bg-white text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] hover:bg-[#F7FAF9] transition-colors"><svg lucidePencil size="14"></svg> Edit</button>
-              <button type="button" (click)="logout()" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white border border-[#E2E9E7] text-[13px] font-semibold text-[#DC2626] hover:bg-[#FFF1F1] hover:border-[#FECACA] transition-colors"><svg lucideLogOut size="14"></svg> Logout</button>
-            }
-          </div>
-        </div>
+          <nav class="min-h-0 flex-1 overflow-y-auto p-2.5">
+            <button type="button" (click)="scrollTo('profile-top')" class="flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-top'" [class.text-white]="activeSection() === 'profile-top'" [class.text-[#5F7078]]="activeSection() !== 'profile-top'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-top'">
+              <svg lucideUser size="15"></svg> Overview
+            </button>
+            <button type="button" (click)="scrollTo('profile-offers')" class="mt-0.5 flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-offers'" [class.text-white]="activeSection() === 'profile-offers'" [class.text-[#5F7078]]="activeSection() !== 'profile-offers'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-offers'">
+              <svg lucideHandCoins size="15"></svg>
+              <span class="flex-1 text-left">My Offers</span>
+              @if (offers().length) {
+                <span class="rounded-full px-2 py-0.5 text-[11px] font-bold" [class.bg-white/20]="activeSection() === 'profile-offers'" [class.text-white]="activeSection() === 'profile-offers'" [class.bg-[#F0F7E8]]="activeSection() !== 'profile-offers'" [class.text-[#0a3622]]="activeSection() !== 'profile-offers'">{{ offers().length }}</span>
+              }
+            </button>
+            <button type="button" (click)="scrollTo('profile-wishlist')" class="mt-0.5 flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-wishlist'" [class.text-white]="activeSection() === 'profile-wishlist'" [class.text-[#5F7078]]="activeSection() !== 'profile-wishlist'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-wishlist'">
+              <svg lucideHeart size="15" class="text-[#DC2626]"></svg>
+              <span class="flex-1 text-left">Wishlist</span>
+              @if (wishlistIds().length) {
+                <span class="rounded-full px-2 py-0.5 text-[11px] font-bold" [class.bg-white/20]="activeSection() === 'profile-wishlist'" [class.text-white]="activeSection() === 'profile-wishlist'" [class.bg-[#F0F7E8]]="activeSection() !== 'profile-wishlist'" [class.text-[#0a3622]]="activeSection() !== 'profile-wishlist'">{{ wishlistIds().length }}</span>
+              }
+            </button>
+            <button type="button" (click)="scrollTo('profile-notifications')" class="mt-0.5 flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-notifications'" [class.text-white]="activeSection() === 'profile-notifications'" [class.text-[#5F7078]]="activeSection() !== 'profile-notifications'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-notifications'">
+              <svg lucideBell size="15"></svg>
+              <span class="flex-1 text-left">Notifications</span>
+              @if (notifications().length) {
+                <span class="h-2 w-2 rounded-full bg-[#7a9a1e]"></span>
+              }
+            </button>
+            <button type="button" (click)="scrollTo('profile-account')" class="mt-0.5 flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-account'" [class.text-white]="activeSection() === 'profile-account'" [class.text-[#5F7078]]="activeSection() !== 'profile-account'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-account'">
+              <svg lucideSave size="15"></svg> Account
+            </button>
+            <button type="button" (click)="scrollTo('profile-support')" class="mt-0.5 flex w-full items-center gap-2.5 rounded-[8px] px-3 py-2.5 text-[13px] font-semibold transition-colors" [class.bg-[#062D32]]="activeSection() === 'profile-support'" [class.text-white]="activeSection() === 'profile-support'" [class.text-[#5F7078]]="activeSection() !== 'profile-support'" [class.hover:bg-[#F7FAF9]]="activeSection() !== 'profile-support'">
+              <svg lucideMapPin size="15"></svg> Support
+            </button>
+          </nav>
 
-        <!-- stats -->
-        <div class="mt-6 grid grid-cols-3 gap-3 max-[600px]:grid-cols-1">
-          <div class="rounded-[12px] border border-[#E6ECEA] bg-[#F7FAF9] p-4 text-center">
-            <p class="text-[11px] font-bold tracking-[0.08em] uppercase text-[#5F7078]">Wishlist</p>
-            <p class="mt-1 font-['Poppins',sans-serif] text-[18px] font-semibold text-[#0B1720]"><a routerLink="/wishlist" class="inline-flex items-center gap-1 hover:text-[#062D32]"><svg lucideHeart size="16" class="text-[#DC2626]"></svg> View</a></p>
+          <div class="border-t border-[#EEF3F1] p-3">
+            <button type="button" (click)="logout()" class="flex w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#E2E9E7] bg-white py-2.5 text-[13px] font-semibold text-[#DC2626] hover:bg-[#FFF1F1] hover:border-[#FECACA] transition-colors"><svg lucideLogOut size="15"></svg> Log Out</button>
           </div>
-          <div class="rounded-[12px] border border-[#E6ECEA] bg-[#F7FAF9] p-4 text-center">
-            <p class="text-[11px] font-bold tracking-[0.08em] uppercase text-[#5F7078]">Member since</p>
-            <p class="mt-1 text-[13px] font-semibold text-[#0B1720]">{{ user()!.email ? 'Ayra' : '—' }}</p>
-          </div>
-          <div class="rounded-[12px] border border-[#E6ECEA] bg-[#F7FAF9] p-4 text-center">
-            <p class="text-[11px] font-bold tracking-[0.08em] uppercase text-[#5F7078]">Support</p>
-            <p class="mt-1 text-[13px] font-semibold text-[#0B1720]"><a routerLink="/contact" class="hover:underline">Contact us</a></p>
-          </div>
-        </div>
+        </aside>
 
-        <!-- edit form -->
-        <div class="mt-8 border-t border-[#E6ECEA] pt-6">
-          <div class="flex items-center justify-between">
-            <h3 class="font-['Poppins',sans-serif] text-[16px] font-semibold text-[#0B1720]">Personal details</h3>
-            @if (editMode()) {
-              <span class="text-xs font-medium text-[#8A969D]">Editing…</span>
-            }
-          </div>
-
-          @if (error()) {
-            <p class="mt-4 rounded-[10px] border border-[#FF4D4F]/20 bg-[#FFF1F1] px-4 py-3 text-sm font-medium text-[#C0392B]">{{ error() }}</p>
-          }
-          @if (success()) {
-            <p class="mt-4 rounded-[10px] border border-[#D4EBCC] bg-[#F0F7E8] px-4 py-3 text-sm font-medium text-[#0a3622]">{{ success() }}</p>
-          }
-
-          @if (editMode()) {
-            <form class="mt-5 space-y-4" (submit)="$event.preventDefault(); save()">
-              <div>
-                <label class="text-[12px] font-semibold text-[#0B1720]">Full name</label>
-                <div class="mt-1.5 flex items-center h-11 rounded-[10px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062D32] overflow-hidden">
-                  <span class="flex items-center justify-center w-11 h-full bg-white border-r border-[#E2E9E7] text-[#8A969D]"><svg lucideUser size="16"></svg></span>
-                  <input [value]="editName()" (input)="editName.set($any($event.target).value)" placeholder="Your name" class="flex-1 h-full bg-transparent px-3 text-[14px] font-medium focus:outline-none" />
-                </div>
-              </div>
-              <div>
-                <label class="text-[12px] font-semibold text-[#0B1720]">Email address</label>
-                <div class="mt-1.5 flex items-center h-11 rounded-[10px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062D32] overflow-hidden">
-                  <span class="flex items-center justify-center w-11 h-full bg-white border-r border-[#E2E9E7] text-[#8A969D]"><svg lucideMail size="16"></svg></span>
-                  <input [value]="editEmail()" (input)="editEmail.set($any($event.target).value)" placeholder="you@example.com" type="email" class="flex-1 h-full bg-transparent px-3 text-[14px] font-medium focus:outline-none" />
-                </div>
-              </div>
-              <div>
-                <label class="text-[12px] font-semibold text-[#0B1720]">Mobile number</label>
-                <div class="mt-1.5 flex items-center h-11 rounded-[10px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062D32] overflow-hidden">
-                  <span class="flex items-center justify-center w-11 h-full bg-white border-r border-[#E2E9E7] text-[#8A969D]"><svg lucidePhone size="16"></svg></span>
-                  <span class="px-2 text-[13px] font-semibold text-[#062D32]">+91</span>
-                  <input [value]="editPhone()" (input)="editPhone.set($any($event.target).value)" placeholder="98445 55308" inputmode="numeric" maxlength="10" class="flex-1 h-full bg-transparent px-3 text-[14px] font-medium focus:outline-none" />
-                </div>
-                <p class="mt-1 text-[11px] text-[#8A969D]">Leave blank if you signed in with Google and don’t have a mobile.</p>
-              </div>
-
-              <div class="flex gap-3 pt-2">
-                <button type="button" (click)="save()" [disabled]="saving()" class="inline-flex items-center gap-1.5 h-11 px-6 rounded-[10px] bg-[#062D32] text-white text-[13px] font-bold hover:bg-[#0A3B40] disabled:opacity-60"><svg lucideSave size="15"></svg> {{ saving() ? 'Saving…' : 'Save changes' }}</button>
-                <button type="button" (click)="cancelEdit()" class="inline-flex items-center gap-1.5 h-11 px-6 rounded-[10px] border border-[#E2E9E7] bg-white text-[13px] font-semibold text-[#062D32] hover:bg-[#F7FAF9]"><svg lucideX size="15"></svg> Cancel</button>
-              </div>
-            </form>
+        <!-- Main column -->
+        <div class="min-w-0">
+      <!-- Profile card -->
+      <div class="mt-5 bg-white rounded-[10px] border border-[#E6ECEA] p-5 sm:p-6">
+        <div class="flex items-center gap-4">
+          @if (user()!.avatar) {
+            <img [src]="user()!.avatar" [alt]="user()!.name" class="h-16 w-16 rounded-full object-cover shrink-0" />
           } @else {
-            <div class="mt-5 space-y-3">
-              <div class="flex items-center justify-between rounded-[10px] border border-[#E6ECEA] bg-white px-4 py-3">
-                <span class="flex items-center gap-2 text-[13px] text-[#5F7078]"><svg lucideUser size="16" class="text-[#8A969D]"></svg> Name</span>
-                <span class="text-[13px] font-semibold text-[#0B1720]">{{ user()!.name || '—' }}</span>
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-[#062D32] text-white text-[20px] font-bold shrink-0">{{ initials() }}</div>
+          }
+          <div class="min-w-0 flex-1">
+            <p class="truncate font-['Poppins',sans-serif] text-[17px] font-semibold text-[#0B1720]">{{ user()!.name || 'Ayra User' }}</p>
+            <p class="mt-0.5 text-[13px] text-[#5F7078]">{{ user()!.phone ? '+91 ' + user()!.phone : 'No mobile added' }}</p>
+            <p class="truncate text-[13px] text-[#5F7078]">{{ user()!.email }}</p>
+          </div>
+          <button type="button" (click)="startEdit(); expandedRow.set(null)" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] border border-[#E2E9E7] bg-white text-[13px] font-semibold text-[#062D32] hover:border-[#062D32] transition-colors shrink-0">Edit Profile</button>
+        </div>
+
+        @if (editMode()) {
+          <form class="mt-5 border-t border-[#EEF3F1] pt-5 space-y-4 max-w-[520px]" (submit)="$event.preventDefault(); save()">
+            @if (error()) {
+              <p class="rounded-[8px] border border-[#FF4D4F]/20 bg-[#FFF1F1] px-4 py-3 text-sm font-medium text-[#C0392B]">{{ error() }}</p>
+            }
+            @if (success()) {
+              <p class="rounded-[8px] border border-[#D4EBCC] bg-[#F0F7E8] px-4 py-3 text-sm font-medium text-[#0a3622]">{{ success() }}</p>
+            }
+            <div>
+              <label class="text-[12px] font-semibold text-[#0B1720]">Full name</label>
+              <input [value]="editName()" (input)="editName.set($any($event.target).value)" placeholder="Your name" class="mt-1.5 h-11 w-full rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] px-3 text-[14px] font-medium focus:outline-none focus:border-[#062D32] focus:bg-white" />
+            </div>
+            <div class="grid grid-cols-2 gap-3 max-[600px]:grid-cols-1">
+              <div>
+                <label class="text-[12px] font-semibold text-[#0B1720]">Email</label>
+                <input [value]="editEmail()" (input)="editEmail.set($any($event.target).value)" placeholder="you@example.com" type="email" class="mt-1.5 h-11 w-full rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] px-3 text-[14px] font-medium focus:outline-none focus:border-[#062D32] focus:bg-white" />
               </div>
-              <div class="flex items-center justify-between rounded-[10px] border border-[#E6ECEA] bg-white px-4 py-3">
-                <span class="flex items-center gap-2 text-[13px] text-[#5F7078]"><svg lucideMail size="16" class="text-[#8A969D]"></svg> Email</span>
-                <span class="text-[13px] font-semibold text-[#0B1720] truncate max-w-[60%]">{{ user()!.email }}</span>
-              </div>
-              <div class="flex items-center justify-between rounded-[10px] border border-[#E6ECEA] bg-white px-4 py-3">
-                <span class="flex items-center gap-2 text-[13px] text-[#5F7078]"><svg lucidePhone size="16" class="text-[#8A969D]"></svg> Mobile</span>
-                <span class="text-[13px] font-semibold text-[#0B1720]">{{ user()!.phone ? '+91 ' + user()!.phone : 'Not added' }}</span>
-              </div>
-              <div class="flex items-center gap-2 pt-2">
-                <a routerLink="/wishlist" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#062D32] hover:underline"><svg lucideHeart size="16" class="text-[#DC2626]"></svg> View wishlist</a>
-                <span class="text-[#E2E9E7]">·</span>
-                <a routerLink="/contact" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#062D32] hover:underline"><svg lucideMapPin size="14"></svg> Support</a>
+              <div>
+                <label class="text-[12px] font-semibold text-[#0B1720]">Mobile</label>
+                <div class="mt-1.5 flex items-center h-11 rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062D32] overflow-hidden">
+                  <span class="px-2.5 text-[13px] font-semibold text-[#062D32]">+91</span>
+                  <input [value]="editPhone()" (input)="editPhone.set($any($event.target).value)" placeholder="98443 04116" inputmode="numeric" maxlength="10" class="flex-1 h-full bg-transparent px-2 text-[14px] font-medium focus:outline-none" />
+                </div>
               </div>
             </div>
-          }
+            <div class="flex gap-3 pt-1">
+              <button type="button" (click)="save()" [disabled]="saving()" class="inline-flex items-center gap-1.5 h-11 px-6 rounded-[8px] bg-[#062D32] text-white text-[13px] font-bold hover:bg-[#0A3B40] disabled:opacity-60"><svg lucideSave size="15"></svg> {{ saving() ? 'Saving…' : 'Save changes' }}</button>
+              <button type="button" (click)="cancelEdit()" class="inline-flex items-center gap-1.5 h-11 px-6 rounded-[8px] border border-[#E2E9E7] bg-white text-[13px] font-semibold text-[#062D32] hover:bg-[#F7FAF9]"><svg lucideX size="15"></svg> Cancel</button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <!-- Quick-access cards -->
+      <div class="mt-4 grid grid-cols-2 gap-3 max-[600px]:grid-cols-1">
+        <button type="button" (click)="scrollTo('profile-wishlist')" class="flex items-center gap-3 rounded-[10px] border border-[#E6ECEA] bg-white p-4 text-left transition-all hover:border-[#062D32]/30 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)]">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#FFF1F1] text-[#DC2626]"><svg lucideHeart size="18"></svg></span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-sm font-semibold text-[#0B1720]">Wishlist</span>
+            <span class="block text-xs text-[#5F7078]">{{ wishlistIds().length }} saved vehicle{{ wishlistIds().length === 1 ? '' : 's' }}</span>
+          </span>
+          <svg lucideArrowRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+        </button>
+        <a routerLink="/compare" class="flex items-center gap-3 rounded-[10px] border border-[#E6ECEA] bg-white p-4 transition-all hover:border-[#062D32]/30 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)]">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#F7FAF9] text-[#062D32]"><svg lucideScale size="18"></svg></span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-sm font-semibold text-[#0B1720]">Compare</span>
+            <span class="block text-xs text-[#5F7078]">{{ compareCount() }} vehicle{{ compareCount() === 1 ? '' : 's' }}</span>
+          </span>
+          <svg lucideArrowRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+        </a>
+        <button type="button" (click)="scrollTo('profile-offers')" class="flex items-center gap-3 rounded-[10px] border border-[#E6ECEA] bg-white p-4 text-left transition-all hover:border-[#062D32]/30 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)]">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#F0F7E8] text-[#0a3622]"><svg lucideHandCoins size="18"></svg></span>
+          <span class="min-w-0 flex-1">
+            <span class="flex items-center gap-2">
+              <span class="block text-sm font-semibold text-[#0B1720]">My Offers</span>
+              @if (hasOfferUpdates()) {
+                <span class="h-2 w-2 rounded-full bg-[#7a9a1e]"></span>
+              }
+            </span>
+            <span class="block text-xs text-[#5F7078]">{{ offers().length }} active offer{{ offers().length === 1 ? '' : 's' }}</span>
+          </span>
+          <svg lucideArrowRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+        </button>
+        <button type="button" (click)="scrollTo('profile-notifications')" class="flex items-center gap-3 rounded-[10px] border border-[#E6ECEA] bg-white p-4 text-left transition-all hover:border-[#062D32]/30 hover:shadow-[0_8px_22px_rgba(6,45,50,0.08)]">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#FFFBEB] text-[#B45309]"><svg lucideBell size="18"></svg></span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-sm font-semibold text-[#0B1720]">Notifications</span>
+            <span class="block text-xs text-[#5F7078]">{{ notifications().length ? notifications().length + ' update' + (notifications().length === 1 ? '' : 's') : 'Stay updated' }}</span>
+          </span>
+          <svg lucideArrowRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+        </button>
+      </div>
+
+      <!-- My Offers -->
+      <section id="profile-offers" class="mt-6 scroll-mt-24">
+        <h2 class="font-['Poppins',sans-serif] text-[16px] font-semibold text-[#0B1720]">My Offers</h2>
+        @if (offersLoading()) {
+          <div class="mt-3 space-y-2.5">
+            <div class="h-16 rounded-[10px] skeleton"></div>
+            <div class="h-16 rounded-[10px] skeleton"></div>
+          </div>
+        } @else if (!offers().length) {
+          <div class="mt-3 rounded-[10px] border border-dashed border-[#C8D5D1] bg-white px-5 py-7 text-center">
+            <p class="text-sm font-semibold text-[#0B1720]">No offers yet</p>
+            <p class="mt-1 text-[13px] text-[#5F7078]">Make an offer on any vehicle — it will appear here with live status.</p>
+            <a routerLink="/cars" class="mt-4 inline-flex items-center gap-1.5 rounded-[8px] bg-[#062D32] px-5 py-2.5 text-[13px] font-bold text-white">Browse vehicles <svg lucideArrowRight size="14"></svg></a>
+          </div>
+        } @else {
+          <div class="mt-3 space-y-2.5">
+            @for (o of offers(); track o.id) {
+              <a [routerLink]="['/vehicles', o.vehicleId]" class="flex items-center gap-3.5 rounded-[10px] border border-[#E6ECEA] bg-white p-3 transition-all hover:border-[#062D32]/30">
+                @if (o.image) {
+                  <img [src]="o.image" [alt]="o.vehicle" loading="lazy" class="h-14 w-14 shrink-0 rounded-[8px] object-cover" />
+                } @else {
+                  <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-[8px] bg-[#F7FAF9] text-[#062D32]"><svg lucideHandCoins size="20"></svg></span>
+                }
+                <span class="min-w-0 flex-1">
+                  <span class="flex items-center gap-2 flex-wrap">
+                    <span class="truncate text-sm font-semibold text-[#0B1720]">{{ o.vehicle }}</span>
+                    <span class="status-chip" [class.status-pending]="o.status === 'Pending'" [class.status-accepted]="o.status === 'Accepted'" [class.status-countered]="o.status === 'Countered'" [class.status-rejected]="o.status === 'Rejected'">{{ o.status }}</span>
+                    @if (isOfferUpdated(o)) {
+                      <span class="rounded-full bg-[#B9F24A] px-2 py-0.5 text-[10px] font-bold text-[#062D32]">Updated</span>
+                    }
+                  </span>
+                  <span class="mt-0.5 block text-[13px] text-[#5F7078]">Your offer <strong class="text-[#0B1720]">{{ offerPrice(o.offerPrice) }}</strong>
+                    @if (o.status === 'Countered' && o.counterPrice) {
+                      · Our counter <strong class="text-[#0d6b32]">{{ offerPrice(o.counterPrice) }}</strong>
+                    }
+                    <span class="text-[#8AA0A8]"> · {{ offerDate(o.date) }}</span>
+                  </span>
+                </span>
+                <svg lucideArrowRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+              </a>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Wishlist -->
+      <section id="profile-wishlist" class="mt-6 scroll-mt-24">
+        <h2 class="font-['Poppins',sans-serif] text-[16px] font-semibold text-[#0B1720]">Wishlist</h2>
+        @if (!wishlistVehicles().length) {
+          <div class="mt-3 rounded-[10px] border border-dashed border-[#C8D5D1] bg-white px-5 py-7 text-center">
+            <p class="text-sm font-semibold text-[#0B1720]">Nothing saved yet</p>
+            <p class="mt-1 text-[13px] text-[#5F7078]">Tap the heart on any vehicle to park it here for later.</p>
+            <a routerLink="/cars" class="mt-4 inline-flex items-center gap-1.5 rounded-[8px] bg-[#062D32] px-5 py-2.5 text-[13px] font-bold text-white">Browse vehicles <svg lucideArrowRight size="14"></svg></a>
+          </div>
+        } @else {
+          <div class="mt-3 space-y-2.5">
+            @for (v of wishlistVehicles(); track v.id) {
+              <div class="flex items-center gap-3.5 rounded-[10px] border border-[#E6ECEA] bg-white p-3">
+                <a [routerLink]="['/vehicles', v.id]" class="shrink-0">
+                  <img [src]="v.image" [alt]="v.brand + ' ' + v.model" loading="lazy" class="h-14 w-14 rounded-[8px] object-cover" />
+                </a>
+                <a [routerLink]="['/vehicles', v.id]" class="min-w-0 flex-1">
+                  <span class="block truncate text-sm font-semibold text-[#0B1720]">{{ v.brand }} {{ v.model }} · {{ v.year }}</span>
+                  <span class="mt-0.5 block text-[13px] font-bold text-[#062D32]">{{ wishlistPrice(v.price) }}</span>
+                  <span class="block truncate text-xs text-[#8AA0A8]">{{ v.fuel }} · {{ v.transmission }} · {{ v.district }}</span>
+                </a>
+                <button type="button" (click)="removeFromWishlist(v.id)" title="Remove from wishlist" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E2E9E7] text-[#DC2626] hover:bg-[#FFF1F1] hover:border-[#FECACA] transition-colors">
+                  <svg lucideX size="15"></svg>
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Notifications -->
+      <section id="profile-notifications" class="mt-6 scroll-mt-24">
+        <h2 class="font-['Poppins',sans-serif] text-[16px] font-semibold text-[#0B1720]">Notifications</h2>
+        @if (!notifications().length) {
+          <div class="mt-3 rounded-[10px] border border-[#E6ECEA] bg-white px-5 py-6 text-center">
+            <p class="text-sm text-[#5F7078]">You're all caught up — offer updates from our team will appear here.</p>
+          </div>
+        } @else {
+          <div class="mt-3 rounded-[10px] border border-[#E6ECEA] bg-white divide-y divide-[#EEF3F1]">
+            @for (n of notifications(); track n.id) {
+              <a [routerLink]="['/vehicles', n.vehicleId]" class="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-[#F7FAF9]">
+                <span class="h-2 w-2 shrink-0 rounded-full bg-[#7a9a1e]"></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block truncate text-[13px] text-[#0B1720]">Your offer on <strong>{{ n.vehicle }}</strong> was <strong>{{ n.status.toLowerCase() }}</strong>@if (n.status === 'Countered' && n.counterPrice) { at <strong>{{ offerPrice(n.counterPrice) }}</strong> }</span>
+                  <span class="mt-0.5 block text-xs text-[#8AA0A8]">{{ offerDate(n.updatedAt) }}</span>
+                </span>
+                <svg lucideArrowRight size="15" class="shrink-0 text-[#8AA0A8]"></svg>
+              </a>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Account -->
+      <section id="profile-account" class="mt-8 scroll-mt-24">
+        <h2 class="text-[11px] font-bold tracking-[0.12em] uppercase text-[#8AA0A8]">Account</h2>
+        <div class="mt-2 rounded-[10px] border border-[#E6ECEA] bg-white divide-y divide-[#EEF3F1]">
+          <div>
+            <button type="button" (click)="toggleRow('personal')" class="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+              <span class="min-w-0 flex-1">
+                <span class="block text-sm font-semibold text-[#0B1720]">Personal Information</span>
+                <span class="block text-xs text-[#8AA0A8]">Update your name and basic details</span>
+              </span>
+              <svg lucideChevronRight size="16" class="shrink-0 text-[#8AA0A8] transition-transform" [class.rotate-90]="expandedRow() === 'personal'"></svg>
+            </button>
+            @if (expandedRow() === 'personal') {
+              <div class="px-4 pb-4">
+                <label class="text-[12px] font-semibold text-[#0B1720]">Full name</label>
+                <input [value]="editName()" (input)="editName.set($any($event.target).value)" placeholder="Your name" class="mt-1.5 h-11 w-full max-w-[420px] rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] px-3 text-[14px] font-medium focus:outline-none focus:border-[#062D32] focus:bg-white" />
+                <div class="mt-3 flex gap-2">
+                  <button type="button" (click)="save()" [disabled]="saving()" class="inline-flex items-center h-10 px-5 rounded-[8px] bg-[#062D32] text-white text-[13px] font-bold hover:bg-[#0A3B40] disabled:opacity-60">{{ saving() ? 'Saving…' : 'Save' }}</button>
+                  <button type="button" (click)="toggleRow('personal')" class="inline-flex items-center h-10 px-5 rounded-[8px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32]">Done</button>
+                </div>
+                @if (error()) {
+                  <p class="mt-3 max-w-[420px] rounded-[8px] border border-[#FF4D4F]/20 bg-[#FFF1F1] px-4 py-2.5 text-[13px] font-medium text-[#C0392B]">{{ error() }}</p>
+                }
+                @if (success()) {
+                  <p class="mt-3 max-w-[420px] rounded-[8px] border border-[#D4EBCC] bg-[#F0F7E8] px-4 py-2.5 text-[13px] font-medium text-[#0a3622]">{{ success() }}</p>
+                }
+              </div>
+            }
+          </div>
+          <div>
+            <button type="button" (click)="toggleRow('contact')" class="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+              <span class="min-w-0 flex-1">
+                <span class="block text-sm font-semibold text-[#0B1720]">Phone & Email</span>
+                <span class="block text-xs text-[#8AA0A8]">{{ user()!.phone ? '+91 ' + user()!.phone : 'No mobile added' }} · {{ user()!.email }}</span>
+              </span>
+              <svg lucideChevronRight size="16" class="shrink-0 text-[#8AA0A8] transition-transform" [class.rotate-90]="expandedRow() === 'contact'"></svg>
+            </button>
+            @if (expandedRow() === 'contact') {
+              <div class="px-4 pb-4 grid grid-cols-2 gap-3 max-w-[520px] max-[600px]:grid-cols-1">
+                <div>
+                  <label class="text-[12px] font-semibold text-[#0B1720]">Email</label>
+                  <input [value]="editEmail()" (input)="editEmail.set($any($event.target).value)" type="email" class="mt-1.5 h-11 w-full rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] px-3 text-[14px] font-medium focus:outline-none focus:border-[#062D32] focus:bg-white" />
+                </div>
+                <div>
+                  <label class="text-[12px] font-semibold text-[#0B1720]">Mobile</label>
+                  <div class="mt-1.5 flex items-center h-11 rounded-[8px] border border-[#E2E9E7] bg-[#F7FAF9] focus-within:bg-white focus-within:border-[#062D32] overflow-hidden">
+                    <span class="px-2.5 text-[13px] font-semibold text-[#062D32]">+91</span>
+                    <input [value]="editPhone()" (input)="editPhone.set($any($event.target).value)" inputmode="numeric" maxlength="10" class="flex-1 h-full bg-transparent px-2 text-[14px] font-medium focus:outline-none" />
+                  </div>
+                </div>
+                <div class="col-span-2 max-[600px]:col-span-1 flex gap-2">
+                  <button type="button" (click)="save()" [disabled]="saving()" class="inline-flex items-center h-10 px-5 rounded-[8px] bg-[#062D32] text-white text-[13px] font-bold hover:bg-[#0A3B40] disabled:opacity-60">{{ saving() ? 'Saving…' : 'Save' }}</button>
+                  <button type="button" (click)="toggleRow('contact')" class="inline-flex items-center h-10 px-5 rounded-[8px] border border-[#E2E9E7] text-[13px] font-semibold text-[#062D32]">Done</button>
+                </div>
+              </div>
+            }
+          </div>
+          <div>
+            <button type="button" (click)="toggleRow('prefs')" class="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+              <span class="min-w-0 flex-1">
+                <span class="block text-sm font-semibold text-[#0B1720]">Saved Preferences</span>
+                <span class="block text-xs text-[#8AA0A8]">Offer updates and newsletter</span>
+              </span>
+              <svg lucideChevronRight size="16" class="shrink-0 text-[#8AA0A8] transition-transform" [class.rotate-90]="expandedRow() === 'prefs'"></svg>
+            </button>
+            @if (expandedRow() === 'prefs') {
+              <div class="px-4 pb-4 space-y-2 max-w-[520px]">
+                <label class="flex cursor-pointer items-center justify-between rounded-[8px] border border-[#E6ECEA] bg-[#F7FAF9] px-3.5 py-3">
+                  <span class="text-[13px] font-semibold text-[#0B1720]">Offer status updates</span>
+                  <button type="button" role="switch" [attr.aria-checked]="editNotifyOffers()" (click)="editNotifyOffers.set(!editNotifyOffers())" class="relative h-6 w-11 shrink-0 rounded-full transition-colors" [class.bg-[#062D32]]="editNotifyOffers()" [class.bg-[#D6E0DC]]="!editNotifyOffers()">
+                    <span class="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all" [class.left-[22px]]="editNotifyOffers()" [class.left-[2px]]="!editNotifyOffers()"></span>
+                  </button>
+                </label>
+                <label class="flex cursor-pointer items-center justify-between rounded-[8px] border border-[#E6ECEA] bg-[#F7FAF9] px-3.5 py-3">
+                  <span class="text-[13px] font-semibold text-[#0B1720]">Newsletter & new arrivals</span>
+                  <button type="button" role="switch" [attr.aria-checked]="editNotifyNewsletter()" (click)="editNotifyNewsletter.set(!editNotifyNewsletter())" class="relative h-6 w-11 shrink-0 rounded-full transition-colors" [class.bg-[#062D32]]="editNotifyNewsletter()" [class.bg-[#D6E0DC]]="!editNotifyNewsletter()">
+                    <span class="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all" [class.left-[22px]]="editNotifyNewsletter()" [class.left-[2px]]="!editNotifyNewsletter()"></span>
+                  </button>
+                </label>
+                <div class="flex gap-2 pt-1">
+                  <button type="button" (click)="save()" [disabled]="saving()" class="inline-flex items-center h-10 px-5 rounded-[8px] bg-[#062D32] text-white text-[13px] font-bold hover:bg-[#0A3B40] disabled:opacity-60">{{ saving() ? 'Saving…' : 'Save' }}</button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Support -->
+      <section id="profile-support" class="mt-8 scroll-mt-24">
+        <h2 class="text-[11px] font-bold tracking-[0.12em] uppercase text-[#8AA0A8]">Support</h2>
+        <div class="mt-2 rounded-[10px] border border-[#E6ECEA] bg-white divide-y divide-[#EEF3F1]">
+          <a routerLink="/about" class="flex items-center gap-3 px-4 py-3.5">
+            <span class="min-w-0 flex-1">
+              <span class="block text-sm font-semibold text-[#0B1720]">Help & FAQs</span>
+              <span class="block text-xs text-[#8AA0A8]">How buying, selling and test drives work</span>
+            </span>
+            <svg lucideChevronRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+          </a>
+          <a routerLink="/contact" class="flex items-center gap-3 px-4 py-3.5">
+            <span class="min-w-0 flex-1">
+              <span class="block text-sm font-semibold text-[#0B1720]">Contact Ayra Cars</span>
+              <span class="block text-xs text-[#8AA0A8]">Call, WhatsApp or visit our office</span>
+            </span>
+            <svg lucideChevronRight size="16" class="shrink-0 text-[#8AA0A8]"></svg>
+          </a>
+        </div>
+      </section>
+
         </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 
   <app-footer />
 </div>
