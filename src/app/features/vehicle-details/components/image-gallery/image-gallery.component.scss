@@ -215,7 +215,7 @@
 .fs-overlay {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 2000;
   background: rgba(0, 0, 0, 0.92);
   animation: am-fade-in 0.3s ease forwards;
 }
