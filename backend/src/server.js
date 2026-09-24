@@ -483,8 +483,8 @@ app.post('/api/admin/login', async (req, res, next) => {
 
     const token = jwt.sign(
       { sub: admin.id, email: admin.email, role: admin.role },
-      process.env.JWT_SECRET || 'ayracars-dev-secret-change-me',
-      { expiresIn: '12h' }
+      JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     res.json({
@@ -1130,6 +1130,28 @@ app.patch('/api/admin/password', adminRequired, async (req, res, next) => {
     await admin.save();
     res.json({ message: 'Password updated successfully.' });
   } catch (err) { next(err); }
+});
+
+// Admin: current session (validates stored token, detects deactivation)
+app.get('/api/admin/me', adminRequired, async (req, res, next) => {
+  try {
+    const admin = await Admin.findById(req.adminId);
+    if (!admin || !admin.isActive) {
+      return res.status(401).json({ message: 'Admin session is no longer valid.' });
+    }
+    res.json({
+      admin: {
+        id: String(admin._id),
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        isActive: admin.isActive,
+        lastLoginAt: admin.lastLoginAt
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // --- Admin management (all admins have equal permissions) ---------------------

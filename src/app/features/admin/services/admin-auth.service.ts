@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { API_BASE } from '@config/api';
 
 const TOKEN_KEY = 'ayracars-admin-token';
@@ -24,6 +24,7 @@ export class AdminAuthService {
 
   readonly isAuthenticated = signal(this.hasToken());
   readonly admin = signal<AdminProfile | null>(this.readAdmin());
+  private sessionChecked = false;
 
   login(email: string, password: string): Observable<AdminLoginResponse> {
     return this.http
@@ -47,6 +48,37 @@ export class AdminAuthService {
     }
     this.admin.set(null);
     this.isAuthenticated.set(false);
+    this.sessionChecked = true;
+  }
+
+  /**
+   * Persistent login: a stored token keeps the admin signed in across visits
+   * (30-day server expiry). Validated once per page load against /admin/me so
+   * expired, revoked or deactivated sessions fall back to the login page.
+   */
+  validateSession(): Observable<boolean> {
+    if (!this.hasToken()) {
+      this.sessionChecked = true;
+      return of(false);
+    }
+    if (this.sessionChecked) {
+      return of(this.isAuthenticated());
+    }
+    return this.http.get<{ admin: AdminProfile }>(`${API_BASE}/admin/me`).pipe(
+      tap((res) => {
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(ADMIN_KEY, JSON.stringify(res.admin));
+        }
+        this.admin.set(res.admin);
+        this.isAuthenticated.set(true);
+        this.sessionChecked = true;
+      }),
+      map(() => true),
+      catchError(() => {
+        this.logout();
+        return of(false);
+      })
+    );
   }
 
   private hasToken(): boolean {
